@@ -2,7 +2,7 @@
 layout: default
 ---
 
-{% if page.sections %}
+
 <nav class="sub-nav">
   <button class="dropdown-btn">Page sections</button>
   <div class="dropdown-content">
@@ -21,28 +21,28 @@ layout: default
       <a href="#actors">Cast</a>
     {% endif %}
 
-    {%- comment -%}
-    Auto galleries
-    {%- endcomment -%}
+    {% assign base = '/images/' | append: page.image_folder %}
 
-    {%- assign folder = '/images/' | append: page.image_folder -%}
-
-    {%- assign ss = site.static_files | where_exp: "f", "f.path contains folder | append: '/screenshots/'" -%}
+    {% assign ss_folder = base | append: '/screenshots/' %}
+    {% assign ss = site.static_files | where_exp: "f", "f.path contains ss_folder" %}
     {% if ss.size > 0 %}
       <a href="#screenshots">Screenshots</a>
     {% endif %}
 
-    {%- assign renders = site.static_files | where_exp: "f", "f.path contains folder | append: '/renders/'" -%}
+    {% assign renders_folder = base | append: '/renders/' %}
+    {% assign renders = site.static_files | where_exp: "f", "f.path contains renders_folder" %}
     {% if renders.size > 0 %}
       <a href="#renders">Renders</a>
     {% endif %}
 
-    {%- assign hq = site.static_files | where_exp: "f", "f.path contains folder | append: '/hq/'" -%}
+    {% assign hq_folder = base | append: '/hq/' %}
+    {% assign hq = site.static_files | where_exp: "f", "f.path contains hq_folder" %}
     {% if hq.size > 0 %}
       <a href="#hq">High Quality</a>
     {% endif %}
 
-    {%- assign art = site.static_files | where_exp: "f", "f.path contains folder | append: '/artwork/'" -%}
+    {% assign art_folder = base | append: '/artwork/' %}
+    {% assign art = site.static_files | where_exp: "f", "f.path contains art_folder" %}
     {% if art.size > 0 %}
       <a href="#artwork">Artwork</a>
     {% endif %}
@@ -54,7 +54,6 @@ layout: default
   </div>
 </nav>
 
-{% endif %}
 
 <section id="info" class="media-info">
   {% if page.cover_image %}
