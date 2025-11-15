@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build": "bundle install && bundle exec jekyll build"
+  }
+}

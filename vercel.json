@@ -1,6 +1,8 @@
 {
   "builds": [
-    { "src": "Gemfile", "use": "@vercel/ruby" },
-    { "src": "_config.yml", "use": "@vercel/jekyll" }
+    { "src": "package.json", "use": "@vercel/static-build" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
