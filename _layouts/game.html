@@ -6,11 +6,54 @@ layout: default
 <nav class="sub-nav">
   <button class="dropdown-btn">Page sections</button>
   <div class="dropdown-content">
-    {% for section in page.sections %}
-      <a href="#{{ section.id }}">{{ section.name }}</a>
-    {% endfor %}
+
+    <a href="#info">Info</a>
+
+    {% if page.cheats %}
+      <a href="#cheats">Cheats</a>
+    {% endif %}
+
+    {% if page.achievements %}
+      <a href="#achievements">Achievements</a>
+    {% endif %}
+
+    {% if page.cast %}
+      <a href="#actors">Cast</a>
+    {% endif %}
+
+    {%- comment -%}
+    Auto galleries
+    {%- endcomment -%}
+
+    {%- assign folder = '/images/' | append: page.image_folder -%}
+
+    {%- assign ss = site.static_files | where_exp: "f", "f.path contains folder | append: '/screenshots/'" -%}
+    {% if ss.size > 0 %}
+      <a href="#screenshots">Screenshots</a>
+    {% endif %}
+
+    {%- assign renders = site.static_files | where_exp: "f", "f.path contains folder | append: '/renders/'" -%}
+    {% if renders.size > 0 %}
+      <a href="#renders">Renders</a>
+    {% endif %}
+
+    {%- assign hq = site.static_files | where_exp: "f", "f.path contains folder | append: '/hq/'" -%}
+    {% if hq.size > 0 %}
+      <a href="#hq">High Quality</a>
+    {% endif %}
+
+    {%- assign art = site.static_files | where_exp: "f", "f.path contains folder | append: '/artwork/'" -%}
+    {% if art.size > 0 %}
+      <a href="#artwork">Artwork</a>
+    {% endif %}
+
+    {% if page.videos %}
+      <a href="#videos">Videos</a>
+    {% endif %}
+
   </div>
 </nav>
+
 {% endif %}
 
 <section id="info" class="media-info">

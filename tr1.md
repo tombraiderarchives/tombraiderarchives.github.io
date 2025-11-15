@@ -360,29 +360,6 @@ achievements:
         description: Reach level 60 in multiplayer
         trophy: silver
 
-masonry_gallery:
-  title: Masonry gallery
-  images:
-    - url: https://placehold.co/800x600
-      alt: Concept art one
-    - url: https://placehold.co/600x900
-      alt: Concept art two
-    - url: https://placehold.co/800x800
-      alt: Concept art three
-    - url: https://placehold.co/700x400
-      alt: Concept art four
-
-flex_gallery:
-  title: Screenshots
-  images:
-    - full: /images/tr2013/screenshots/01.jpg
-      thumb: /images/tr2013/screenshots/thumbs/01.jpg
-      alt: Screenshot one
-    - full: /images/tr2013/screenshots/02.jpg
-      thumb: /images/tr2013/screenshots/thumbs/02.jpg
-      alt: Screenshot two
-
-
 videos:
   - url: https://www.youtube.com/embed/VIqvSNDIlTs
     title: Official Trailer
