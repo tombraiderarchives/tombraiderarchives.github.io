@@ -1,0 +1,15 @@
+title: Tomb Raider Archives
+description: A comprehensive archive of Tomb Raider games, movies, and media
+url: "https://tombraiderarchives.github.io"
+baseurl: "/site"
+
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
