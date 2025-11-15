@@ -1,7 +1,7 @@
 title: Tomb Raider Archives
 description: A comprehensive archive of Tomb Raider games, movies, and media
 url: "https://tombraiderarchives.github.io"
-baseurl: "/site"
+baseurl: ""
 
 
 # Build settings
