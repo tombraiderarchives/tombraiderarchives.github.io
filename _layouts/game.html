@@ -220,7 +220,7 @@ layout: default
 
 <!-- Screenshots -->
 {% assign target_screenshots = '/images/' | append: page.image_folder | append: '/screenshots/' %}
-{% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains target_screenshots" %}
+{% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains target_screenshots and file.path does not contain '/thumbs/'" %}
 {% if screenshot_files.size > 0 %}
 <section id="screenshots" class="gallery">
   <div class="section-header"><h2>Screenshots</h2></div>
@@ -271,7 +271,8 @@ layout: default
 
 <!-- Artwork -->
 {% assign target_artwork = '/images/' | append: page.image_folder | append: '/artwork/' %}
-{% assign artwork_files = site.static_files | where_exp: "file", "file.path contains target_artwork" %}
+{% assign artwork_files = site.static_files | where_exp: "file", "file.path contains target_artwork and file.path does not contain '/thumbs/'" %}
+
 {% if artwork_files.size > 0 %}
 <section id="artwork" class="gallery">
   <div class="section-header"><h2>Artwork</h2></div>
