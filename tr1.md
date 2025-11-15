@@ -49,4 +49,4 @@ Tomb Raider is an action adventure video game developed by Core Design and publi
 
 Lara Croft receives a commission from Jacqueline Natla, the CEO of Natla Technologies, to unearth a mysterious artifact believed to be hidden in a Peruvian tomb. Lara discovers that the artifact is only a fragment of a more powerful object, the Scion, from the lost continent of Atlantis. She soon realizes she is not the only one searching for it, and her employer has secrets of her own.
 
-The game spans 15 levels across South America, Greece, Egypt, and Atlantis. Although the controls and graphics feel dated now, Tomb Raider was one of the first games to blend exploration, puzzles, and combat in a cinematic way, making it a classic in the series.
+The game spans 15 levels across South America, Greece, Egypt, and Atlantis. Although the controls and graphics feel dated now, Tomb Raider was one of the first games to blend exploration, puzzles, and combat in a cinematic way, making it a classic in the series. 
