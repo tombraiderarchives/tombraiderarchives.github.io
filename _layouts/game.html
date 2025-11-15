@@ -23,25 +23,33 @@ layout: default
     {% assign base_folder = "/images/" | append: page.image_folder %}
 
     {% assign ss_folder = base_folder | append: "/screenshots/" %}
-    {% assign ss_files = site.static_files | where_exp: "file", "file.path contains ss_folder and file.path does not contain '/thumbs/'" %}
+    {% assign ss_all = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
+    {% assign ss_thumbs = ss_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+    {% assign ss_files = ss_all | minus: ss_thumbs %}
     {% if ss_files.size > 0 %}
       <a href="#screenshots">Screenshots</a>
     {% endif %}
 
     {% assign renders_folder = base_folder | append: "/renders/" %}
-    {% assign render_files = site.static_files | where_exp: "file", "file.path contains renders_folder and file.path does not contain '/thumbs/'" %}
+    {% assign renders_all = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
+    {% assign renders_thumbs = renders_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+    {% assign render_files = renders_all | minus: renders_thumbs %}
     {% if render_files.size > 0 %}
       <a href="#renders">Renders</a>
     {% endif %}
 
     {% assign hq_folder = base_folder | append: "/hq/" %}
-    {% assign hq_files = site.static_files | where_exp: "file", "file.path contains hq_folder and file.path does not contain '/thumbs/'" %}
+    {% assign hq_all = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
+    {% assign hq_thumbs = hq_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+    {% assign hq_files = hq_all | minus: hq_thumbs %}
     {% if hq_files.size > 0 %}
       <a href="#hq">High Quality</a>
     {% endif %}
 
     {% assign art_folder = base_folder | append: "/artwork/" %}
-    {% assign artwork_files = site.static_files | where_exp: "file", "file.path contains art_folder and file.path does not contain '/thumbs/'" %}
+    {% assign art_all = site.static_files | where_exp: "file", "file.path contains art_folder" %}
+    {% assign art_thumbs = art_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+    {% assign artwork_files = art_all | minus: art_thumbs %}
     {% if artwork_files.size > 0 %}
       <a href="#artwork">Artwork</a>
     {% endif %}
@@ -52,7 +60,6 @@ layout: default
 
   </div>
 </nav>
-
 
 <section id="info" class="media-info">
   {% if page.cover_image %}
@@ -213,8 +220,10 @@ layout: default
 
 {% if page.image_folder %}
 
-{% assign target_screenshots_string = "/images/" | append: page.image_folder | append: "/screenshots/" %}
-{% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains target_screenshots_string and file.path does not contain '/thumbs/'" %}
+{% assign ss_folder = "/images/" | append: page.image_folder | append: "/screenshots/" %}
+{% assign ss_all = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
+{% assign ss_thumbs = ss_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+{% assign screenshot_files = ss_all | minus: ss_thumbs %}
 
 {% if screenshot_files.size > 0 %}
 <section id="screenshots" class="gallery">
@@ -230,8 +239,10 @@ layout: default
 </section>
 {% endif %}
 
-{% assign target_renders_string = "/images/" | append: page.image_folder | append: "/renders/" %}
-{% assign render_files = site.static_files | where_exp: "file", "file.path contains target_renders_string and file.path does not contain '/thumbs/'" %}
+{% assign renders_folder = "/images/" | append: page.image_folder | append: "/renders/" %}
+{% assign renders_all = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
+{% assign renders_thumbs = renders_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+{% assign render_files = renders_all | minus: renders_thumbs %}
 
 {% if render_files.size > 0 %}
 <section id="renders" class="gallery">
@@ -247,8 +258,10 @@ layout: default
 </section>
 {% endif %}
 
-{% assign target_hq_string = "/images/" | append: page.image_folder | append: "/hq/" %}
-{% assign hq_files = site.static_files | where_exp: "file", "file.path contains target_hq_string and file.path does not contain '/thumbs/'" %}
+{% assign hq_folder = "/images/" | append: page.image_folder | append: "/hq/" %}
+{% assign hq_all = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
+{% assign hq_thumbs = hq_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+{% assign hq_files = hq_all | minus: hq_thumbs %}
 
 {% if hq_files.size > 0 %}
 <section id="hq" class="gallery">
@@ -264,8 +277,10 @@ layout: default
 </section>
 {% endif %}
 
-{% assign target_artwork_string = "/images/" | append: page.image_folder | append: "/artwork/" %}
-{% assign artwork_files = site.static_files | where_exp: "file", "file.path contains target_artwork_string and file.path does not contain '/thumbs/'" %}
+{% assign art_folder = "/images/" | append: page.image_folder | append: "/artwork/" %}
+{% assign art_all = site.static_files | where_exp: "file", "file.path contains art_folder" %}
+{% assign art_thumbs = art_all | where_exp: "file", "file.path contains '/thumbs/'" %}
+{% assign artwork_files = art_all | minus: art_thumbs %}
 
 {% if artwork_files.size > 0 %}
 <section id="artwork" class="gallery">
