@@ -1,411 +1,52 @@
 ---
 layout: game
-title: Tomb Raider
+title: Tomb Raider (1996)
 cover_image: /images/tr1/cover.jpg
 image_folder: tr1
 
-sections:
-  - id: info
-    name: Info
-  - id: cheats
-    name: Cheats
-  - id: achievements
-    name: Achievements
-  - id: masonry1
-    name: Masonry gallery
-  - id: flex1
-    name: Flex gallery
-  - id: videos
-    name: Video gallery
-  - id: actors
-    name: Cast
-
-
 stats:
-  release_date: March 05, 2013
+  release_date: October 24, 1996
   genre: Action adventure
   rating: Mature
-  length: Roughly 12 to 15 hours
-  platforms: Windows, PlayStation 3, Xbox 360, PlayStation 4, Xbox One
-  developer: Crystal Dynamics
-  writer: Rhianna Pratchett
-  setting: Dragon Triangle, off the coast of Japan
+  length: Roughly 15 hours
+  platforms: Sega Saturn, PlayStation, MS-DOS
+  developer: Core Design
+  writer: ---
+  setting: Peru, Greece, Egypt, Atlantis
 
 cheats:
-  - platform_name: PC extras
+  - platform_name: PC Cheats
     items:
-      - name: Explorer kit
-        description: Unlocks a survival skin and an early access bow upgrade for Lara.
-      - name: Scavenger pack
-        description: Provides bonus salvage to speed up early weapon upgrades.
-  
-  - platform_name: Console tips
+      - name: Level Skip
+        description: WALK forward, WALK backward, turn around 3 times, forward jump
+      - name: All Weapons and Ammo
+        description: WALK forward, WALK backward, turn around 3 times, backflip
+
+  - platform_name: PlayStation Cheats
     items:
-      - name: Camp fast travel
-        description: Use base camps to return to earlier areas and clean up collectibles.
-      - name: Quick melee finishers
-        description: Stagger enemies with arrows, then use finishers to save ammo.
-  
-  - platform_name: Completion hints
+      - name: Level Skip PAL
+        description: Open Inventory, L2, R2, Triangle, L1, L1, Circle, R2, L2 then confirm
+      - name: Level Skip NTSC U
+        description: Open Inventory, L2, R2, L1, Circle, Triangle, L1, R2, L2 then confirm
+      - name: Level Skip NTSC J
+        description: Open Inventory, R2, L2, R1, L1, R1, L2, R2, Select then confirm
+      - name: All Weapons PAL
+        description: Open Inventory, L1, Triangle, L2, R2, R2, L2, Circle, L1 then confirm
+      - name: All Weapons NTSC U
+        description: Open Inventory, L1, Triangle, R2, L2, L2, R2, Circle, L1 then confirm
+      - name: All Weapons NTSC J
+        description: Open Inventory, L1, R1, L2, R2, L2, R1, L1, Select then confirm
+
+  - platform_name: Sega Saturn Cheats
     items:
-      - name: Relic hunter
-        description: Study relics from the menu to reveal extra clues about Yamatai.
-      - name: Tomb raider
-        description: Optional tombs reward large amounts of salvage and experience.
-
-achievements:
-  - platform_name: Xbox achievements
-    items:
-      - name: Bookworm
-        description: Find 25% of all documents
-        gamerscore: 10
-      - name: Historian
-        description: 75% of all documents found
-        gamerscore: 15
-      - name: Relic Hunter
-        description: Collect 25% of all relics
-        gamerscore: 10
-      - name: Archaeologist
-        description: Collect 75% of all relics
-        gamerscore: 15
-      - name: Looking for Trouble
-        description: Collect 25% of GPS caches
-        gamerscore: 10
-      - name: Bag Full of Tricks
-        description: Collect 75% of GPS caches
-        gamerscore: 15
-      - name: No Stone Left Unturned
-        description: Find all documents, relics, and GPS caches
-        gamerscore: 50
-      - name: Now We're Getting Serious
-        description: Collect 5000 pieces of salvage
-        gamerscore: 20
-      - name: Tastes Like Chicken!
-        description: Loot 200 enemies
-        gamerscore: 15
-      - name: Predator
-        description: Kill 50 enemies with the bow
-        gamerscore: 10
-      - name: Equalizer
-        description: Kill 75 enemies with the rifle
-        gamerscore: 10
-      - name: Gunslinger
-        description: Kill 40 enemies with the shotgun
-        gamerscore: 10
-      - name: Scrounger
-        description: Kill 35 enemies with a pistol
-        gamerscore: 10
-      - name: Get Over Here!
-        description: Rope pull 5 enemies off edges
-        gamerscore: 20
-      - name: Opportunist
-        description: Kill 25 unaware enemies
-        gamerscore: 15
-      - name: Down and Dirty
-        description: Incapacitate 25 enemies with dodge counter
-        gamerscore: 20
-      - name: Headhunter
-        description: Perform 50 headshot kills in the single player campaign
-        gamerscore: 15
-      - name: Boom Goes the Dynamite
-        description: Force an enemy to drop dynamite that kills two people when exploding
-        gamerscore: 15
-      - name: Former Adventurer
-        description: Perform 15 finishers
-        gamerscore: 15
-      - name: Deadeye
-        description: Shoot 10 enemies off zip lines
-        gamerscore: 20
-      - name: A Survivor Is Born
-        description: Complete the game
-        gamerscore: 75
-      - name: One Smart Cookie
-        description: One optional tomb completed
-        gamerscore: 20
-      - name: Intellectually Superior
-        description: Complete all optional tombs
-        gamerscore: 50
-      - name: Inconceivable!
-        description: Complete one challenge
-        gamerscore: 20
-      - name: Epic Fumbler
-        description: Complete all challenges
-        gamerscore: 50
-      - name: Feather Duster
-        description: Kill and loot 10 large animals (deer, boar, wolves)
-        gamerscore: 15
-      - name: Knee Deep
-        description: Kill and loot 10 small animals (rabbits, chickens, rats)
-        gamerscore: 15
-      - name: Big Game Hunter
-        description: Kill and loot 10 flying animals (crows and gulls)
-        gamerscore: 15
-      - name: Crab Cakes
-        description: Kill FeeFee the crab
-        gamerscore: 5
-      - name: Unfinished Business
-        description: Purchase all skills in one category
-        gamerscore: 25
-      - name: True Commitment
-        description: Purchase all skills in all categories
-        gamerscore: 50
-      - name: The Professional
-        description: Fully mod and completely upgrade any weapon
-        gamerscore: 25
-      - name: Clever Girl
-        description: Fully mod and completely upgrade all weapons
-        gamerscore: 50
-      - name: Sharp Shooter
-        description: Bundle of dynamite shot out of the air
-        gamerscore: 10
-      - name: Chatterbox
-        description: All conversations with the Endurance crew completed
-        gamerscore: 5
-      - name: I'm all that!
-        description: Played a match to completion in all multiplayer modes
-        gamerscore: 20
-      - name: Down Boy!
-        description: Kill 20 enemy players in multiplayer using a turret
-        gamerscore: 20
-      - name: On My Way Up
-        description: Kill a zip-lining enemy player in multiplayer
-        gamerscore: 10
-      - name: I Got You
-        description: Catch a player in a snare trap in multiplayer
-        gamerscore: 10
-      - name: Bling!
-        description: Survive 10 explosions in multiplayer
-        gamerscore: 20
-      - name: Good Samaritan
-        description: Revive a teammate in a multiplayer match
-        gamerscore: 10
-      - name: True Commitment (MP)
-        description: Win a ranked match in every multiplayer mode
-        gamerscore: 25
-      - name: I'm The Boss
-        description: In multiplayer, be the only player on your team that isn't dead or incapacitated
-        gamerscore: 15
-      - name: Lights Out
-        description: Kill 10 multiplayer enemies using your melee attack
-        gamerscore: 15
-      - name: Monkey Around
-        description: Kill 2 multiplayer enemies with a single explosive
-        gamerscore: 20
-      - name: Sole Survivor
-        description: In a multiplayer match, escape death 3 times by using the rope ascender
-        gamerscore: 15
-      - name: Shop Till You Drop
-        description: Purchase a new multiplayer character
-        gamerscore: 10
-      - name: True Passion
-        description: Reach level 10 in multiplayer
-        gamerscore: 10
-      - name: I Can Do This All Day
-        description: Buy every upgrade and character in multiplayer
-        gamerscore: 20
-      - name: Artilleryman
-        description: Reach level 60 in multiplayer
-        gamerscore: 30
-  
-  - platform_name: PlayStation trophies
-    items:
-      - name: Bookworm
-        description: Find 25% of all documents
-        trophy: bronze
-      - name: Historian
-        description: Find 75% of all documents
-        trophy: bronze
-      - name: Relic Hunter
-        description: Collect 25% of all relics
-        trophy: bronze
-      - name: Archaeologist
-        description: Collect 75% of all relics
-        trophy: bronze
-      - name: Looking for Trouble
-        description: Collect 25% of GPS caches
-        trophy: bronze
-      - name: Bag Full of Tricks
-        description: Collect 75% of GPS caches
-        trophy: bronze
-      - name: Collector
-        description: Collect 5000 pieces of salvage
-        trophy: bronze
-      - name: Tastes Like Chicken!
-        description: Loot 200 enemies
-        trophy: bronze
-      - name: The Professional
-        description: Fully mod and completely upgrade any weapon
-        trophy: bronze
-      - name: Big Game Hunter
-        description: Kill and loot 10 large animals (deer, boar, wolves)
-        trophy: bronze
-      - name: Feather Duster
-        description: Kill and loot 10 small animals (rabbits, chickens, rats)
-        trophy: bronze
-      - name: Tastes Like Chicken
-        description: Kill and loot 10 flying animals (crows and gulls)
-        trophy: bronze
-      - name: Headhunter
-        description: Perform 50 headshot kills in the single player campaign
-        trophy: bronze
-      - name: Predator
-        description: Kill 50 enemies with the bow
-        trophy: bronze
-      - name: Equalizer
-        description: Kill 75 enemies with the rifle
-        trophy: bronze
-      - name: Gunslinger
-        description: Kill 40 enemies with the shotgun
-        trophy: bronze
-      - name: Scrounger
-        description: Kill 35 enemies with a pistol
-        trophy: bronze
-      - name: Boom Goes the Dynamite
-        description: Force an enemy to drop dynamite that kills two people when exploding
-        trophy: bronze
-      - name: Get Over Here!
-        description: Rope pull 5 enemies off edges
-        trophy: bronze
-      - name: Opportunist
-        description: Kill 25 unaware enemies
-        trophy: bronze
-      - name: Former Adventurer
-        description: Perform 15 finishers
-        trophy: bronze
-      - name: Deadeye
-        description: Shoot 10 enemies off zip lines
-        trophy: bronze
-      - name: Down and Dirty
-        description: Incapacitate 25 enemies with dodge counter
-        trophy: bronze
-      - name: One Smart Cookie
-        description: One optional tomb completed
-        trophy: bronze
-      - name: Inconceivable!
-        description: Complete one challenge
-        trophy: bronze
-      - name: Sharp Shooter
-        description: Shoot a bundle of dynamite out of the air
-        trophy: bronze
-      - name: Crab Cakes
-        description: Kill FeeFee the crab
-        trophy: bronze
-      - name: Chatterbox
-        description: Complete all conversations with the Endurance crew
-        trophy: bronze
-      - name: Unfinished Business
-        description: Purchase all skills in one category
-        trophy: silver
-      - name: True Survivor
-        description: Purchase all skills in all categories
-        trophy: silver
-      - name: Clever Girl
-        description: Fully mod and completely upgrade all weapons
-        trophy: silver
-      - name: No Stone Left Unturned
-        description: Find all documents, relics, and GPS caches
-        trophy: gold
-      - name: Intellectually Superior
-        description: Complete all optional tombs
-        trophy: gold
-      - name: Epic Fumbler
-        description: Complete all challenges
-        trophy: silver
-      - name: A Survivor Is Born
-        description: Complete the game
-        trophy: silver
-      - name: Master Raider
-        description: Unlock every Tomb Raider trophy
-        trophy: platinum
-      - name: I'm all that!
-        description: Complete a match in all multiplayer modes
-        trophy: bronze
-      - name: Down Boy!
-        description: Kill 20 enemy players in multiplayer using a turret
-        trophy: bronze
-      - name: On My Way Up
-        description: Kill a zip-lining enemy player in multiplayer
-        trophy: bronze
-      - name: I Got You
-        description: Catch a player in a snare trap in multiplayer
-        trophy: bronze
-      - name: Bling!
-        description: Survive 10 explosions in multiplayer
-        trophy: bronze
-      - name: Good Samaritan
-        description: Revive a teammate in a multiplayer match
-        trophy: bronze
-      - name: I'm The Boss
-        description: In multiplayer, be the only player on your team that isn't dead or incapacitated
-        trophy: bronze
-      - name: Lights Out
-        description: Kill 10 multiplayer enemies using your melee attack
-        trophy: bronze
-      - name: Monkey Around
-        description: Kill 2 multiplayer enemies with a single explosive
-        trophy: bronze
-      - name: Sole Survivor
-        description: In a multiplayer match, escape death 3 times by using the rope ascender
-        trophy: bronze
-      - name: Shop Till You Drop
-        description: Purchase a new multiplayer character
-        trophy: bronze
-      - name: True Passion
-        description: Reach level 10 in multiplayer
-        trophy: bronze
-      - name: I Can Do This All Day
-        description: Buy every upgrade and character in multiplayer
-        trophy: bronze
-      - name: Artilleryman
-        description: Reach level 60 in multiplayer
-        trophy: silver
-
-masonry_gallery:
-  title: Masonry gallery
-  images:
-    - url: https://placehold.co/800x600
-      alt: Concept art one
-    - url: https://placehold.co/600x900
-      alt: Concept art two
-    - url: https://placehold.co/800x800
-      alt: Concept art three
-    - url: https://placehold.co/700x400
-      alt: Concept art four
-
-flex_gallery:
-  title: Screenshots
-  images:
-    - full: /images/tr2013/screenshots/01.jpg
-      thumb: /images/tr2013/screenshots/thumbs/01.jpg
-      alt: Screenshot one
-    - full: /images/tr2013/screenshots/02.jpg
-      thumb: /images/tr2013/screenshots/thumbs/02.jpg
-      alt: Screenshot two
-
-
-videos:
-  - url: https://www.youtube.com/embed/VIqvSNDIlTs
-    title: Official Trailer
-    description: The official reveal trailer for Tomb Raider 2013
-  - url: https://www.youtube.com/embed/9bZkp7q19f0
-    title: Gameplay showcase
-    description: Early exploration of the coastal forest and mountain village
-
-cast:
-  - name: Camilla Luddington
-    role: Lara Croft (Voice)
-    image: https://placehold.co/150
-  - name: Robin Atkin Downes
-    role: Conrad Roth (Voice)
-    image: https://placehold.co/150
-  - name: Cooper Thornton
-    role: Jonah Maiava (Voice)
-    image: https://placehold.co/150
-  - name: Robert Craighead
-    role: Dr. James Whitman (Voice)
-    image: https://placehold.co/150
+      - name: Level Skip NTSC U and J
+        description: Pause, open passport, Z, Y, Z, Y, X, X, X, Start then confirm
+      - name: All Weapons NTSC U and J
+        description: Open Inventory, X, Y, X, Y, Z, Z, Z, Z, Y, Z, Y, X, X, X, Start then confirm
 ---
 
-The narrative unfolds on the mythical island of Yamatai, concealed within the perilous Dragon's Triangle near Japan. Veiled in an aura of mystery, Yamatai boasts a tumultuous history marked by relentless storms and countless shipwrecks. Once ruled by the enigmatic "Sun Queen" Himiko, endowed with weather-controlling shamanistic powers, Yamatai's past remains obscured. Legends echo tales of Portuguese traders, US Marines, and a Japanese military project stranded on the island. As the story unravels, players encounter the current inhabitants — the Solarii Brotherhood, a ruthless assembly of criminals, mercenaries, and survivors who have forged a society centered around Himiko's worship, unveiling their intricate social structure and enigmatic intentions.
+Tomb Raider is an action adventure video game developed by Core Design and published by Eidos Interactive. It was originally released in 1996 for the Sega Saturn, PlayStation, and MS DOS platforms.
 
-Assuming the role of Lara Croft, an ambitious archaeology graduate driven by her theories on Yamatai, players join an expedition funded by the Nishimura family. Guided by the celebrity archaeologist Dr. James Whitman, the journey includes Conrad Roth, Lara's mentor and a former Royal Marine; Samantha "Sam" Nishimura, Lara's friend and documentarian; Joslyn Reyes, a skeptical mechanic; Jonah Maiava, a believer in the paranormal; Angus "Grim" Grimaldi, the Endurance's helmsman; and Alex Weiss, an eccentric electronics specialist. This eclectic ensemble sets the stage for an exploration that goes beyond unraveling the mysteries of Yamatai, delving into personal relationships and the complex dynamics of survival.
+Lara Croft receives a commission from Jacqueline Natla, the CEO of Natla Technologies, to unearth a mysterious artifact believed to be hidden in a Peruvian tomb. Lara discovers that the artifact is only a fragment of a more powerful object, the Scion, from the lost continent of Atlantis. She soon realizes she is not the only one searching for it, and her employer has secrets of her own.
+
+The game spans 15 levels across South America, Greece, Egypt, and Atlantis. Although the controls and graphics feel dated now, Tomb Raider was one of the first games to blend exploration, puzzles, and combat in a cinematic way, making it a classic in the series.
