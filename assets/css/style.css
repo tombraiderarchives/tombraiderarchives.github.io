@@ -654,9 +654,12 @@ a {
   position: fixed;
   bottom: 20px;
   right: 15px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  color: var(--text-color);
+  backdrop-filter: blur(4px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  background: rgba(187,134,252,0.1);
+  border: 1px solid rgba(187,134,252,0.2);
+  mix-blend-mode: normal;
+  color: var(--highlight-color);
   border-radius: 100%;
   width: 64px;
   height: 64px;
@@ -664,7 +667,6 @@ a {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 8px var(--box-shadow-color);
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -679,7 +681,70 @@ a {
 
 .back-to-top i {
   font-size: 1.5rem;
+  mix-blend-mode: difference;  
 }
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 24px;
+  margin-top: 12px;
+}
+
+.levels-grid .entry {
+  display: grid;
+  grid-template-columns: 100px auto;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.levels-grid .entry span:first-child {
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.section-collapsible {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 3px solid var(--cat-bg-color);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: 4px;  
+}
+
+.section-collapsible h2 {
+  margin: 0;
+}
+
+.section-icon {
+  font-size: 1.9rem;
+  transition: transform .45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-content {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    max-height .55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity .40s cubic-bezier(0.22, 1, 0.36, 1),
+    transform .45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-expanded .section-content {
+  max-height: 5000px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-expanded .section-icon {
+  transform: rotate(180deg);
+}
+
+
 
 /* =====================================
    Responsive
@@ -755,4 +820,11 @@ a {
   .dropdown-content.show {
     display: flex;
   }
+  .levels-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .levels-grid .entry {
+    grid-template-columns: 100px auto;
+  }  
 }

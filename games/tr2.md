@@ -13,6 +13,44 @@ stats:
   developer: Core Design
   writer: Unknown
   setting: China, Venice, Offshore Rig, Maria Doria, Tibetan Foothills
+  
+cheats:
+  - platform_name: PC, Macintosh and iOS
+    items:
+      - name: Level Skip
+        description: Light a flare, walk forward, walk back, turn around 3 times, jump forward.
+      - name: All Weapons and Ammo
+        description: Light a flare, walk forward, walk back, turn around 3 times, backflip.
+      - name: Exploding Lara
+        description: Perform the above cheats without a flare in hand.
+
+  - platform_name: PlayStation Cheats
+    items:
+      - name: Level Skip NTSC
+        description: Hold walk, sidestep left, right, left, step back, step forward, release walk, turn 3 times, jump forward and roll.
+      - name: Level Skip PAL
+        description: Light a flare, hold walk, step forward, step back, release walk, turn 3 times, jump forward.
+      - name: Level Skip Alternate
+        description: Hold walk, step left, right, left, forward, back, release walk, turn 3 times, jump forward and roll.
+      - name: All Weapons and Ammo NTSC
+        description: Hold walk, sidestep left, right, left, step back, step forward, release walk, turn 3 times, backflip and roll.
+      - name: All Weapons and Ammo PAL
+        description: Light a flare, hold walk, step forward, step back, release walk, turn 3 times, backflip.
+      - name: All Weapons Alternate
+        description: Hold walk, step left, right, left, back, forward, turn 3 times, backflip and roll.
+      - name: Infinite Flares
+        description: Enable All Weapons, draw pistols, press L2.
+      - name: Exploding Lara
+        description: Hold walk, step forward, step back, turn 3 times, backflip.
+
+  - platform_name: Sega Saturn Cheats
+    items:
+      - name: Level Skip
+        description: Pause, open passport, Z, Y, Z, Y, X, X, X, Start.
+      - name: All Weapons
+        description: Open inventory, X, Y, X, Y, Z, Z, Z, Z, Y, Z, Y, X, X, X, Start.
+
+  
 
 videos:
   - url: https://www.youtube.com/embed/RtIuNTR1a9E

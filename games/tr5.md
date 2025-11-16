@@ -13,6 +13,55 @@ stats:
   developer: Core Design
   writer: Unknown
   setting: Rome, Russia, Ireland, New York
+  
+cheats:
+  - platform_name: PC and Macintosh
+    items:
+      - name: Unlimited Small Medipacks
+        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
+      - name: Unlimited Large Medipacks
+        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
+      - name: Chapter Select Rome
+        description: From Main Menu type F I L T H Y 1.
+      - name: Chapter Select Russia
+        description: From Main Menu type F I L T H Y 2.
+      - name: Chapter Select Ireland
+        description: From Main Menu type F I L T H Y 3.
+      - name: Chapter Select New York
+        description: From Main Menu type F I L T H Y 4.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold B I T S, quit to Main Menu.
+
+  - platform_name: PlayStation Cheats
+    items:
+      - name: All Items
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down.
+      - name: Weapons and Unlimited Supplies
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Up.
+      - name: Chapter Select Rome
+        description: From Main Menu hold L1 Up and press X.
+      - name: Chapter Select Russia
+        description: From Main Menu hold L1 Up and press X.
+      - name: Chapter Select Ireland
+        description: From Main Menu hold L2 Up and press X.
+      - name: Chapter Select New York
+        description: From Main Menu hold R1 Up and press X.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down Circle, press Triangle.
+
+  - platform_name: Dreamcast Cheats
+    items:
+      - name: Chapter Select Rome
+        description: From Main Menu hold L R and press Up.
+      - name: Chapter Select Russia
+        description: From Main Menu hold L R and press Down.
+      - name: Chapter Select Ireland
+        description: From Main Menu hold L R and press Left.
+      - name: Chapter Select New York
+        description: From Main Menu hold L R and press Right.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold Y until Secrets Found shows 36, quit to Main Menu.
+  
 
 videos:
   - url: https://www.youtube.com/embed/21DSUhxADCs

@@ -13,6 +13,28 @@ stats:
   developer: Core Design
   writer: Unknown
   setting: Antarctica, India, London, Nevada, South Pacific
+  
+cheats:
+  - platform_name: PC and Macintosh
+    items:
+      - name: Level Skip
+        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, jump forward.
+      - name: All Weapons and Ammo
+        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, backflip.
+
+  - platform_name: PlayStation Cheats
+    items:
+      - name: Level Skip
+        description: Press L2, R2, L2, L2, R2, L2, R2, L2, R2, L2, L2, L2, L2, R2, L2, R2, R2, R2, R2, L2.
+      - name: All Weapons and Ammo
+        description: Press L2, R2, R2, L2, L2, L2, L2, R2, L2, R2, L2, R2, L2, R2, L2, L2, R2, L2, L2, R2.
+      - name: All Items and Secrets
+        description: Press L2, L2, L2, L2, L2, R2, L2, L2, L2, R2, L2, R2, L2, L2, R2, L2, L2, R2, L2, L2.
+      - name: Full Health
+        description: Press R2, R2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, R2, L2, L2, L2, L2, L2.
+      - name: Racetrack Key
+        description: In Lara's Home Press R2, L2, L2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, L2, L2, R2, L2, L2.
+  
 
 videos:
   - url: https://www.youtube.com/embed/3yLY0nlnMi0

@@ -13,6 +13,41 @@ stats:
   developer: Core Design
   writer: Unknown
   setting: Egypt, Cambodia
+  
+cheats:
+  - platform_name: PC and Macintosh
+    items:
+      - name: Level Skip
+        description: Face North, open inventory, highlight Load Game, hold H E L P, release, close inventory.
+      - name: All Weapons and Unlimited Supplies
+        description: Face North, open inventory, highlight Small Medipack, hold G U N S, release, close inventory.
+      - name: All Items
+        description: Face North, open inventory, highlight Large Medipack, hold B I T S, release, close inventory.
+      - name: Unlimited Small Medipacks
+        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
+      - name: Unlimited Large Medipacks
+        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
+
+  - platform_name: PlayStation Cheats
+    items:
+      - name: Level Skip
+        description: Face North, open inventory, highlight Load Game, hold L1 L2 R1 R2 Up, release, press Select.
+      - name: All Weapons and Unlimited Supplies
+        description: Face North, open inventory, highlight Small Medipack, hold L1 L2 R1 R2 Up, release, press Select.
+      - name: All Items
+        description: Face North, open inventory, highlight Large Medipack, hold L1 L2 R1 R2 Down, release, press Select.
+
+  - platform_name: Dreamcast Cheats
+    items:
+      - name: Level Skip
+        description: Face North, open inventory, highlight Load Game, hold L R Y, release, close inventory.
+      - name: All Weapons and Unlimited Supplies
+        description: Face North, open inventory, highlight Small Medipack, press L Up X Up R Y.
+      - name: All Weapons Alternate
+        description: Face North, open inventory, highlight Small Medipack, hold L R Y, release, close inventory.
+      - name: Unlimited Ammo
+        description: Face North, open inventory, highlight Small Medipack, press L R Up, Right Up Start Start.
+  
 
 videos:
   - url: https://www.youtube.com/embed/ksSmkFmX2Fk

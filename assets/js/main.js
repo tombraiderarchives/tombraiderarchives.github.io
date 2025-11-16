@@ -22,7 +22,7 @@ window.addEventListener("scroll", () => {
   }
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
 
-  if (currentScroll > 300) {
+  if (currentScroll > 400) {
     backToTopButton.classList.add("show");
   } else {
     backToTopButton.classList.remove("show");
