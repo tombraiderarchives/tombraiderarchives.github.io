@@ -2,12 +2,9 @@
 layout: default
 ---
 
-{% assign base_folder = "images/" | append: page.image_folder %}
-
 <nav class="sub-nav">
   <button class="dropdown-btn">Page sections</button>
   <div class="dropdown-content">
-
     <a href="#info">Info</a>
 
     {% if page.cheats %}
@@ -22,42 +19,16 @@ layout: default
       <a href="#actors">Cast</a>
     {% endif %}
 
-    {% assign ss_folder = base_folder | append: "/screenshots/" %}
-    {% assign ss_all = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
-    {% assign ss_thumbs = ss_all | where_exp: "file", "file.path contains 'screenshots/thumbs/'" %}
-    {% assign ss_files = ss_all | minus: ss_thumbs %}
-    {% if ss_files.size > 0 %}
+    {% if page.image_folder %}
       <a href="#screenshots">Screenshots</a>
-    {% endif %}
-
-    {% assign renders_folder = base_folder | append: "/renders/" %}
-    {% assign renders_all = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
-    {% assign renders_thumbs = renders_all | where_exp: "file", "file.path contains 'renders/thumbs/'" %}
-    {% assign render_files = renders_all | minus: renders_thumbs %}
-    {% if render_files.size > 0 %}
       <a href="#renders">Renders</a>
-    {% endif %}
-
-    {% assign hq_folder = base_folder | append: "/hq/" %}
-    {% assign hq_all = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
-    {% assign hq_thumbs = hq_all | where_exp: "file", "file.path contains 'hq/thumbs/'" %}
-    {% assign hq_files = hq_all | minus: hq_thumbs %}
-    {% if hq_files.size > 0 %}
       <a href="#hq">High Quality</a>
-    {% endif %}
-
-    {% assign art_folder = base_folder | append: "/artwork/" %}
-    {% assign art_all = site.static_files | where_exp: "file", "file.path contains art_folder" %}
-    {% assign art_thumbs = art_all | where_exp: "file", "file.path contains 'artwork/thumbs/'" %}
-    {% assign artwork_files = art_all | minus: art_thumbs %}
-    {% if artwork_files.size > 0 %}
       <a href="#artwork">Artwork</a>
     {% endif %}
 
     {% if page.videos %}
       <a href="#videos">Videos</a>
     {% endif %}
-
   </div>
 </nav>
 
@@ -220,77 +191,86 @@ layout: default
 
 {% if page.image_folder %}
 
-{% assign ss_folder = base_folder | append: "/screenshots/" %}
-{% assign ss_all = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
-{% assign ss_thumbs = ss_all | where_exp: "file", "file.path contains 'screenshots/thumbs/'" %}
-{% assign screenshot_files = ss_all | minus: ss_thumbs %}
+{%- assign ss_folder = "/images/" | append: page.image_folder | append: "/screenshots/" -%}
+{%- assign renders_folder = "/images/" | append: page.image_folder | append: "/renders/" -%}
+{%- assign hq_folder = "/images/" | append: page.image_folder | append: "/hq/" -%}
+{%- assign art_folder = "/images/" | append: page.image_folder | append: "/artwork/" -%}
 
-{% if screenshot_files.size > 0 %}
+{%- comment -%}
+Screenshots gallery
+{%- endcomment -%}
+{%- assign screenshot_files = site.static_files | where_exp: "file", "file.path contains ss_folder" -%}
+{% if screenshot_files and screenshot_files.size > 0 %}
 <section id="screenshots" class="gallery">
   <div class="section-header"><h2>Screenshots</h2></div>
   <div class="flex-grid">
     {% for image in screenshot_files %}
-      {% assign thumb_path = image.path | replace: "/screenshots/", "/screenshots/thumbs/" %}
-      <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
-        <img src="{{ thumb_path | relative_url }}" alt="Screenshot {{ forloop.index }}" loading="lazy">
-      </a>
+      {% unless image.path contains "/thumbs/" %}
+        {% assign thumb_path = image.path | replace: "/screenshots/", "/screenshots/thumbs/" %}
+        <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
+          <img src="{{ thumb_path | relative_url }}" alt="Screenshot {{ forloop.index }}" loading="lazy">
+        </a>
+      {% endunless %}
     {% endfor %}
   </div>
 </section>
 {% endif %}
 
-{% assign renders_folder = base_folder | append: "/renders/" %}
-{% assign renders_all = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
-{% assign renders_thumbs = renders_all | where_exp: "file", "file.path contains 'renders/thumbs/'" %}
-{% assign render_files = renders_all | minus: renders_thumbs %}
-
-{% if render_files.size > 0 %}
+{%- comment -%}
+Renders gallery
+{%- endcomment -%}
+{%- assign render_files = site.static_files | where_exp: "file", "file.path contains renders_folder" -%}
+{% if render_files and render_files.size > 0 %}
 <section id="renders" class="gallery">
   <div class="section-header"><h2>Renders</h2></div>
   <div class="flex-grid">
     {% for image in render_files %}
-      {% assign thumb_path = image.path | replace: "/renders/", "/renders/thumbs/" %}
-      <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
-        <img src="{{ thumb_path | relative_url }}" alt="Render {{ forloop.index }}" loading="lazy">
-      </a>
+      {% unless image.path contains "/thumbs/" %}
+        {% assign thumb_path = image.path | replace: "/renders/", "/renders/thumbs/" %}
+        <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
+          <img src="{{ thumb_path | relative_url }}" alt="Render {{ forloop.index }}" loading="lazy">
+        </a>
+      {% endunless %}
     {% endfor %}
   </div>
 </section>
 {% endif %}
 
-{% assign hq_folder = base_folder | append: "/hq/" %}
-{% assign hq_all = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
-{% assign hq_thumbs = hq_all | where_exp: "file", "file.path contains 'hq/thumbs/'" %}
-{% assign hq_files = hq_all | minus: hq_thumbs %}
-
-{% if hq_files.size > 0 %}
+{%- comment -%}
+High quality gallery
+{%- endcomment -%}
+{%- assign hq_files = site.static_files | where_exp: "file", "file.path contains hq_folder" -%}
+{% if hq_files and hq_files.size > 0 %}
 <section id="hq" class="gallery">
   <div class="section-header"><h2>High Quality Images</h2></div>
   <div class="masonry-grid">
     {% for image in hq_files %}
-      {% assign thumb_path = image.path | replace: "/hq/", "/hq/thumbs/" %}
-      <a href="{{ image.path | relative_url }}" class="lightbox-trigger masonry">
-        <img src="{{ thumb_path | relative_url }}" alt="HQ Image {{ forloop.index }}" loading="lazy">
-      </a>
+      {% unless image.path contains "/thumbs/" %}
+        {% assign thumb_path = image.path | replace: "/hq/", "/hq/thumbs/" %}
+        <a href="{{ image.path | relative_url }}" class="lightbox-trigger masonry">
+          <img src="{{ thumb_path | relative_url }}" alt="HQ Image {{ forloop.index }}" loading="lazy">
+        </a>
+      {% endunless %}
     {% endfor %}
   </div>
 </section>
 {% endif %}
 
-{% assign art_folder = base_folder | append: "/artwork/" %}
-{% assign art_all = site.static_files | where_exp: "file", "file.path contains art_folder" %}
-{% assign art_thumbs = art_all | where_exp: "file", "file.path contains 'artwork/thumbs/'" %}
-{% assign artwork_files = art_all | minus: art_thumbs %}
-
-{% if artwork_files.size > 0 %}
+{%- comment -%}
+Artwork gallery
+{%- endcomment -%}
+{%- assign artwork_files = site.static_files | where_exp: "file", "file.path contains art_folder" -%}
+{% if artwork_files and artwork_files.size > 0 %}
 <section id="artwork" class="gallery">
   <div class="section-header"><h2>Artwork</h2></div>
   <div class="masonry-grid">
     {% for image in artwork_files %}
-      {% assign thumb_path = image.path | replace: "/artwork/", "/artwork/thumbs/" %}
-      <a href="{{ image.path | relative_url }}" class="lightbox-trigger masonry">
-        <img src="{{ thumb_path | relative_url }}" alt="Artwork {{ forloop.index }}" loading="lazy">
-      </a>
+      {% unless image.path contains "/thumbs/" %}
+        {% assign thumb_path = image.path | replace: "/artwork/", "/artwork/thumbs/" %}
+        <a href="{{ image.path | relative_url }}" class="lightbox-trigger masonry">
+          <img src="{{ thumb_path | relative_url }}" alt="Artwork {{ forloop.index }}" loading="lazy">
+        </a>
+      {% endunless %}
     {% endfor %}
   </div>
 </section>
