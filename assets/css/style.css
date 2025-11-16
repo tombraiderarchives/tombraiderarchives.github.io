@@ -38,8 +38,8 @@
   --spacing-lg: 20px;
   --spacing-xl: 30px;
   --content-width: 100%;
-  --touch-size: 56px; /* choose 44, 48, 56, or 64 */
-  
+  --touch-size: 56px;
+  --small-font: 0.9rem;
   font-size: 16px;
 }
 
@@ -71,8 +71,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb-bg-color)
-    var(--scrollbar-track-bg-color);
+  scrollbar-color: var(--scrollbar-thumb-bg-color) var(--scrollbar-track-bg-color);
   box-sizing: border-box;
 }
 
@@ -167,7 +166,7 @@ a {
   width: 300px;
   padding: 4px var(--spacing-md);
   overflow-y: auto;
-  font-size: 0.9rem;
+  font-size: var(--small-font);
   transition: left 0.25s ease, top 0.25s ease;
 }
 
@@ -209,34 +208,56 @@ a {
   margin-top: 6px;
 }
 
-.menu-item > a {
-min-height: var(--touch-size);
-display: flex;
-align-items: center;
-
-
+/* Universal nav base */
+.menu-item > a,
+.submenu-item > a,
+.sub-links a,
+.dropdown-content a {
+  min-height: var(--touch-size);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   gap: 10px;
+  padding: 12px;
+  border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--text-color);
   background-color: var(--cat-bg-color);
-  padding: 12px 12px;
-  border-radius: var(--radius-lg);
   box-shadow: 0 4px 8px var(--box-shadow-color);
-  transition: background-color 0.2s ease, color 0.2s ease,
-    transform 0.1s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  font-size: var(--small-font);  
 }
 
-.menu-item > a i {
-  font-size: 1.3rem;
-  color: var(--accent-color);
-}
-
-.menu-item > a:hover {
+/* Universal hover */
+.menu-item > a:hover,
+.submenu-item > a:hover,
+.sub-links a:hover,
+.dropdown-content a:hover {
   background-color: var(--hover-bg-color);
   color: var(--hover-text-color);
   transform: scale(1.02);
 }
 
+/* Icons inside nav */
+.menu-item > a i,
+.submenu-item > a i,
+.sub-links a i {
+  font-size: 1.3rem;
+  color: var(--accent-color);
+}
+
+/* Layer specific backgrounds */
+.submenu-item > a {
+  background-color: var(--submenu-bg-color);
+  font-weight: 500;
+}
+
+.sub-links a {
+  background-color: var(--sublink-bg-color);
+  font-size: 0.88rem;
+}
+
+/* Submenu open states */
 .submenu {
   max-height: 0;
   overflow: hidden;
@@ -244,73 +265,22 @@ align-items: center;
 }
 
 .submenu.open {
-	max-height: 1000px;
-	overflow: visible;
-}
-
-.submenu-item > a {
-	min-height: var(--touch-size);
-  display: block;
-  text-decoration: none;
-  color: var(--text-color);
-  background-color: var(--submenu-bg-color);
-  padding: 10px 12px;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 8px var(--box-shadow-color);
-  font-weight: 500;
-  position: relative;
-  display: flex;
-align-items: center;
-
-
-}
-
-.submenu-item > a i {
-  margin-right: 6px;
-}
-
-.submenu-item > a:hover {
-  background-color: var(--hover-bg-color);
-  color: var(--hover-text-color);
-  transform: scale(1.02);  
+  max-height: 1000px;
+  overflow: visible;
 }
 
 .sub-links {
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height 0.25s ease;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
 }
 
 .sub-links.open {
-	max-height: 600px;
-	overflow: visible;
+  max-height: 600px;
+  overflow: visible;
 }
 
-.sub-links a {
-	min-height: var(--touch-size);
-	
-display: flex;
-align-items: center;
-
-  text-decoration: none;
-  color: var(--text-color);
-  background-color: var(--sublink-bg-color);
-  padding: 9px 12px;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 8px var(--box-shadow-color);
-  font-size: 0.88rem;
-}
-
-.sub-links a i {
-  margin-right: 6px;
-}
-
-.sub-links a:hover {
-  background-color: var(--hover-bg-color);
-  color: var(--hover-text-color);
-  transform: scale(1.02);  
-}
-
+/* Era backgrounds */
 .classic-era {
   background-image: url("/images/menu/classic_menu.png");
   background-position: right center;
@@ -340,12 +310,9 @@ align-items: center;
 }
 
 /* =====================================
-   Sub nav (desktop pills)
+   Sub nav desktop
 ====================================== */
-
 @media (min-width: 901px) {
-
-  /* remove the big bar */
   .sub-nav {
     background-color: transparent;
     box-shadow: none;
@@ -353,7 +320,6 @@ align-items: center;
     margin-bottom: var(--spacing-sm);
   }
 
-  /* container behaves like a row of pills */
   .dropdown-content {
     display: flex;
     flex-wrap: wrap;
@@ -362,34 +328,15 @@ align-items: center;
     background: none;
   }
 
-  /* the pills themselves */
   .dropdown-content a {
-	      min-height: var(--touch-size);
-display: flex;
-align-items: center;
-justify-content: center;
-
+    justify-content: center;
     background-color: var(--header-bg-color);
-    padding: 8px 14px;
-    border-radius: var(--radius-lg);
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--text-color);
-    transition: background-color 0.2s ease, color 0.2s ease;
-    box-shadow: 0 2px 4px var(--box-shadow-color);
   }
 
-  .dropdown-content a:hover {
-    background-color: var(--hover-bg-color);
-    color: var(--highlight-color);
-  }
-
-  /* hide button on desktop */
   .dropdown-btn {
     display: none;
   }
 }
-
 
 /* =====================================
    Sections and components
@@ -416,18 +363,16 @@ justify-content: center;
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   box-shadow: 0 4px 8px var(--box-shadow-color);
-  align-items: flex-start; /* THIS IS THE FIX */
+  align-items: flex-start;
 }
 
 .media-info img {
-  max-width: 260px;   /* controls the width limit */
-  width: 100%;        /* scales properly */
-  height: auto;       /* keeps aspect ratio */
-  flex: 0 0 auto;     /* never stretch */
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+  flex: 0 0 auto;
   border-radius: var(--radius-lg);
 }
-
-
 
 .media-info .description {
   flex: 1 1 260px;
@@ -552,7 +497,7 @@ justify-content: center;
 .flex-grid img {
   width: 100%;
   object-fit: cover;
-  object-position: top center;  
+  object-position: top center;
   border-radius: var(--radius-lg);
   display: block;
 }
@@ -562,7 +507,7 @@ justify-content: center;
 }
 
 .masonry-grid img {
- max-height: 340px;
+  max-height: 340px;
 }
 
 .flex-grid {
@@ -696,7 +641,6 @@ justify-content: center;
   bottom: 20px;
   right: var(--spacing-md);
   backdrop-filter: blur(4px) saturate(200%);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
   background: rgba(187,134,252,0.1);
   border: 1px solid rgba(187,134,252,0.2);
   mix-blend-mode: normal;
@@ -722,7 +666,7 @@ justify-content: center;
 
 .back-to-top i {
   font-size: 1.5rem;
-  mix-blend-mode: difference;  
+  mix-blend-mode: difference;
 }
 
 .levels-grid {
@@ -736,7 +680,7 @@ justify-content: center;
   display: grid;
   grid-template-columns: 100px auto;
   gap: 8px;
-  font-size: 0.9rem;
+  font-size: var(--small-font);
 }
 
 .levels-grid .entry span:first-child {
@@ -752,7 +696,6 @@ justify-content: center;
   padding: 0;
   border-bottom: 3px solid var(--cat-bg-color);
   margin-bottom: var(--spacing-lg);
- 
 }
 
 .section-collapsible h2 {
@@ -765,7 +708,6 @@ justify-content: center;
   opacity: 1 !important;
   transform: none !important;
 }
-
 
 .section-icon {
   font-size: 1.9rem;
@@ -800,7 +742,7 @@ justify-content: center;
   :root {
     font-size: 18px;
   }
-  
+
   .header-title {
     font-size: 1.3rem;
   }
@@ -859,67 +801,52 @@ justify-content: center;
 
   .levels-grid .entry {
     grid-template-columns: 100px auto;
-  }  
-
+  }
 
   .dropdown-btn {
     display: block !important;
-	width: 100%;
-	height: var(--touch-size);
+    width: 100%;
+    height: var(--touch-size);
     background-color: var(--cat-bg-color);
     padding: 10px 12px;
     border-radius: var(--radius-lg);
-	border: 0;
+    border: 0;
     box-shadow: 0 4px 8px var(--box-shadow-color);
-	color: var(--text-color);
-	font-size: 1.05rem;
-	font-weight: 600;
-	font-family: "Alexandria", system-ui, sans-serif;
-	cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-
+    color: var(--text-color);
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: "Alexandria", system-ui, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  
-	.sub-nav {
-		    margin-bottom: var(--spacing-sm);
-	}
 
-  /* Mobile dropdown stays hidden until opened */
+  .sub-nav {
+    margin-bottom: var(--spacing-sm);
+  }
+
   .dropdown-content {
     display: none !important;
     flex-direction: column;
     gap: var(--spacing-sm);
     border-radius: var(--radius-lg);
-    margin-top: var(--spacing-sm);	
+    margin-top: var(--spacing-sm);
   }
 
-  /* Show only when button activates it */
   .dropdown-content.show {
     display: flex !important;
   }
 
-.dropdown-content a {
+  .dropdown-content a {
     background-color: var(--submenu-bg-color);
     height: var(--touch-size);
     border-radius: var(--radius-lg);
-    font-weight: 600;
     text-decoration: none;
     color: var(--text-color);
-    transition: background-color 0.2s ease, color 0.2s ease;
     box-shadow: 0 2px 4px var(--box-shadow-color);
-
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-
-  .dropdown-content a:hover {
-    background-color: var(--hover-bg-color);
-    color: var(--highlight-color);
   }
-
-
 }
