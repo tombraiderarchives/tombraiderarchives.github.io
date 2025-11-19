@@ -78,6 +78,7 @@ document.querySelectorAll(".main-navigation a").forEach((link) => {
 });
 
 /* Desktop nav submenu handling */
+/* Desktop nav submenu handling */
 document.querySelectorAll(".menu-item > a").forEach((link) => {
   link.addEventListener("click", (event) => {
     const parent = link.parentElement;
@@ -89,12 +90,16 @@ document.querySelectorAll(".menu-item > a").forEach((link) => {
     document.querySelectorAll(".submenu").forEach((other) => {
       if (other !== submenu) {
         other.classList.remove("open");
+        // also remove open from other parents
+        other.parentElement.classList.remove("open");
       }
     });
 
     submenu.classList.toggle("open");
+    parent.classList.toggle("open");  // FIXED LINE
   });
 });
+
 
 document.querySelectorAll(".submenu-item > a").forEach((link) => {
   link.addEventListener("click", (event) => {
@@ -107,12 +112,15 @@ document.querySelectorAll(".submenu-item > a").forEach((link) => {
     document.querySelectorAll(".sub-links").forEach((other) => {
       if (other !== subLinks) {
         other.classList.remove("open");
+        other.parentElement.classList.remove("open");
       }
     });
 
     subLinks.classList.toggle("open");
+    parent.classList.toggle("open");  // this is the key line
   });
 });
+
 
 /* Local sub nav on smaller screens */
 if (dropdownBtn) {
