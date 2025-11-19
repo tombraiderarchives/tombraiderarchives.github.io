@@ -1,61 +1,63 @@
 ---
 layout: default
 ---
+<div class="intro">
+	<h1>{{ page.title }}</h1>
+	<h3>"{{ page.quote }}"</h3>
+		<nav class="sub-nav">
+	  <button class="dropdown-btn">Game Hub</button>
+	  <div class="dropdown-content">
 
-<nav class="sub-nav">
-  <button class="dropdown-btn">Page sections</button>
-  <div class="dropdown-content">
+		<a href="#info">Info</a>
 
-    <a href="#info">Info</a>
+		{% if page.cheats %}
+		  <a href="#cheats">Cheats</a>
+		{% endif %}
 
-    {% if page.cheats %}
-      <a href="#cheats">Cheats</a>
-    {% endif %}
+		{% if page.achievements %}
+		  <a href="#achievements">Achievements</a>
+		{% endif %}
 
-    {% if page.achievements %}
-      <a href="#achievements">Achievements</a>
-    {% endif %}
+		{% if page.cast %}
+		  <a href="#actors">Cast</a>
+		{% endif %}
 
-    {% if page.cast %}
-      <a href="#actors">Cast</a>
-    {% endif %}
+		{% if page.image_folder %}
 
-    {% if page.image_folder %}
+		  {%- assign ss_folder = "/images/" | append: page.image_folder | append: "/screenshots/" -%}
+		  {%- assign renders_folder = "/images/" | append: page.image_folder | append: "/renders/" -%}
+		  {%- assign hq_folder = "/images/" | append: page.image_folder | append: "/hq/" -%}
+		  {%- assign art_folder = "/images/" | append: page.image_folder | append: "/artwork/" -%}
 
-      {%- assign ss_folder = "/images/" | append: page.image_folder | append: "/screenshots/" -%}
-      {%- assign renders_folder = "/images/" | append: page.image_folder | append: "/renders/" -%}
-      {%- assign hq_folder = "/images/" | append: page.image_folder | append: "/hq/" -%}
-      {%- assign art_folder = "/images/" | append: page.image_folder | append: "/artwork/" -%}
+		  {% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
+		  {% assign render_files = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
+		  {% assign hq_files = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
+		  {% assign artwork_files = site.static_files | where_exp: "file", "file.path contains art_folder" %}
 
-      {% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
-      {% assign render_files = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
-      {% assign hq_files = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
-      {% assign artwork_files = site.static_files | where_exp: "file", "file.path contains art_folder" %}
+		  {% if screenshot_files.size > 0 %}
+			<a href="#screenshots">Screenshots</a>
+		  {% endif %}
 
-      {% if screenshot_files.size > 0 %}
-        <a href="#screenshots">Screenshots</a>
-      {% endif %}
+		  {% if render_files.size > 0 %}
+			<a href="#renders">Renders</a>
+		  {% endif %}
 
-      {% if render_files.size > 0 %}
-        <a href="#renders">Renders</a>
-      {% endif %}
+		  {% if hq_files.size > 0 %}
+			<a href="#hq">High Quality</a>
+		  {% endif %}
 
-      {% if hq_files.size > 0 %}
-        <a href="#hq">High Quality</a>
-      {% endif %}
+		  {% if artwork_files.size > 0 %}
+			<a href="#artwork">Artwork</a>
+		  {% endif %}
 
-      {% if artwork_files.size > 0 %}
-        <a href="#artwork">Artwork</a>
-      {% endif %}
+		{% endif %}
 
-    {% endif %}
-
-    {% if page.videos %}
-      <a href="#videos">Videos</a>
-    {% endif %}
-  </div>
-</nav>
-
+		{% if page.videos %}
+		  <a href="#videos">Videos</a>
+		{% endif %}
+	  </div>
+	</nav>
+</div>
 
 <!-- INFO -->
 <div id="info" class="section-always-open">
@@ -64,7 +66,6 @@ layout: default
       <img src="{{ page.cover_image | relative_url }}" alt="{{ page.title }} key art" loading="lazy">
     {% endif %}
     <div class="description">
-      <h2>{{ page.title }}</h2>
       {{ content }}
     </div>
   </section>

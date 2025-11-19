@@ -23,7 +23,7 @@
   --cat-bg-color: #1b1e1a;
   --submenu-bg-color: #22251f;
   --sublink-bg-color: #2a2e27;
-  --bckground-image: url("/images/ui/noise.png");  
+  --background-image: url("/images/ui/noise.png");  
 
   /* Text */
   --text-color: #e7e7e3;
@@ -42,6 +42,7 @@
 
   /* Misc */
   --box-shadow-color: rgba(0, 0, 0, 0.25);
+  --text-shadow-color: rgba(0, 0, 0, 0.75);  
   --scrollbar-track-bg-color: #0e0f0d;
   --scrollbar-thumb-bg-color: #4fa675;
 
@@ -231,7 +232,34 @@ a {
   max-width: var(--content-width);
   margin: 0 auto;
 }
+.intro {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--spacing-lg);
+  background-image: url(/images/tr2/header.png);
+  background-repeat: no-repeat;
+  background-size: auto 250px; /* keeps proportions while filling */
+  background-position: top center; /* centers image */
+  margin-bottom: var(--spacing-xl);
+  min-height: 250px;
+text-shadow:
+  0 0 7px var(--text-shadow-color),
+  0 0 15px var(--text-shadow-color);
 
+}
+
+.intro h1 {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin: 0;
+  
+}
+
+.intro h3 {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-color);  
+}
+  
 /* =====================================
    Navigation
 ====================================== */
@@ -363,12 +391,14 @@ a {
 /* =====================================
    Sub nav desktop
 ====================================== */
+  .sub-nav {
+    margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
+  }
 @media (min-width: 901px) {
   .sub-nav {
     background-color: transparent;
     box-shadow: none;
     padding: 0;
-    margin-bottom: var(--spacing-sm);
   }
 
   .dropdown-content {
@@ -886,10 +916,6 @@ a {
     justify-content: center;
   }
 
-  .sub-nav {
-    margin-bottom: var(--spacing-sm);
-  }
-
   .dropdown-content {
     display: none !important;
     flex-direction: column;
@@ -913,4 +939,19 @@ a {
     align-items: center;
     justify-content: center;
   }
+	.intro {
+	  background-position: top right; /* centers image */
+	}
+	.intro h1 {
+  font-size: 1.75rem;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.intro h3 {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-color);  
+  font-style: italic;
+}
 }
