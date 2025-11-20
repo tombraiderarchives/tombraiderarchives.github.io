@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider 2
-cover_image: /images/tr2/cover.jpg
+cover_image: /images/tr2/cover.png
 image_folder: tr2
 quote: Pardon me, if that was just your way of trying the doors for me...
 

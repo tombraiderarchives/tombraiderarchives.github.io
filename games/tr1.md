@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider (1996)
-cover_image: /images/tr1/cover.jpg
+cover_image: /images/tr1/cover.png
 image_folder: tr1
 
 stats:

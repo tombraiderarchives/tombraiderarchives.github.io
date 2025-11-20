@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider Chronicles
-cover_image: /images/tr5/cover.jpg
+cover_image: /images/tr5/cover.png
 image_folder: tr5
 
 stats:

@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider Angel of Darkness
-cover_image: /images/tr6/cover.jpg
+cover_image: /images/tr6/cover.png
 image_folder: tr6
 
 stats:
