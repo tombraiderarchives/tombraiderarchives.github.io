@@ -6,13 +6,6 @@
   src: url("https://fonts.gstatic.com/s/alexandria/v3/UMBXrPdDqW66y0Y2usFeai3dAw.woff2")
     format("woff2");
 }
-
-@font-face {
-  font-family: "Roboto";
-  src: url("https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2")
-    format("woff2");
-}
-
 /* =====================================
    Design tokens
 ====================================== */
@@ -103,7 +96,7 @@
    Base
 ====================================== */
 body {
-  font-family: "Lexend", system-ui, sans-serif;
+  font-family: "Roboto";
   margin: 0;
   padding: 0;
   background-color: var(--background-color);
@@ -127,8 +120,8 @@ body::before {
 h1,
 h2,
 h3 {
-  font-family: "Lexend", system-ui, sans-serif;
   margin: 0 0 0.5rem 0;
+  font-family: "Lexend";
 }
 
 h1 {
@@ -232,20 +225,7 @@ a {
   max-width: var(--content-width);
   margin: 0 auto;
 }
-.intro {
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: var(--spacing-lg);
-  background-image: url(/images/tr2/header.png);
-  background-repeat: no-repeat;
-  background-size: auto 250px; /* keeps proportions while filling */
-  background-position: top center; /* centers image */
-  margin-bottom: var(--spacing-xl);
-  min-height: 250px;
-text-shadow:
-  0 0 7px var(--text-shadow-color),
-  0 0 15px var(--text-shadow-color);
 
-}
 
 .intro h1 {
   font-size: 2.5rem;
@@ -393,6 +373,7 @@ text-shadow:
 ====================================== */
   .sub-nav {
     margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
+	font-family: Roboto Mono;
   }
 @media (min-width: 901px) {
   .sub-nav {
@@ -433,6 +414,7 @@ text-shadow:
 
 .section-header h2 {
   margin: 0;
+  font-weight: 400;
 }
 
 .media-info {
@@ -440,10 +422,6 @@ text-shadow:
   flex-wrap: wrap;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
-  background-color: var(--cat-bg-color);
-  padding: var(--spacing-lg);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 8px var(--box-shadow-color);
   align-items: flex-start;
 }
 
@@ -467,13 +445,13 @@ text-shadow:
 }
 
 .card,
+.media-info,
 .achievements li,
 .cheats li,
 .video-card {
-  background-color: var(--cat-bg-color);
+  border: 3px solid var(--cat-bg-color);
   padding: var(--spacing-md);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 8px var(--box-shadow-color);
 }
 
 .card {
@@ -794,6 +772,7 @@ text-shadow:
 
 .section-collapsible h2 {
   margin: 0;
+  font-weight: 500;
 }
 
 .section-always-open .section-content,
@@ -833,6 +812,7 @@ text-shadow:
 /* =====================================
    Responsive
 ====================================== */
+  .main-navigation { font-family: "Roboto Mono"; }
 @media (max-width: 900px) {
   :root {
     font-size: 18px;
@@ -867,7 +847,14 @@ text-shadow:
   .main-navigation.fixed {
     top: 0;
   }
-
+  
+  .menu-item > a,
+.submenu-item > a,
+.sub-links a,
+.dropdown-content a {
+  min-height: calc(var(--touch-size) + 10px);
+}
+  
   .close-menu {
     display: block;
   }
@@ -909,7 +896,7 @@ text-shadow:
     color: var(--text-color);
     font-size: 1.05rem;
     font-weight: 600;
-    font-family: "Lexend", system-ui, sans-serif;
+    font-family: "Roboto Mono";
     cursor: pointer;
     display: flex;
     align-items: center;
