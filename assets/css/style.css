@@ -268,7 +268,7 @@ a {
   background-color: var(--cat-bg-color);
   box-shadow: 0 4px 8px var(--box-shadow-color);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
-  font-size: var(--small-font);  
+  font-size: var(--small-font); 
 }
 
 /* Universal hover */
@@ -278,7 +278,6 @@ a {
 .dropdown-content a:hover {
   background-color: var(--hover-bg-color);
   color: var(--hover-text-color);
-  transform: scale(1.02);
 }
 
 /* Icons inside nav */
@@ -322,23 +321,19 @@ a {
 .submenu {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.25s ease;
+  transition: max-height .45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .submenu.open {
-  max-height: 1000px;
-  overflow: visible;
 }
 
 .sub-links {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.25s ease;
+  transition: max-height .45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sub-links.open {
-  max-height: 600px;
-  overflow: visible;
 }
 
 /* Era backgrounds */

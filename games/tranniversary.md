@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider Anniversary
-cover_image: /images/tranniversary/cover.jpg
+cover_image: /images/tranniversary/cover.png
 image_folder: tranniversary
 
 stats:

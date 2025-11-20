@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider Legend
-cover_image: /images/trlegend/cover.jpg
+cover_image: /images/trlegend/cover.png
 image_folder: trlegend
 
 stats:

@@ -77,49 +77,103 @@ document.querySelectorAll(".main-navigation a").forEach((link) => {
   });
 });
 
-/* Desktop nav submenu handling */
-/* Desktop nav submenu handling */
+/* Smooth submenu for main categories */
 document.querySelectorAll(".menu-item > a").forEach((link) => {
   link.addEventListener("click", (event) => {
     const parent = link.parentElement;
-    const submenu = parent.querySelector(".submenu");
-    if (!submenu) return;
+    const panel = parent.querySelector(".submenu");
+    if (!panel) return;
 
     event.preventDefault();
 
+    // close others
     document.querySelectorAll(".submenu").forEach((other) => {
-      if (other !== submenu) {
-        other.classList.remove("open");
-        // also remove open from other parents
+      if (other !== panel) {
+        if (!other.parentElement.classList.contains("open")) return;
+        
+        other.style.maxHeight = other.scrollHeight + "px";
         other.parentElement.classList.remove("open");
+        
+        requestAnimationFrame(() => {
+          other.style.maxHeight = "0px";
+        });
       }
     });
 
-    submenu.classList.toggle("open");
-    parent.classList.toggle("open");  // FIXED LINE
+    const isOpen = parent.classList.contains("open");
+
+    if (isOpen) {
+      // closing
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      parent.classList.remove("open");
+      
+      requestAnimationFrame(() => {
+        panel.style.maxHeight = "0px";
+      });
+    } else {
+      // opening
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      parent.classList.add("open");
+
+      panel.addEventListener("transitionend", () => {
+        if (parent.classList.contains("open")) {
+          panel.style.maxHeight = "none";
+        }
+      }, { once: true });
+    }
   });
 });
 
 
+
+/* Smooth submenu for Era lists */
 document.querySelectorAll(".submenu-item > a").forEach((link) => {
   link.addEventListener("click", (event) => {
     const parent = link.parentElement;
-    const subLinks = parent.querySelector(".sub-links");
-    if (!subLinks) return;
+    const panel = parent.querySelector(".sub-links");
+    if (!panel) return;
 
     event.preventDefault();
 
+    // close others
     document.querySelectorAll(".sub-links").forEach((other) => {
-      if (other !== subLinks) {
-        other.classList.remove("open");
+      if (other !== panel) {
+        if (!other.parentElement.classList.contains("open")) return;
+        
+        other.style.maxHeight = other.scrollHeight + "px";
         other.parentElement.classList.remove("open");
+        
+        requestAnimationFrame(() => {
+          other.style.maxHeight = "0px";
+        });
       }
     });
 
-    subLinks.classList.toggle("open");
-    parent.classList.toggle("open");  // this is the key line
+    const isOpen = parent.classList.contains("open");
+
+    if (isOpen) {
+      // closing
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      parent.classList.remove("open");
+      
+      requestAnimationFrame(() => {
+        panel.style.maxHeight = "0px";
+      });
+    } else {
+      // opening
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      parent.classList.add("open");
+
+      panel.addEventListener("transitionend", () => {
+        if (parent.classList.contains("open")) {
+          panel.style.maxHeight = "none";
+        }
+      }, { once: true });
+    }
   });
 });
+
+
 
 
 /* Local sub nav on smaller screens */

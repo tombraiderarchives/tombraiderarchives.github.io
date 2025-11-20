@@ -1,7 +1,7 @@
 ---
 layout: game
 title: Tomb Raider Underworld
-cover_image: /images/trunderworld/cover.jpg
+cover_image: /images/trunderworld/cover.png
 image_folder: trunderworld
 
 stats:
