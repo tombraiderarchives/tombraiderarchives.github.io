@@ -8,18 +8,18 @@ layout: default
 	  <button class="dropdown-btn">Game Hub</button>
 	  <div class="dropdown-content">
 
-		<a href="#info">Info</a>
+		<a href="#info"><i class="ph ph-info"></i> Info</a>
 
 		{% if page.cheats %}
-		  <a href="#cheats">Cheats</a>
+		  <a href="#cheats"><i class="ph ph-key"></i> Cheats</a>
 		{% endif %}
 
 		{% if page.achievements %}
-		  <a href="#achievements">Achievements</a>
+		  <a href="#achievements"><i class="ph ph-trophy"></i> Achievements</a>
 		{% endif %}
 
 		{% if page.cast %}
-		  <a href="#actors">Cast</a>
+		  <a href="#actors"><i class="ph ph-user-star"></i> Cast</a>
 		{% endif %}
 
 		{% if page.image_folder %}
@@ -35,25 +35,25 @@ layout: default
 		  {% assign artwork_files = site.static_files | where_exp: "file", "file.path contains art_folder" %}
 
 		  {% if screenshot_files.size > 0 %}
-			<a href="#screenshots">Screenshots</a>
+			<a href="#screenshots"><i class="ph ph-camera"></i> Screenshots</a>
 		  {% endif %}
 
 		  {% if render_files.size > 0 %}
-			<a href="#renders">Renders</a>
+			<a href="#renders"><i class="ph ph-image-square"></i> Renders</a>
 		  {% endif %}
 
 		  {% if hq_files.size > 0 %}
-			<a href="#hq">High Quality</a>
+			<a href="#hq"><i class="ph ph-image"></i> High Quality</a>
 		  {% endif %}
 
 		  {% if artwork_files.size > 0 %}
-			<a href="#artwork">Artwork</a>
+			<a href="#artwork"><i class="ph ph-palette"></i> Artwork</a>
 		  {% endif %}
 
 		{% endif %}
 
 		{% if page.videos %}
-		  <a href="#videos">Videos</a>
+		  <a href="#videos"><i class="ph ph-film-strip"></i> Videos</a>
 		{% endif %}
 	  </div>
 	</nav>

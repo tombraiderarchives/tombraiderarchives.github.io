@@ -271,6 +271,7 @@ a {
   font-size: var(--small-font); 
 }
 
+
 /* Universal hover */
 .menu-item > a:hover,
 .submenu-item > a:hover,
@@ -283,11 +284,13 @@ a {
 /* Icons inside nav */
 .menu-item > a i,
 .submenu-item > a i,
+.dropdown-content i,
 .sub-links a i {
   font-size: 1.3rem;
   color: var(--accent-color);
   transition: color 0.25s ease;  
 }
+
 
 .menu-item.open > a i
  {
