@@ -5,8 +5,6 @@
 </head>
 
 <body>
-  {% include header.html %}
-
   <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <rect y="3" width="20" height="1.75" rx="1" fill="currentColor"/>
@@ -15,12 +13,7 @@
     </svg>
   </button>
 
-    <main class="content">
-      <div class="container">
-        {{ content }}
-      </div>
-    </main>
-  </div>
+  <div class="overlay" id="overlay"></div>
 
   <aside class="sidenav" id="sidenav">
     <div class="sidenav-header">
