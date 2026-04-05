@@ -3,7 +3,9 @@
 <head>
   {% include head.html %}
 </head>
+
 <body>
+  {% include header.html %}
 
   <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -13,7 +15,12 @@
     </svg>
   </button>
 
-  <div class="overlay" id="overlay"></div>
+    <main class="content">
+      <div class="container">
+        {{ content }}
+      </div>
+    </main>
+  </div>
 
   <aside class="sidenav" id="sidenav">
     <div class="sidenav-header">
