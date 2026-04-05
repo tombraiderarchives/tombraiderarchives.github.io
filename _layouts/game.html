@@ -1,0 +1,299 @@
+---
+layout: default
+---
+
+{% if page.sections %}
+<nav class="sub-nav">
+  <button class="dropdown-btn">Page sections</button>
+  <div class="dropdown-content">
+    {% for section in page.sections %}
+      <a href="#{{ section.id }}">{{ section.name }}</a>
+    {% endfor %}
+  </div>
+</nav>
+{% endif %}
+
+<section id="info" class="media-info">
+  {% if page.cover_image %}
+    <img
+      src="{{ page.cover_image | relative_url }}"
+      alt="{{ page.title }} key art"
+      loading="lazy"
+    >
+  {% endif %}
+  <div class="description">
+    <h2>{{ page.title }}</h2>
+    {{ content }}
+  </div>
+</section>
+
+{% if page.stats %}
+<section class="grid">
+
+{% if page.stats.release_date %}
+  <article class="card">
+    <i class="bx bx-calendar bx-icon"></i>
+    <div>
+      <h3>Release date</h3>
+      <p>{{ page.stats.release_date }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.genre %}
+  <article class="card">
+    <i class="bx bx-category bx-icon"></i>
+    <div>
+      <h3>Genre</h3>
+      <p>{{ page.stats.genre }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.rating %}
+  <article class="card">
+    <i class="bx bx-star bx-icon"></i>
+    <div>
+      <h3>Rating</h3>
+      <p>{{ page.stats.rating }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.length %}
+  <article class="card">
+    <i class="bx bx-time bx-icon"></i>
+    <div>
+      <h3>Main story length</h3>
+      <p>{{ page.stats.length }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.platforms %}
+  <article class="card">
+    <i class="bx bx-joystick bx-icon"></i>
+    <div>
+      <h3>Platforms</h3>
+      <p>{{ page.stats.platforms }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.developer %}
+  <article class="card">
+    <i class="bx bx-code-block bx-icon"></i>
+    <div>
+      <h3>Developer</h3>
+      <p>{{ page.stats.developer }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.writer %}
+  <article class="card">
+    <i class="bx bx-pencil bx-icon"></i>
+    <div>
+      <h3>Lead writer</h3>
+      <p>{{ page.stats.writer }}</p>
+    </div>
+  </article>
+{% endif %}
+
+{% if page.stats.setting %}
+  <article class="card">
+    <i class="bx bx-tv bx-icon"></i>
+    <div>
+      <h3>Setting</h3>
+      <p>{{ page.stats.setting }}</p>
+    </div>
+  </article>
+{% endif %}
+
+</section>
+{% endif %}
+
+{% if page.cheats %}
+<section id="cheats" class="cheats">
+  <div class="section-header">
+    <h2>Cheats and extras</h2>
+  </div>
+  <div class="grid">
+    {% for platform in page.cheats %}
+    <div class="platform">
+      <h3>{{ platform.platform_name }}</h3>
+      <ul>
+        {% for cheat in platform.items %}
+        <li>
+          <div class="description">
+            <strong>{{ cheat.name }}</strong>
+            <p>{{ cheat.description }}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if page.achievements %}
+<section id="achievements" class="achievements">
+  <div class="section-header">
+    <h2>Achievements</h2>
+  </div>
+  <div class="grid">
+    {% for platform in page.achievements %}
+    <div class="platform">
+      <h3>{{ platform.platform_name }}</h3>
+      <ul>
+        {% for achievement in platform.items %}
+        <li>
+          {% if achievement.trophy %}
+            <i class="bx bx-trophy trophy-icon trophy-{{ achievement.trophy }}"></i>
+          {% elsif achievement.gamerscore %}
+            <div class="gamerscore">
+              <span>{{ achievement.gamerscore }}</span>
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="#008000" stroke-width="2" fill="none"></circle>
+                <text x="7" y="16" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">G</text>
+              </svg>
+            </div>
+          {% endif %}
+          <div class="description">
+            <strong>{{ achievement.name }}</strong>
+            <p>{{ achievement.description }}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if page.image_folder %}
+
+<!-- Screenshots -->
+{% assign target_screenshots = '/images/' | append: page.image_folder | append: '/screenshots/' %}
+{% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains target_screenshots" %}
+{% if screenshot_files.size > 0 %}
+<section id="screenshots" class="gallery">
+  <div class="section-header"><h2>Screenshots</h2></div>
+  <div class="flex-grid">
+    {% for image in screenshot_files %}
+      {% assign thumb_path = image.path | replace: '/screenshots/', '/screenshots/thumbs/' %}
+      <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
+        <img src="{{ thumb_path | relative_url }}" alt="Screenshot {{ forloop.index }}" loading="lazy">
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Renders -->
+{% assign target_renders = '/images/' | append: page.image_folder | append: '/renders/' %}
+{% assign render_files = site.static_files | where_exp: "file", "file.path contains target_renders" %}
+{% if render_files.size > 0 %}
+<section id="renders" class="gallery">
+  <div class="section-header"><h2>Renders</h2></div>
+  <div class="flex-grid">
+    {% for image in render_files %}
+      {% assign thumb_path = image.path | replace: '/renders/', '/renders/thumbs/' %}
+      <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
+        <img src="{{ thumb_path | relative_url }}" alt="Render {{ forloop.index }}" loading="lazy">
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- High Quality -->
+{% assign target_hq = '/images/' | append: page.image_folder | append: '/hq/' %}
+{% assign hq_files = site.static_files | where_exp: "file", "file.path contains target_hq" %}
+{% if hq_files.size > 0 %}
+<section id="hq" class="gallery">
+  <div class="section-header"><h2>High Quality Images</h2></div>
+  <div class="masonry-grid">
+    {% for image in hq_files %}
+      {% assign thumb_path = image.path | replace: '/hq/', '/hq/thumbs/' %}
+      <a href="{{ image.path | relative_url }}" class="lightbox-trigger masonry">
+        <img src="{{ thumb_path | relative_url }}" alt="HQ Image {{ forloop.index }}" loading="lazy">
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Artwork -->
+{% assign target_artwork = '/images/' | append: page.image_folder | append: '/artwork/' %}
+{% assign artwork_files = site.static_files | where_exp: "file", "file.path contains target_artwork" %}
+{% if artwork_files.size > 0 %}
+<section id="artwork" class="gallery">
+  <div class="section-header"><h2>Artwork</h2></div>
+  <div class="masonry-grid">
+    {% for image in artwork_files %}
+      {% assign thumb_path = image.path | replace: '/artwork/', '/artwork/thumbs/' %}
+      <a href="{{ image.path | relative_url }}" class="lightbox-trigger masonry">
+        <img src="{{ thumb_path | relative_url }}" alt="Artwork {{ forloop.index }}" loading="lazy">
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endif %}
+
+{% if page.videos %}
+<section id="videos" class="gallery">
+  <div class="section-header"><h2>Video gallery</h2></div>
+  <div class="video-grid">
+    {% for video in page.videos %}
+      <article class="video-card">
+        <div class="video-wrapper">
+          <iframe src="{{ video.url }}" loading="lazy" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+          <p>{{ video.title }}</p>
+          <p>{{ video.description }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<div id="lightbox-masonry" class="lightbox">
+  <span class="close"><i class="bx bx-x"></i></span>
+  <div class="lightbox-content">
+    <img id="lightbox-img-masonry" src="" alt="">
+  </div>
+  <span class="nav-arrow left"><i class="bx bxs-chevron-left"></i></span>
+  <span class="nav-arrow right"><i class="bx bxs-chevron-right"></i></span>
+</div>
+
+<div id="lightbox-flex" class="lightbox">
+  <span class="close"><i class="bx bx-x"></i></span>
+  <div class="lightbox-content">
+    <img id="lightbox-img-flex" src="" alt="">
+  </div>
+  <span class="nav-arrow left"><i class="bx bxs-chevron-left"></i></span>
+  <span class="nav-arrow right"><i class="bx bxs-chevron-right"></i></span>
+</div>
+
+{% if page.cast %}
+<section id="actors" class="actors">
+  <div class="section-header"><h2>Main cast</h2></div>
+  <div class="actors-grid">
+    {% for actor in page.cast %}
+      <article class="actor-card">
+        <img src="{{ actor.image | relative_url }}" alt="{{ actor.name }}" loading="lazy">
+        <h3>{{ actor.name }}</h3>
+        <p>{{ actor.role }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
