@@ -1,15 +1,13 @@
 title: Tomb Raider Archives
-description: A comprehensive archive of Tomb Raider games, movies, and media
+description: A comprehensive archive of the Tomb Raider franchise — games, movies, and series.
 url: "https://tombraiderarchives.github.io"
 baseurl: ""
-
-
-# Build settings
 markdown: kramdown
 permalink: pretty
 
-# Exclude files from processing
 exclude:
-  - README.md
   - Gemfile
   - Gemfile.lock
+  - README.md
+  - node_modules
+  - package.json

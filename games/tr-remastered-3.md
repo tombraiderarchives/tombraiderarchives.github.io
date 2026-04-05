@@ -1,25 +1,25 @@
 ---
 layout: default
-title: Tomb Raider III (1998)
+title: Tomb Raider III Remastered (2024)
 ---
 
 <div class="hero">
-  <h1>Tomb Raider III: Adventures of Lara Croft</h1>
-  <p class="subtitle">Core Design · 1998 · Classic Era</p>
+  <h1>Tomb Raider III Remastered</h1>
+  <p class="subtitle">Aspyr Media · 2024 · Remastered Era</p>
 </div>
 
 <div class="info-grid">
-  <div class="info-cell"><div class="label">Released</div><div class="value">November 21, 1998</div></div>
-  <div class="info-cell"><div class="label">Developer</div><div class="value">Core Design</div></div>
-  <div class="info-cell"><div class="label">Platforms</div><div class="value">PlayStation, Windows</div></div>
-  <div class="info-cell"><div class="label">Genre</div><div class="value">Action adventure</div></div>
+  <div class="info-cell"><div class="label">Released</div><div class="value">February 14, 2024</div></div>
+  <div class="info-cell"><div class="label">Developer</div><div class="value">Aspyr Media</div></div>
+  <div class="info-cell"><div class="label">Platforms</div><div class="value">PS4, PS5, Xbox One, Xbox Series, Switch, PC</div></div>
   <div class="info-cell"><div class="label">Setting</div><div class="value">India, South Pacific, Nevada, London, Antarctica</div></div>
+  <div class="info-cell"><div class="label">Original</div><div class="value">1998 (Core Design)</div></div>
   <div class="info-cell"><div class="label">Length</div><div class="value">~14 hours</div></div>
 </div>
 
-The most expansive classic-era entry, Tomb Raider III features a semi-open structure where players can tackle the South Pacific, Nevada, and London levels in any order after the India opening. The game centres on four meteorite fragments with extraordinary properties scattered across the globe.
+The remaster of the most expansive classic-era entry, faithfully rebuilt with updated visuals. All 20 levels, the non-linear hub structure, every secret and every cheat are preserved intact.
 
-Known for its steep difficulty, TR3 is notorious among fans for its punishing traps and complex level design. It remains a favourite for those who enjoyed the challenge, and its Antarctica finale is one of the series' most memorable sequences.
+Tomb Raider III is notorious for its difficulty and beloved for it. The remaster makes it approachable with optional modern controls while keeping the challenge exactly as the original intended.
 
 <div class="section-title">Cheats</div>
 

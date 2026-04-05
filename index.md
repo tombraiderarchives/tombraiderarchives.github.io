@@ -3,53 +3,42 @@ layout: default
 title: Home
 ---
 
-<section class="media-info">
-  <img
-    src="https://placehold.co/500x750"
-    alt="Tomb Raider Archives"
-    loading="lazy"
-  >
-  <div class="description">
-    <h2>Welcome to Tomb Raider Archives</h2>
-    <p>
-      Your comprehensive resource for everything Tomb Raider. Explore detailed information about games, movies, and TV series from across the entire franchise.
-    </p>
-    <p>
-      Use the navigation menu on the left to browse through different eras of Tomb Raider games, or explore the media section for movies and series information.
-    </p>
-  </div>
-</section>
+<div class="hero">
+  <h1>Tomb Raider Archives</h1>
+  <p class="subtitle">A comprehensive archive of the Tomb Raider franchise — games, movies, and series.</p>
+</div>
 
-<section class="grid">
-  <article class="card">
-    <i class="bx bx-joystick bx-icon"></i>
-    <div>
-      <h3>Games</h3>
-      <p>Explore games from the Classic, Legend, and Survivor eras, plus the Remastered trilogy.</p>
-    </div>
-  </article>
+<p>Welcome. Use the navigation on the left to explore the full franchise — from the original 1996 classic through to the 2024 remaster collection, the Angelina Jolie films, the Alicia Vikander reboot, and the Netflix animated series.</p>
 
-  <article class="card">
-    <i class="bx bx-movie-play bx-icon"></i>
-    <div>
-      <h3>Movies & Series</h3>
-      <p>Discover the Tomb Raider films and animated series that bring Lara to life.</p>
-    </div>
-  </article>
-
-  <article class="card">
-    <i class="bx bx-book bx-icon"></i>
-    <div>
-      <h3>Lore Library</h3>
-      <p>Deep dive into the stories, characters, and mythology of the Tomb Raider universe.</p>
-    </div>
-  </article>
-
-  <article class="card">
-    <i class="bx bx-news bx-icon"></i>
-    <div>
-      <h3>News Archive</h3>
-      <p>Stay updated with the latest announcements and community updates.</p>
-    </div>
-  </article>
-</section>
+<div class="card-grid">
+  <a href="/games/tr1/" class="card">
+    <div class="card-label">Classic Era</div>
+    <h3>Tomb Raider (1996)</h3>
+    <p>The game that started it all. Peru, Greece, Egypt, Atlantis.</p>
+  </a>
+  <a href="/games/tr2013/" class="card">
+    <div class="card-label">Survivor Era</div>
+    <h3>Tomb Raider (2013)</h3>
+    <p>Lara's origin story reimagined on the island of Yamatai.</p>
+  </a>
+  <a href="/games/tr-remastered-1/" class="card">
+    <div class="card-label">Remastered</div>
+    <h3>TR I–III Remastered</h3>
+    <p>The classic trilogy rebuilt for modern platforms in 2024.</p>
+  </a>
+  <a href="/movies/lara-croft-tomb-raider/" class="card">
+    <div class="card-label">Film</div>
+    <h3>Lara Croft: Tomb Raider</h3>
+    <p>Angelina Jolie as Lara in the 2001 blockbuster.</p>
+  </a>
+  <a href="/movies/tomb-raider-2018/" class="card">
+    <div class="card-label">Film</div>
+    <h3>Tomb Raider (2018)</h3>
+    <p>Alicia Vikander's origin story reboot.</p>
+  </a>
+  <a href="/series/legend-of-lara-croft/" class="card">
+    <div class="card-label">Netflix Series</div>
+    <h3>Legend of Lara Croft</h3>
+    <p>Powerhouse Animation's 2024 animated series.</p>
+  </a>
+</div>
