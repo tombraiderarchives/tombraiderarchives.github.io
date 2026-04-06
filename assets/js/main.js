@@ -61,20 +61,15 @@ if (lightbox) {
     currentGallery = thumbs;
     currentIndex   = index;
     showImage(index);
-    lightbox.hidden = false;
-    // Trigger transition
-    requestAnimationFrame(() => lightbox.style.opacity = '1');
+    lightbox.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     lbClose.focus();
   }
 
   function closeLightbox() {
-    lightbox.style.opacity = '0';
-    setTimeout(() => {
-      lightbox.hidden = true;
-      document.body.style.overflow = '';
-      lastFocused?.focus();
-    }, 200);
+    lightbox.classList.remove('is-open');
+    document.body.style.overflow = '';
+    lastFocused?.focus();
   }
 
   function showImage(index) {
