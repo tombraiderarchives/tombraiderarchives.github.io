@@ -2,23 +2,261 @@
 layout: default
 ---
 
-<h1>{{ page.title }}</h1>
+{% comment %}Detect gallery subfolders from static_files{% endcomment %}
+{% if page.image_folder %}
+  {% assign _base  = "/images/" | append: page.image_folder %}
+  {% assign _ss_p  = _base | append: "/screenshots/thumbs/" %}
+  {% assign _art_p = _base | append: "/artwork/thumbs/" %}
+  {% assign _hq_p  = _base | append: "/hq/thumbs/" %}
+  {% assign _rnd_p = _base | append: "/renders/thumbs/" %}
+  {% assign _ld_p  = _base | append: "/loadscreens/thumbs/" %}
 
-{% if page.cover_image %}
-<img src="{{ page.cover_image }}" alt="{{ page.title }} cover" style="max-width:200px;">
+  {% assign _ss  = site.static_files | where_exp: "f", "f.path contains _ss_p"  %}
+  {% assign _art = site.static_files | where_exp: "f", "f.path contains _art_p" %}
+  {% assign _hq  = site.static_files | where_exp: "f", "f.path contains _hq_p"  %}
+  {% assign _rnd = site.static_files | where_exp: "f", "f.path contains _rnd_p" %}
+  {% assign _ld  = site.static_files | where_exp: "f", "f.path contains _ld_p"  %}
+
+  {% assign _has_gallery = false %}
+  {% if _ss.size > 0 or _art.size > 0 or _hq.size > 0 or _rnd.size > 0 or _ld.size > 0 %}
+    {% assign _has_gallery = true %}
+  {% endif %}
 {% endif %}
 
-{% if page.description %}
-<p>{{ page.description }}</p>
-{% endif %}
+<article class="game-page">
 
-{% if page.stats %}
-<h2>Info</h2>
-<table>
-  {% for stat in page.stats %}
-  <tr><th>{{ stat[0] | replace: '_', ' ' | capitalize }}</th><td>{{ stat[1] }}</td></tr>
-  {% endfor %}
-</table>
-{% endif %}
+  <!-- Header -->
+  <header class="game-header">
+    {% if page.cover_image %}
+    <div class="game-cover">
+      <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" width="200" height="280" loading="eager">
+    </div>
+    {% endif %}
+    <div class="game-header-text">
+      {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
+      <h1>{{ page.title }}</h1>
+      {% if page.description %}<p class="game-desc">{{ page.description }}</p>{% endif %}
 
-{{ content }}
+      <!-- Quick jump nav -->
+      <nav class="jump-nav" aria-label="Jump to section">
+        {% if page.stats %}<a href="#stats">Info</a>{% endif %}
+        {% if page.cheats %}<a href="#cheats">Cheats</a>{% endif %}
+        {% if page.achievements or page.trophies %}<a href="#achievements">Achievements</a>{% endif %}
+        {% if _has_gallery %}<a href="#gallery">Gallery</a>{% endif %}
+        {% if page.videos %}<a href="#videos">Videos</a>{% endif %}
+        {% if page.cast %}<a href="#cast">Cast</a>{% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  {% if page.stats %}
+  <section id="stats" class="game-section">
+    <h2 class="section-title">Game Info</h2>
+    <dl class="stats-grid">
+      {% if page.stats.release_date %}<div class="stat"><dt>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
+      {% if page.stats.developer   %}<div class="stat"><dt>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
+      {% if page.stats.genre       %}<div class="stat"><dt>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
+      {% if page.stats.platforms   %}<div class="stat"><dt>Platforms</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
+      {% if page.stats.length      %}<div class="stat"><dt>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
+      {% if page.stats.rating      %}<div class="stat"><dt>Rating</dt><dd>{{ page.stats.rating }}</dd></div>{% endif %}
+      {% if page.stats.setting     %}<div class="stat"><dt>Setting</dt><dd>{{ page.stats.setting }}</dd></div>{% endif %}
+      {% if page.stats.writer      %}<div class="stat"><dt>Writer</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
+      {% if page.stats.director    %}<div class="stat"><dt>Director</dt><dd>{{ page.stats.director }}</dd></div>{% endif %}
+      {% if page.stats.runtime     %}<div class="stat"><dt>Runtime</dt><dd>{{ page.stats.runtime }}</dd></div>{% endif %}
+      {% if page.stats.budget      %}<div class="stat"><dt>Budget</dt><dd>{{ page.stats.budget }}</dd></div>{% endif %}
+      {% if page.stats.box_office  %}<div class="stat"><dt>Box Office</dt><dd>{{ page.stats.box_office }}</dd></div>{% endif %}
+    </dl>
+  </section>
+  {% endif %}
+
+  <!-- Body content -->
+  {% if content != "" %}
+  <section class="game-section game-body">
+    {{ content }}
+  </section>
+  {% endif %}
+
+  <!-- Cheats -->
+  {% if page.cheats %}
+  <section id="cheats" class="game-section">
+    <h2 class="section-title">Cheats &amp; Codes</h2>
+    {% for group in page.cheats %}
+    <h3 class="subsection-title">{{ group.platform_name }}</h3>
+    <ul class="cheat-list">
+      {% for item in group.items %}
+      <li class="cheat-item">
+        <span class="cheat-name">{{ item.name }}</span>
+        {% if item.code %}<code class="cheat-code">{{ item.code }}</code>{% endif %}
+        {% if item.steps %}
+        <ol class="cheat-steps">
+          {% for step in item.steps %}<li>{{ step }}</li>{% endfor %}
+        </ol>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <!-- Achievements -->
+  {% if page.achievements or page.trophies %}
+  <section id="achievements" class="game-section">
+    <h2 class="section-title">Achievements{% if page.trophies %} &amp; Trophies{% endif %}</h2>
+    {% assign ach_list = page.achievements | default: page.trophies %}
+    <ul class="ach-list">
+      {% for ach in ach_list %}
+      <li class="ach-item">
+        <div class="ach-name">{{ ach.name }}</div>
+        {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+        {% if ach.gamerscore  %}<span class="ach-score">{{ ach.gamerscore }}G</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <!-- Gallery -->
+  {% if _has_gallery %}
+  <section id="gallery" class="game-section">
+    <h2 class="section-title">Gallery</h2>
+
+    {% if _ss.size > 0 %}
+    <h3 class="subsection-title">Screenshots</h3>
+    <div class="gallery-grid" data-gallery="screenshots">
+      {% assign _ss_sorted = _ss | sort: "name" %}
+      {% for thumb in _ss_sorted %}
+        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Screenshot {{ forloop.index }}">
+          <img src="{{ thumb.path }}" alt="Screenshot {{ forloop.index }}" loading="lazy" decoding="async">
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if _art.size > 0 %}
+    <h3 class="subsection-title">Artwork</h3>
+    <div class="gallery-grid" data-gallery="artwork">
+      {% assign _art_sorted = _art | sort: "name" %}
+      {% for thumb in _art_sorted %}
+        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Artwork {{ forloop.index }}">
+          <img src="{{ thumb.path }}" alt="Artwork {{ forloop.index }}" loading="lazy" decoding="async">
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if _hq.size > 0 %}
+    <h3 class="subsection-title">High Quality</h3>
+    <div class="gallery-grid" data-gallery="hq">
+      {% assign _hq_sorted = _hq | sort: "name" %}
+      {% for thumb in _hq_sorted %}
+        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="HQ image {{ forloop.index }}">
+          <img src="{{ thumb.path }}" alt="HQ image {{ forloop.index }}" loading="lazy" decoding="async">
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if _rnd.size > 0 %}
+    <h3 class="subsection-title">Renders</h3>
+    <div class="gallery-grid" data-gallery="renders">
+      {% assign _rnd_sorted = _rnd | sort: "name" %}
+      {% for thumb in _rnd_sorted %}
+        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Render {{ forloop.index }}">
+          <img src="{{ thumb.path }}" alt="Render {{ forloop.index }}" loading="lazy" decoding="async">
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if _ld.size > 0 %}
+    <h3 class="subsection-title">Load Screens</h3>
+    <div class="gallery-grid" data-gallery="loadscreens">
+      {% assign _ld_sorted = _ld | sort: "name" %}
+      {% for thumb in _ld_sorted %}
+        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Load screen {{ forloop.index }}">
+          <img src="{{ thumb.path }}" alt="Load screen {{ forloop.index }}" loading="lazy" decoding="async">
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </section>
+  {% endif %}
+
+  <!-- Videos -->
+  {% if page.videos %}
+  <section id="videos" class="game-section">
+    <h2 class="section-title">Videos</h2>
+    <div class="video-grid">
+      {% for video in page.videos %}
+      <div class="video-item">
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/{{ video.youtube_id }}"
+            title="{{ video.title }}"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        {% if video.title %}<p class="video-title">{{ video.title }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Cast -->
+  {% if page.cast %}
+  <section id="cast" class="game-section">
+    <h2 class="section-title">Cast</h2>
+    <div class="cast-grid">
+      {% for member in page.cast %}
+      <div class="cast-card">
+        {% if member.image %}
+        <div class="cast-img-wrap">
+          <img src="{{ member.image }}" alt="{{ member.name }}" loading="lazy" decoding="async">
+        </div>
+        {% endif %}
+        <div class="cast-info">
+          <div class="cast-name">{{ member.name }}</div>
+          {% if member.role %}<div class="cast-role">{{ member.role }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+</article>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+  <button class="lb-close" id="lbClose" aria-label="Close">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <line x1="2" y1="2" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="18" y1="2" x2="2"  y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <button class="lb-prev" id="lbPrev" aria-label="Previous image">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="lb-img-wrap">
+    <img id="lbImg" src="" alt="" decoding="async">
+  </div>
+  <button class="lb-next" id="lbNext" aria-label="Next image">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <p class="lb-counter" id="lbCounter" aria-live="polite"></p>
+</div>
