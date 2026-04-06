@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+</head>
+<body>
+  <nav class="sidenav">
+    <a href="{{ site.baseurl }}/" class="site-title">Tomb Raider Archives</a>
+    <ul>
+      <li><a href="{{ site.baseurl }}/">Home</a></li>
+      <li class="group-label">Games</li>
+      <li><a href="{{ site.baseurl }}/games/tr1/">Tomb Raider (1996)</a></li>
+      <li><a href="{{ site.baseurl }}/games/tr2/">Tomb Raider II</a></li>
+      <li><a href="{{ site.baseurl }}/games/tr3/">Tomb Raider III</a></li>
+      <li><a href="{{ site.baseurl }}/games/tr4/">The Last Revelation</a></li>
+      <li><a href="{{ site.baseurl }}/games/tr5/">Chronicles</a></li>
+      <li><a href="{{ site.baseurl }}/games/tr6/">Angel of Darkness</a></li>
+      <li><a href="{{ site.baseurl }}/games/trlegend/">Legend</a></li>
+      <li><a href="{{ site.baseurl }}/games/tranniversary/">Anniversary</a></li>
+      <li><a href="{{ site.baseurl }}/games/trunderworld/">Underworld</a></li>
+      <li><a href="{{ site.baseurl }}/games/tr2013/">Tomb Raider (2013)</a></li>
+      <li><a href="{{ site.baseurl }}/games/rottr/">Rise of the Tomb Raider</a></li>
+      <li><a href="{{ site.baseurl }}/games/sottr/">Shadow of the Tomb Raider</a></li>
+      <li class="group-label">Movies</li>
+      <li><a href="{{ site.baseurl }}/media/lara-croft-tomb-raider/">Lara Croft: Tomb Raider</a></li>
+      <li><a href="{{ site.baseurl }}/media/cradle-of-life/">The Cradle of Life</a></li>
+      <li><a href="{{ site.baseurl }}/media/tomb-raider-2018/">Tomb Raider (2018)</a></li>
+      <li class="group-label">Series</li>
+      <li><a href="{{ site.baseurl }}/media/revisioned/">ReVisioned</a></li>
+      <li><a href="{{ site.baseurl }}/media/legend-of-lara-croft/">Legend of Lara Croft</a></li>
+    </ul>
+  </nav>
+  <main class="content">
+    {{ content }}
+  </main>
+</body>
+</html>
