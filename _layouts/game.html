@@ -237,6 +237,7 @@ layout: default
 
 </article>
 
+{% if _has_gallery %}
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
   <button class="lb-close" id="lbClose" aria-label="Close">
@@ -260,3 +261,4 @@ layout: default
   </button>
   <p class="lb-counter" id="lbCounter" aria-live="polite"></p>
 </div>
+{% endif %}
