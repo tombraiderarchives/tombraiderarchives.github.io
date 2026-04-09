@@ -95,29 +95,6 @@
   });
 }());
 
-/* ── Game page tabs ─────────────────────────────────────────────────────── */
-(function () {
-  var btns   = document.querySelectorAll('.tab-btn');
-  var panels = document.querySelectorAll('.tab-panel');
-  if (!btns.length) return;
-
-  function activate(btn) {
-    btns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
-    panels.forEach(function (p) { p.classList.remove('is-active'); });
-    btn.classList.add('is-active');
-    btn.setAttribute('aria-selected', 'true');
-    var panel = document.getElementById('tab-' + btn.dataset.tab);
-    if (panel) panel.classList.add('is-active');
-  }
-
-  // Activate first tab by default
-  activate(btns[0]);
-
-  btns.forEach(function (btn) {
-    btn.addEventListener('click', function () { activate(btn); });
-  });
-}());
-
 /* ── Lightbox ───────────────────────────────────────────────────────────── */
 (function () {
   var lightbox  = document.getElementById('lightbox');
