@@ -18,7 +18,7 @@ title: Home
       {% if post.excerpt_text %}
       <p class="news-item-excerpt">{{ post.excerpt_text }}</p>
       {% endif %}
-      <a href="{{ post.url }}" class="news-read-more">Read more &rarr;</a>
+      <a href="{{ post.url }}" class="news-read-more">Read more <span aria-hidden="true">&rarr;</span></a>
     </article>
     {% endfor %}
   </div>
