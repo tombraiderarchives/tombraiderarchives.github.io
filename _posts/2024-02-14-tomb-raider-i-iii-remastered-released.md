@@ -2,6 +2,7 @@
 layout: post
 title: Tomb Raider I–III Remastered Released Today
 date: 2024-02-14
+tags: [Remastered, Aspyr Media, Release]
 excerpt_text: Aspyr Media's remaster of the original trilogy is available now on PC, PlayStation, Xbox, and Nintendo Switch.
 ---
 

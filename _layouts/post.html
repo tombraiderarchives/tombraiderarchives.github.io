@@ -3,11 +3,32 @@ layout: default
 ---
 
 <article class="post-page">
+  <a href="{{ site.baseurl }}/news/" class="back-btn" aria-label="Back to news">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All news
+  </a>
+
+  {% if page.header_image %}
+  <img src="{{ page.header_image }}" alt="{{ page.title }}" class="post-header-img" loading="eager">
+  {% endif %}
+
   <header class="post-header">
-    <p class="post-meta">{{ page.date | date: "%B %d, %Y" }}</p>
+    <div class="post-header-meta">
+      <p class="post-meta">{{ page.date | date: "%B %d, %Y" }}</p>
+      {% if page.tags and page.tags.size > 0 %}
+      <ul class="tag-list" aria-label="Tags">
+        {% for tag in page.tags %}
+        <li><span class="tag">{{ tag }}</span></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
     <h1>{{ page.title }}</h1>
     {% if page.excerpt_text %}<p class="post-lead">{{ page.excerpt_text }}</p>{% endif %}
   </header>
+
   <div class="post-body">
     {{ content }}
   </div>

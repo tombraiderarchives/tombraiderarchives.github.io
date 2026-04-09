@@ -1,5 +1,16 @@
 'use strict';
 
+/* ── Clickable news cards ───────────────────────────────────────────────── */
+(function () {
+  document.querySelectorAll('.news-item[data-href]').forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      // Don't intercept clicks on child links (let them navigate normally)
+      if (e.target.closest('a')) return;
+      window.location.href = card.getAttribute('data-href');
+    });
+  });
+}());
+
 /* ── Sidebar (mobile) ───────────────────────────────────────────────────── */
 (function () {
   const sidebar   = document.getElementById('sidebar');

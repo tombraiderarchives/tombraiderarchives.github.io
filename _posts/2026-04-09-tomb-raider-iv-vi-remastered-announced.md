@@ -2,6 +2,7 @@
 layout: post
 title: Tomb Raider IV–VI Remastered Announced
 date: 2026-04-09
+tags: [Remastered, Aspyr Media, Classic Era]
 excerpt_text: Aspyr Media confirms a second remastered collection covering The Last Revelation, Chronicles, and The Angel of Darkness.
 ---
 

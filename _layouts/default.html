@@ -22,8 +22,7 @@
     <aside class="sidebar" id="sidebar" aria-label="Site navigation">
       <div class="sidebar-header">
         <a href="{{ site.baseurl }}/" class="logo" aria-label="{{ site.title }} — home">
-          <span class="logo-main">Tomb Raider</span>
-          <span class="logo-sub">Archives</span>
+          <span class="logo-text">Tomb Raider <em>Archives</em></span>
         </a>
         <button class="nav-close" id="navClose" aria-label="Close navigation">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -41,6 +40,14 @@
                class="nav-link{% if page.url == '/' %} active{% endif %}"
                {% if page.url == '/' %}aria-current="page"{% endif %}>
               Home
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ site.baseurl }}/news/"
+               class="nav-link{% if page.url contains '/news/' or page.url contains '/_posts/' %} active{% endif %}"
+               {% if page.url contains '/news/' %}aria-current="page"{% endif %}>
+              News
             </a>
           </li>
 
@@ -183,6 +190,25 @@
             </div>
           </li>
 
+          <!-- ── LORE ── -->
+          <li class="nav-section-item">
+            <button class="nav-group-toggle nav-group-toggle--section"
+                    aria-expanded="{% if page.url contains '/lore/' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-section-lore">
+              <i class="ph ph-book-open nav-icon" aria-hidden="true"></i>
+              <span>Lore</span>
+              <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-sub" id="nav-section-lore">
+              <ul role="list" class="nav-leaf-list">
+                <li><a href="{{ site.baseurl }}/lore/timeline/"   class="nav-link nav-link--leaf{% if page.url contains '/lore/timeline/'   %} active{% endif %}"{% if page.url contains '/lore/timeline/'   %} aria-current="page"{% endif %}>Timeline</a></li>
+                <li><a href="{{ site.baseurl }}/lore/characters/" class="nav-link nav-link--leaf{% if page.url contains '/lore/characters/' %} active{% endif %}"{% if page.url contains '/lore/characters/' %} aria-current="page"{% endif %}>Characters</a></li>
+              </ul>
+            </div>
+          </li>
+
         </ul>
       </nav>
     </aside>
@@ -191,6 +217,44 @@
       <main id="main">
         {{ content }}
       </main>
+
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <a href="{{ site.baseurl }}/" class="footer-logo">Tomb Raider <em>Archives</em></a>
+            <p class="footer-tagline">A fan-made archive dedicated to preserving the history of the Tomb Raider franchise. Not affiliated with Crystal Dynamics, Aspyr Media, or Square Enix.</p>
+          </div>
+          <nav class="footer-nav" aria-label="Footer navigation">
+            <div class="footer-col">
+              <h3>Games</h3>
+              <ul>
+                <li><a href="{{ site.baseurl }}/games/tomb-raider-remastered-01/">Remastered</a></li>
+                <li><a href="{{ site.baseurl }}/games/tr1/">Classic Era</a></li>
+                <li><a href="{{ site.baseurl }}/games/trlegend/">Legend Era</a></li>
+                <li><a href="{{ site.baseurl }}/games/tr2013/">Survivor Era</a></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h3>Media</h3>
+              <ul>
+                <li><a href="{{ site.baseurl }}/media/lara-croft-tomb-raider/">Movies</a></li>
+                <li><a href="{{ site.baseurl }}/media/legend-of-lara-croft/">Series</a></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h3>Explore</h3>
+              <ul>
+                <li><a href="{{ site.baseurl }}/news/">News</a></li>
+                <li><a href="{{ site.baseurl }}/lore/timeline/">Timeline</a></li>
+                <li><a href="{{ site.baseurl }}/lore/characters/">Characters</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">© {{ 'now' | date: "%Y" }} Tomb Raider Archives &nbsp;·&nbsp; Fan site, not affiliated with Crystal Dynamics, Aspyr Media, or Square Enix.</p>
+        </div>
+      </footer>
     </div>
 
   </div><!-- /.layout -->
