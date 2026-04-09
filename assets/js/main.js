@@ -38,10 +38,9 @@
 
 /* ── Sidebar (mobile) ───────────────────────────────────────────────────── */
 (function () {
-  const sidebar   = document.getElementById('sidebar');
-  const overlay   = document.getElementById('overlay');
-  const navToggle = document.getElementById('navToggle');
-  const navClose  = document.getElementById('navClose');
+  var sidebar   = document.getElementById('sidebar');
+  var overlay   = document.getElementById('overlay');
+  var navToggle = document.getElementById('navToggle');
   if (!sidebar || !overlay || !navToggle) return;
 
   function openSidebar() {
@@ -49,7 +48,8 @@
     overlay.classList.add('is-visible');
     navToggle.setAttribute('aria-expanded', 'true');
     navToggle.setAttribute('aria-label', 'Close navigation');
-    navClose.focus();
+    var first = sidebar.querySelector('a, button');
+    if (first) first.focus();
   }
 
   function closeSidebar() {
@@ -57,6 +57,7 @@
     overlay.classList.remove('is-visible');
     navToggle.setAttribute('aria-expanded', 'false');
     navToggle.setAttribute('aria-label', 'Open navigation');
+    navToggle.focus();
   }
 
   navToggle.addEventListener('click', function () {
@@ -64,13 +65,11 @@
     else openSidebar();
   });
 
-  navClose.addEventListener('click', closeSidebar);
   overlay.addEventListener('click', closeSidebar);
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
       closeSidebar();
-      navToggle.focus();
     }
   });
 }());
