@@ -903,7 +903,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .back-btn:hover { color: var(--accent); text-decoration: none; }
 .back-btn svg { flex-shrink: 0; }
 
-/* ── Post header image / placeholder ────────────────────────────────────── */
+/* ── Post header image ───────────────────────────────────────────────────── */
 .post-header-img {
   width: 100%;
   max-height: 360px;
@@ -912,19 +912,59 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   margin-bottom: 2rem;
   display: block;
 }
-.post-header-placeholder {
-  width: 100%;
-  border-radius: var(--radius);
-  margin-bottom: 2rem;
-  overflow: hidden;
-  background: var(--bg-2);
+
+/* ── Image placeholder slots ─────────────────────────────────────────────── */
+/* Used wherever a real image is missing — game covers, post headers, cast   */
+.img-ph {
+  background: var(--bg-3);
   border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  color: var(--text-dim);
+  user-select: none;
 }
-.post-header-placeholder svg {
-  display: block;
+.img-ph-icon { opacity: .3; flex-shrink: 0; }
+.img-ph-label {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .35;
+}
+
+/* Cover art — 2:3 portrait */
+.img-ph--cover { width: 130px; height: 185px; flex-shrink: 0; }
+
+/* Article/post hero banner — wide */
+.img-ph--hero {
   width: 100%;
-  height: 140px;
+  height: 220px;
+  margin-bottom: 2rem;
 }
+
+/* News card slot — matches .news-item-img height */
+.news-item-placeholder {
+  display: block;
+  width: calc(100% + 3rem);
+  height: 160px;
+  margin: -1.25rem -1.5rem 1.25rem;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  overflow: hidden;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+}
+.news-item-placeholder svg { opacity: .25; }
+
+/* Portrait — cast members */
+.img-ph--portrait { width: 100%; aspect-ratio: 2/3; border-radius: var(--radius); }
 .post-header-meta {
   display: flex;
   align-items: center;
@@ -1007,22 +1047,14 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 
 /* Full-width news list variant */
 .news-list--full { gap: 1.25rem; }
-.news-item-img,
-.news-item-placeholder {
+.news-item-img {
   display: block;
   width: calc(100% + 3rem);
+  max-height: 240px;
+  object-fit: cover;
   margin: -1.25rem -1.5rem 1.25rem;
   border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
   overflow: hidden;
-}
-.news-item-img {
-  max-height: 240px;
-  object-fit: cover;
-}
-.news-item-placeholder svg {
-  display: block;
-  width: 100%;
-  height: 80px;
 }
 
 /* ── Timeline ─────────────────────────────────────────────────────────────── */

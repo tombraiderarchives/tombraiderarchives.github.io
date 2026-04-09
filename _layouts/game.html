@@ -32,11 +32,19 @@ layout: default
     <div class="game-hero-backdrop" style="background-image:url('{{ _backdrop }}')"></div>
     {% endif %}
     <header class="game-header">
-      {% if page.cover_image %}
       <div class="game-cover">
-        <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" width="200" height="280" loading="eager">
+        {% if page.cover_image %}
+        <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" loading="eager">
+        {% else %}
+        <div class="img-ph img-ph--cover" aria-hidden="true">
+          <svg class="img-ph-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <span class="img-ph-label">No cover</span>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
       <div class="game-header-text">
         {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
         <h1>{{ page.title }}</h1>
@@ -246,11 +254,18 @@ layout: default
     <div class="cast-grid">
       {% for member in page.cast %}
       <div class="cast-card">
-        {% if member.image %}
         <div class="cast-img-wrap">
+          {% if member.image %}
           <img src="{{ member.image }}" alt="{{ member.name }}" loading="lazy" decoding="async">
+          {% else %}
+          <div class="img-ph img-ph--portrait" aria-hidden="true">
+            <svg class="img-ph-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M20 21a8 8 0 1 0-16 0"/>
+            </svg>
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
         <div class="cast-info">
           <div class="cast-name">{{ member.name }}</div>
           {% if member.role %}<div class="cast-role">{{ member.role }}</div>{% endif %}
