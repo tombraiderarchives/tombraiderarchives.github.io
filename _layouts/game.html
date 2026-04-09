@@ -144,6 +144,16 @@ layout: default
       </article>
       {% endif %}
 
+      {% if page.stats.publisher %}
+      <article class="card">
+        <i class="ph ph-buildings"></i>
+        <div>
+          <h3>Publisher</h3>
+          <p>{{ page.stats.publisher }}</p>
+        </div>
+      </article>
+      {% endif %}
+
       {% if page.stats.writer %}
       <article class="card">
         <i class="ph ph-pencil"></i>

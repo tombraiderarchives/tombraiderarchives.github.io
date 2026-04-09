@@ -11,7 +11,8 @@ stats:
   length: Unknown
   platforms: Windows, PlayStation 4, Xbox One, PlayStation 5, Xbox Series X/S
   developer: Crystal Dynamics, Eidos-Montreal
-  writer: Unknown
+  publisher: Microsoft Studios (Xbox) · Square Enix (PC/PS4)
+  writer: Rhianna Pratchett
   setting: Siberia, Syria, Kitezh, Soviet Installation
 
 videos:

@@ -9,7 +9,8 @@ stats:
   genre: Action adventure
   rating: Mature
   platforms: Windows, PlayStation 4, Xbox One
-  developer: Crystal Dynamics, Eidos Montreal
+  developer: Eidos Montréal / Crystal Dynamics
+  publisher: Square Enix
   writer: Unknown
   setting: Central and South American jungles, Paititi, Mayan and Incan ruins
 

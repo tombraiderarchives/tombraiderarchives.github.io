@@ -11,6 +11,7 @@ stats:
   length: Unknown
   platforms: Windows, Playstation 2, Mac OS X
   developer: Core Design
+  publisher: Eidos Interactive
   writer: Unknown
   setting: Paris, Prague
   

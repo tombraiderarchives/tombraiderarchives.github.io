@@ -11,6 +11,7 @@ stats:
   length: Unknown
   platforms: Windows, Playstation 2, Xbox, Xbox 360, PSP, Wii, Playstation 3
   developer: Crystal Dynamics
+  publisher: Eidos Interactive
   writer: Unknown
   setting: Peru, Greece, Egypt, Lost Island
 

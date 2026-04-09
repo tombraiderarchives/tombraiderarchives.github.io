@@ -11,6 +11,7 @@ stats:
   length: Unknown
   platforms: Windows, Playstation, Mac OS, Dreamcast
   developer: Core Design
+  publisher: Eidos Interactive
   writer: Unknown
   setting: Rome, Russia, Ireland, New York
   

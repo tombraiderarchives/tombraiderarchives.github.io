@@ -12,6 +12,7 @@ stats:
   length: Unknown
   platforms: Windows, Playstation, Mac OS, iOS, Android
   developer: Core Design
+  publisher: Eidos Interactive
   writer: Unknown
   setting: China, Venice, Offshore Rig, Maria Doria, Tibetan Foothills
   

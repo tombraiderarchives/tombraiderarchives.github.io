@@ -11,6 +11,7 @@ stats:
   length: Unknown
   platforms: Windows, Playstation, Mac OS
   developer: Core Design
+  publisher: Eidos Interactive
   writer: Unknown
   setting: Antarctica, India, London, Nevada, South Pacific
   

@@ -11,6 +11,7 @@ stats:
   length: Roughly 15 hours
   platforms: Windows, PlayStation 4, PlayStation 5, Xbox One, Xbox Series X/S, Nintendo Switch
   developer: Aspyr Media
+  publisher: Aspyr Media
   writer: ---
   setting: Peru, Greece, Egypt, Atlantis
 

@@ -11,6 +11,7 @@ stats:
   length: Roughly 14 hours
   platforms: Windows, PlayStation 4, PlayStation 5, Xbox One, Xbox Series X/S, Nintendo Switch
   developer: Aspyr Media
+  publisher: Aspyr Media
   writer: ---
   setting: India, South Pacific, Nevada, London, Antarctica
 

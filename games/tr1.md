@@ -11,6 +11,7 @@ stats:
   length: Roughly 15 hours
   platforms: Sega Saturn, PlayStation, MS-DOS
   developer: Core Design
+  publisher: Eidos Interactive
   writer: ---
   setting: Peru, Greece, Egypt, Atlantis
 
