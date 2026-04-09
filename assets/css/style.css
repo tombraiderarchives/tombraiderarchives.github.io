@@ -323,6 +323,70 @@ a:hover { text-decoration: underline; }
 .home-hero h1 { margin-bottom: .5rem; }
 .home-hero p  { color: var(--text-muted); font-size: 1rem; }
 
+/* ── News ────────────────────────────────────────────────────────────────── */
+.news-section { margin-top: 2.5rem; }
+.news-section > h2 { margin-bottom: 1.25rem; }
+
+.news-list { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.news-item {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  transition: border-color .15s;
+}
+.news-item:hover { border-color: var(--border-2); }
+
+.news-item-meta {
+  font-size: .72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .4rem;
+}
+
+.news-item-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: .5rem;
+}
+.news-item-title a { color: var(--text); text-decoration: none; }
+.news-item-title a:hover { color: var(--accent); }
+
+.news-item-excerpt {
+  font-size: .875rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: .75rem;
+}
+
+.news-read-more {
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+}
+.news-read-more:hover { text-decoration: underline; }
+
+/* ── Post page ───────────────────────────────────────────────────────────── */
+.post-page { max-width: 720px; }
+.post-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.post-meta {
+  font-size: .75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .5rem;
+}
+.post-lead { font-size: 1.05rem; color: var(--text-muted); margin-top: .75rem; line-height: 1.6; }
+.post-body { line-height: 1.75; }
+.post-body p  { margin-bottom: 1rem; }
+.post-body h2 { margin: 1.75rem 0 .75rem; }
+.post-body h3 { margin: 1.5rem 0 .5rem; }
+.post-body ul, .post-body ol { padding-left: 1.4rem; margin-bottom: 1rem; }
+.post-body li { margin-bottom: .35rem; }
+
 /* ── Section titles ─────────────────────────────────────────────────────── */
 .section-title {
   font-size: .75rem;
@@ -559,15 +623,16 @@ a:hover { text-decoration: underline; }
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.60);
+  border: 1px solid rgba(255,255,255,.25);
   border-radius: 50%;
   color: #fff;
   cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,.6);
   transition: background .15s, transform .15s;
   -webkit-tap-highlight-color: transparent;
 }
-.lb-btn:hover { background: rgba(255,255,255,.18); }
+.lb-btn:hover { background: rgba(0,0,0,.80); }
 .lb-close { top: 1rem; right: 1rem; }
 .lb-prev  { left: .75rem;  top: 50%; transform: translateY(-50%); }
 .lb-next  { right: .75rem; top: 50%; transform: translateY(-50%); }
@@ -691,16 +756,17 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 
 /* ── Mobile ─────────────────────────────────────────────────────────────── */
 @media (max-width: 860px) {
-  /* Sidebar becomes a fixed drawer */
+  /* Sidebar becomes a full-screen drawer sliding from the right */
   .sidebar {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
+    left: auto;
+    width: 100%;
     height: 100%;
     z-index: 200;
-    transform: translateX(-100%);
+    transform: translateX(100%);
     transition: transform .3s var(--ease);
-    /* Ensure sidebar is above overlay */
   }
   .sidebar.is-open { transform: translateX(0); }
 
@@ -717,9 +783,19 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
     padding: 1.5rem 1.25rem 7rem; /* bottom padding clears the FAB */
   }
 
+  /* Larger touch targets in nav */
+  .nav-link {
+    min-height: 48px;
+    font-size: .875rem;
+    padding: .65rem 1rem;
+  }
+  .nav-group-toggle {
+    min-height: 48px;
+  }
+
   .game-header { flex-direction: column; gap: 1.25rem; }
   .game-cover img { width: 110px; }
-  .jump-nav a { height: 36px; font-size: .78rem; } /* larger touch targets */
+  .jump-nav a { height: 40px; font-size: .8rem; }
 }
 
 @media (max-width: 480px) {
