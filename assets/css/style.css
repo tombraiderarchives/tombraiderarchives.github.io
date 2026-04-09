@@ -604,6 +604,70 @@ a:hover { text-decoration: underline; }
 .cast-name { font-size: .82rem; font-weight: 600; }
 .cast-role { font-size: .75rem; color: var(--text-muted); margin-top: .1rem; }
 
+/* ── Page-authored game pages (layout: default + raw HTML) ─────────────── */
+/* Styles for the classes used in hand-written game/media pages            */
+
+/* Page hero */
+.hero {
+  margin-bottom: 2rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.hero h1 { margin-bottom: .4rem; }
+.subtitle {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* Info/stats grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+.info-cell { background: var(--bg-2); padding: .8rem 1rem; }
+.label {
+  font-size: .67rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-dim);
+  margin-bottom: .2rem;
+}
+.value { font-size: .875rem; color: var(--text); }
+
+/* Prose paragraphs between divs */
+main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; line-height: 1.7; }
+
+/* Cheat groups */
+.cheats-group { margin-bottom: 1.5rem; }
+.cheats-group h3 {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-dim);
+  margin: 1rem 0 .5rem;
+}
+/* Cheat description (used in page-authored pages instead of cheat-code) */
+.cheat-desc {
+  width: 100%;
+  font-size: .82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Cast info wrapper (cards without images) */
+.cast-info { display: flex; flex-direction: column; padding: .35rem 0; }
+
 /* ── Focus ──────────────────────────────────────────────────────────────── */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
