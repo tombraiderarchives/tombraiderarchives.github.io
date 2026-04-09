@@ -23,18 +23,39 @@ layout: default
   {% endif %}
 {% endif %}
 
+{% comment %}Extract year from release_date{% endcomment %}
+{% if page.stats.release_date %}
+  {% assign _rd_parts = page.stats.release_date | split: ", " %}
+  {% if _rd_parts.size > 1 %}
+    {% assign _year = _rd_parts | last %}
+  {% else %}
+    {% assign _year = page.stats.release_date %}
+  {% endif %}
+{% endif %}
+
 <article class="game-page">
 
-  <!-- Hero header with optional backdrop -->
-  <div class="game-hero">
-    {% assign _backdrop = page.header_image | default: page.cover_image %}
-    {% if _backdrop %}
-    <div class="game-hero-backdrop" style="background-image:url('{{ _backdrop }}')"></div>
-    {% endif %}
-    <header class="game-header">
-      <div class="game-cover">
+  <!-- Tags + title -->
+  <header class="game-page-header">
+    <div class="game-tags">
+      {% if page.era %}<span class="game-tag game-tag--era">{{ page.era }}</span>{% endif %}
+      <span class="game-tag">Game</span>
+      {% if _year %}<span class="game-tag">{{ _year }}</span>{% endif %}
+      {% if page.stats.platforms %}
+        {% assign _platforms = page.stats.platforms | split: ", " %}
+        {% for _plat in _platforms %}
+        <span class="game-tag">{{ _plat }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <h1 class="game-title">{{ page.title }}</h1>
+
+    <!-- Cover + info grid side by side -->
+    <div class="game-intro">
+      <div class="game-cover-col">
         {% if page.cover_image %}
-        <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" loading="eager">
+        <img src="{{ page.cover_image }}" alt="{{ page.title }} cover" class="game-cover-img" loading="eager">
         {% else %}
         <div class="img-ph img-ph--cover" aria-hidden="true">
           <svg class="img-ph-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
@@ -45,54 +66,52 @@ layout: default
         </div>
         {% endif %}
       </div>
-      <div class="game-header-text">
-        {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
-        <h1>{{ page.title }}</h1>
-        <nav class="jump-nav" aria-label="Jump to section">
-          {% if page.stats %}<a href="#stats">Info</a>{% endif %}
-          {% if page.cheats %}<a href="#cheats">Cheats</a>{% endif %}
-          {% if page.achievements or page.trophies %}<a href="#achievements">Achievements</a>{% endif %}
-          {% if _has_gallery %}<a href="#gallery">Gallery</a>{% endif %}
-          {% if page.videos %}<a href="#videos">Videos</a>{% endif %}
-          {% if page.cast %}<a href="#cast">Cast</a>{% endif %}
-        </nav>
-      </div>
-    </header>
-  </div>
 
-  <!-- Stats -->
-  {% if page.stats %}
-  <section id="stats" class="game-section">
-    <h2 class="section-title">Game Info</h2>
-    <dl class="stats-grid">
-      {% if page.stats.release_date %}<div class="stat"><dt>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
-      {% if page.stats.developer   %}<div class="stat"><dt>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
-      {% if page.stats.publisher   %}<div class="stat"><dt>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
-      {% if page.stats.genre       %}<div class="stat"><dt>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
-      {% if page.stats.platforms   %}<div class="stat"><dt>Platforms</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
-      {% if page.stats.length      %}<div class="stat"><dt>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
-      {% if page.stats.rating      %}<div class="stat"><dt>Rating</dt><dd>{{ page.stats.rating }}</dd></div>{% endif %}
-      {% if page.stats.setting     %}<div class="stat"><dt>Setting</dt><dd>{{ page.stats.setting }}</dd></div>{% endif %}
-      {% if page.stats.writer      %}<div class="stat"><dt>Writer</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
-      {% if page.stats.director    %}<div class="stat"><dt>Director</dt><dd>{{ page.stats.director }}</dd></div>{% endif %}
-      {% if page.stats.runtime     %}<div class="stat"><dt>Runtime</dt><dd>{{ page.stats.runtime }}</dd></div>{% endif %}
-      {% if page.stats.budget      %}<div class="stat"><dt>Budget</dt><dd>{{ page.stats.budget }}</dd></div>{% endif %}
-      {% if page.stats.box_office  %}<div class="stat"><dt>Box Office</dt><dd>{{ page.stats.box_office }}</dd></div>{% endif %}
-    </dl>
-  </section>
-  {% endif %}
+      {% if page.stats %}
+      <dl class="game-info-grid">
+        {% if page.stats.developer   %}<div class="game-info-cell"><dt>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
+        {% if page.stats.publisher   %}<div class="game-info-cell"><dt>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
+        {% if page.stats.release_date%}<div class="game-info-cell"><dt>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
+        {% if page.stats.genre       %}<div class="game-info-cell"><dt>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
+        {% if page.stats.rating      %}<div class="game-info-cell"><dt>Rating</dt><dd>{{ page.stats.rating }}</dd></div>{% endif %}
+        {% if page.stats.length      %}<div class="game-info-cell"><dt>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
+        {% if page.stats.setting     %}<div class="game-info-cell"><dt>Setting</dt><dd>{{ page.stats.setting }}</dd></div>{% endif %}
+        {% if page.stats.director    %}<div class="game-info-cell"><dt>Director</dt><dd>{{ page.stats.director }}</dd></div>{% endif %}
+        {% if page.stats.writer      %}<div class="game-info-cell"><dt>Writer</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
+        {% if page.stats.runtime     %}<div class="game-info-cell"><dt>Runtime</dt><dd>{{ page.stats.runtime }}</dd></div>{% endif %}
+        {% if page.stats.budget      %}<div class="game-info-cell"><dt>Budget</dt><dd>{{ page.stats.budget }}</dd></div>{% endif %}
+        {% if page.stats.box_office  %}<div class="game-info-cell"><dt>Box Office</dt><dd>{{ page.stats.box_office }}</dd></div>{% endif %}
+      </dl>
+      {% endif %}
+    </div>
+  </header>
 
-  <!-- Body content -->
+  <!-- Tab navigation -->
+  <nav class="tab-nav" role="tablist" aria-label="Game sections">
+    {% if content != "" %}<button class="tab-btn" data-tab="overview" role="tab">Overview</button>{% endif %}
+    {% if page.storyline %}<button class="tab-btn" data-tab="storyline" role="tab">Storyline</button>{% endif %}
+    {% if page.cheats %}<button class="tab-btn" data-tab="cheats" role="tab">Cheats</button>{% endif %}
+    {% if page.achievements or page.trophies %}<button class="tab-btn" data-tab="achievements" role="tab">Achievements</button>{% endif %}
+    {% if _has_gallery %}<button class="tab-btn" data-tab="gallery" role="tab">Screenshots</button>{% endif %}
+    {% if page.videos %}<button class="tab-btn" data-tab="media" role="tab">Media</button>{% endif %}
+    {% if page.cast %}<button class="tab-btn" data-tab="cast" role="tab">Cast</button>{% endif %}
+  </nav>
+
+  <!-- Tab panels -->
   {% if content != "" %}
-  <section class="game-section game-body">
-    {{ content }}
-  </section>
+  <div class="tab-panel" id="tab-overview" role="tabpanel">
+    <div class="game-body">{{ content }}</div>
+  </div>
   {% endif %}
 
-  <!-- Cheats -->
+  {% if page.storyline %}
+  <div class="tab-panel" id="tab-storyline" role="tabpanel">
+    <div class="game-body">{{ page.storyline | markdownify }}</div>
+  </div>
+  {% endif %}
+
   {% if page.cheats %}
-  <section id="cheats" class="game-section">
-    <h2 class="section-title">Cheats &amp; Codes</h2>
+  <div class="tab-panel" id="tab-cheats" role="tabpanel">
     {% for group in page.cheats %}
     <h3 class="subsection-title">{{ group.platform_name }}</h3>
     <ul class="cheat-list">
@@ -105,56 +124,49 @@ layout: default
       {% endfor %}
     </ul>
     {% endfor %}
-  </section>
+  </div>
   {% endif %}
 
-  <!-- Achievements & Trophies -->
-  {% if page.achievements %}
-  <section id="achievements" class="game-section">
-    <h2 class="section-title">Achievements{% if page.trophies %} &amp; Trophies{% endif %}</h2>
-    {% for platform in page.achievements %}
-    <h3 class="subsection-title">{{ platform.platform_name }}</h3>
-    <ul class="ach-list">
-      {% for ach in platform.items %}
-      <li class="ach-item">
-        {% if ach.gamerscore %}<span class="ach-score">{{ ach.gamerscore }}G</span>{% endif %}
-        {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}">{{ ach.trophy }}</span>{% endif %}
-        <div>
-          <div class="ach-name">{{ ach.name }}</div>
-          {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
-        </div>
-      </li>
+  {% if page.achievements or page.trophies %}
+  <div class="tab-panel" id="tab-achievements" role="tabpanel">
+    {% if page.achievements %}
+      {% for platform in page.achievements %}
+      <h3 class="subsection-title">{{ platform.platform_name }}</h3>
+      <ul class="ach-list">
+        {% for ach in platform.items %}
+        <li class="ach-item">
+          {% if ach.gamerscore %}<span class="ach-score">{{ ach.gamerscore }}G</span>{% endif %}
+          {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}">{{ ach.trophy }}</span>{% endif %}
+          <div>
+            <div class="ach-name">{{ ach.name }}</div>
+            {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
       {% endfor %}
-    </ul>
-    {% endfor %}
-  </section>
-  {% endif %}
-
-  {% if page.trophies and page.achievements == nil %}
-  <section id="achievements" class="game-section">
-    <h2 class="section-title">Trophies</h2>
-    {% for platform in page.trophies %}
-    <h3 class="subsection-title">{{ platform.platform_name }}</h3>
-    <ul class="ach-list">
-      {% for ach in platform.items %}
-      <li class="ach-item">
-        {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}">{{ ach.trophy }}</span>{% endif %}
-        <div>
-          <div class="ach-name">{{ ach.name }}</div>
-          {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
-        </div>
-      </li>
+    {% endif %}
+    {% if page.trophies %}
+      {% for platform in page.trophies %}
+      <h3 class="subsection-title">{{ platform.platform_name }}</h3>
+      <ul class="ach-list">
+        {% for ach in platform.items %}
+        <li class="ach-item">
+          {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}">{{ ach.trophy }}</span>{% endif %}
+          <div>
+            <div class="ach-name">{{ ach.name }}</div>
+            {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
       {% endfor %}
-    </ul>
-    {% endfor %}
-  </section>
+    {% endif %}
+  </div>
   {% endif %}
 
-  <!-- Gallery -->
   {% if _has_gallery %}
-  <section id="gallery" class="game-section">
-    <h2 class="section-title">Gallery</h2>
-
+  <div class="tab-panel" id="tab-gallery" role="tabpanel">
     {% if _ss.size > 0 %}
     <h3 class="subsection-title">Screenshots</h3>
     <div class="gallery-grid" data-gallery="screenshots">
@@ -167,7 +179,6 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
-
     {% if _art.size > 0 %}
     <h3 class="subsection-title">Artwork</h3>
     <div class="gallery-grid" data-gallery="artwork">
@@ -180,7 +191,6 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
-
     {% if _hq.size > 0 %}
     <h3 class="subsection-title">High Quality</h3>
     <div class="gallery-grid" data-gallery="hq">
@@ -193,7 +203,6 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
-
     {% if _rnd.size > 0 %}
     <h3 class="subsection-title">Renders</h3>
     <div class="gallery-grid" data-gallery="renders">
@@ -206,7 +215,6 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
-
     {% if _ld.size > 0 %}
     <h3 class="subsection-title">Load Screens</h3>
     <div class="gallery-grid" data-gallery="loadscreens">
@@ -219,38 +227,27 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
-
-  </section>
+  </div>
   {% endif %}
 
-  <!-- Videos -->
   {% if page.videos %}
-  <section id="videos" class="game-section">
-    <h2 class="section-title">Videos</h2>
+  <div class="tab-panel" id="tab-media" role="tabpanel">
     <div class="video-grid">
       {% for video in page.videos %}
       <div class="video-item">
         <div class="video-embed">
-          <iframe
-            src="{{ video.url }}"
-            title="{{ video.title }}"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
+          <iframe src="{{ video.url }}" title="{{ video.title }}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         {% if video.title %}<p class="video-title">{{ video.title }}</p>{% endif %}
         {% if video.description %}<p class="video-desc">{{ video.description }}</p>{% endif %}
       </div>
       {% endfor %}
     </div>
-  </section>
+  </div>
   {% endif %}
 
-  <!-- Cast -->
   {% if page.cast %}
-  <section id="cast" class="game-section">
-    <h2 class="section-title">Cast</h2>
+  <div class="tab-panel" id="tab-cast" role="tabpanel">
     <div class="cast-grid">
       {% for member in page.cast %}
       <div class="cast-card">
@@ -273,7 +270,7 @@ layout: default
       </div>
       {% endfor %}
     </div>
-  </section>
+  </div>
   {% endif %}
 
 </article>
