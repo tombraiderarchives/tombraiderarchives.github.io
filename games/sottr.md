@@ -3,6 +3,7 @@ layout: game
 title: Shadow of the Tomb Raider
 cover_image: /images/sottr/cover.jpg
 image_folder: sottr
+era: Survivor Era
 
 stats:
   release_date: September 14, 2018

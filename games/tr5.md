@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider Chronicles
 cover_image: /images/tr5/cover.png
 image_folder: tr5
+era: Classic Era
 
 stats:
   release_date: November 26, 2000

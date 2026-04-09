@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider III Remastered (2024)
 cover_image: /images/remastered/tr3/cover.jpg
 image_folder: remastered/tr3
+era: Classic Era
 
 stats:
   release_date: February 14, 2024

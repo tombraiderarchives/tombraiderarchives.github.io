@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider I Remastered (2024)
 cover_image: /images/remastered/tr1/cover.jpg
 image_folder: remastered/tr1
+era: Classic Era
 
 stats:
   release_date: February 14, 2024

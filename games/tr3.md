@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider 3
 cover_image: /images/tr3/cover.png
 image_folder: tr3
+era: Classic Era
 
 stats:
   release_date: November 20, 1998

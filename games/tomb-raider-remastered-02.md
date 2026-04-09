@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider II Remastered (2024)
 cover_image: /images/remastered/tr2/cover.jpg
 image_folder: remastered/tr2
+era: Classic Era
 
 stats:
   release_date: February 14, 2024

@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider The Last Revelation
 cover_image: /images/tr4/cover.png
 image_folder: tr4
+era: Classic Era
 
 stats:
   release_date: November 24, 1999

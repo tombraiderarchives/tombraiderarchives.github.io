@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider Anniversary
 cover_image: /images/tranniversary/cover.png
 image_folder: tranniversary
+era: Legend Era
 
 stats:
   release_date: June 01, 2007

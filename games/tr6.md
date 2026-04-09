@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider Angel of Darkness
 cover_image: /images/tr6/cover.png
 image_folder: tr6
+era: Classic Era
 
 stats:
   release_date: June 20, 2003

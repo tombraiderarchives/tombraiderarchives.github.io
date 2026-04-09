@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider Legend
 cover_image: /images/trlegend/cover.png
 image_folder: trlegend
+era: Legend Era
 
 stats:
   release_date: April 07, 2006

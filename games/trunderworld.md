@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider Underworld
 cover_image: /images/trunderworld/cover.png
 image_folder: trunderworld
+era: Legend Era
 
 stats:
   release_date: November 18, 2008

@@ -3,6 +3,7 @@ layout: game
 title: Rise of the Tomb Raider
 cover_image: /images/rottr/cover.jpg
 image_folder: rottr
+era: Survivor Era
 
 stats:
   release_date: November 10, 2015

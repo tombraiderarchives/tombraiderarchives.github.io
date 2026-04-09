@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider (1996)
 cover_image: /images/tr1/cover.png
 image_folder: tr1
+era: Classic Era
 
 stats:
   release_date: October 24, 1996

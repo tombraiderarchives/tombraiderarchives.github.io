@@ -3,6 +3,7 @@ layout: game
 title: Tomb Raider IV The Last Revelation Remastered (2025)
 cover_image: /images/remastered/cover_4-6.png
 image_folder: remastered/tr4
+era: Classic Era
 
 stats:
   release_date: 2025
