@@ -25,26 +25,32 @@ layout: default
 
 <article class="game-page">
 
-  <!-- Header -->
-  <header class="game-header">
-    {% if page.cover_image %}
-    <div class="game-cover">
-      <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" width="200" height="280" loading="eager">
-    </div>
+  <!-- Hero header with optional backdrop -->
+  <div class="game-hero">
+    {% assign _backdrop = page.header_image | default: page.cover_image %}
+    {% if _backdrop %}
+    <div class="game-hero-backdrop" style="background-image:url('{{ _backdrop }}')"></div>
     {% endif %}
-    <div class="game-header-text">
-      {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
-      <h1>{{ page.title }}</h1>
-      <nav class="jump-nav" aria-label="Jump to section">
-        {% if page.stats %}<a href="#stats">Info</a>{% endif %}
-        {% if page.cheats %}<a href="#cheats">Cheats</a>{% endif %}
-        {% if page.achievements or page.trophies %}<a href="#achievements">Achievements</a>{% endif %}
-        {% if _has_gallery %}<a href="#gallery">Gallery</a>{% endif %}
-        {% if page.videos %}<a href="#videos">Videos</a>{% endif %}
-        {% if page.cast %}<a href="#cast">Cast</a>{% endif %}
-      </nav>
-    </div>
-  </header>
+    <header class="game-header">
+      {% if page.cover_image %}
+      <div class="game-cover">
+        <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" width="200" height="280" loading="eager">
+      </div>
+      {% endif %}
+      <div class="game-header-text">
+        {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
+        <h1>{{ page.title }}</h1>
+        <nav class="jump-nav" aria-label="Jump to section">
+          {% if page.stats %}<a href="#stats">Info</a>{% endif %}
+          {% if page.cheats %}<a href="#cheats">Cheats</a>{% endif %}
+          {% if page.achievements or page.trophies %}<a href="#achievements">Achievements</a>{% endif %}
+          {% if _has_gallery %}<a href="#gallery">Gallery</a>{% endif %}
+          {% if page.videos %}<a href="#videos">Videos</a>{% endif %}
+          {% if page.cast %}<a href="#cast">Cast</a>{% endif %}
+        </nav>
+      </div>
+    </header>
+  </div>
 
   <!-- Stats -->
   {% if page.stats %}

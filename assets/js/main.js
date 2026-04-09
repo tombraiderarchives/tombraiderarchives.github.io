@@ -1,5 +1,30 @@
 'use strict';
 
+/* ── Theme toggle ───────────────────────────────────────────────────────── */
+(function () {
+  var html   = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  if (!toggle) return;
+
+  function applyTheme(theme) {
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    var icon = toggle.querySelector('i');
+    if (icon) {
+      icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+    }
+    toggle.setAttribute('aria-label',
+      theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  // Sync icon to whatever theme was set by the FOUC script
+  applyTheme(html.getAttribute('data-theme') || 'dark');
+
+  toggle.addEventListener('click', function () {
+    applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+}());
+
 /* ── Clickable news cards ───────────────────────────────────────────────── */
 (function () {
   document.querySelectorAll('.news-item[data-href]').forEach(function (card) {

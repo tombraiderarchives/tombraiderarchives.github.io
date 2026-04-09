@@ -1,21 +1,43 @@
 /* ── Reset & tokens ─────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Dark theme (default) ──────────────────────────────────────────────────── */
 :root {
-  --bg:         #0c0c0c;
-  --bg-2:       #131313;
-  --bg-3:       #1a1a1a;
-  --bg-4:       #222;
-  --border:     rgba(255,255,255,.07);
-  --border-2:   rgba(255,255,255,.12);
-  --text:       #ddd;
-  --text-muted: #909090;
-  --text-dim:   #7c7c7c;
-  --accent:     #c8953c;
-  --accent-dim: rgba(200,149,60,.1);
-  --sidebar-w:  260px;
-  --radius:     8px;
-  --ease:       cubic-bezier(.4,0,.2,1);
+  --bg:            #060504;
+  --bg-2:          #0f0d09;
+  --bg-3:          #181410;
+  --bg-4:          #201c17;
+  --border:        rgba(234,231,225,.07);
+  --border-2:      rgba(234,231,225,.13);
+  --text:          #eae7e1;
+  --text-muted:    #9a9388;
+  --text-dim:      #6e6256;
+  --accent:        #7ea583;
+  --accent-dim:    rgba(126,165,131,.12);
+  --accent-border: rgba(126,165,131,.28);
+  --primary:       #c2b8a8;
+  --secondary:     #465b3e;
+  --sidebar-w:     260px;
+  --radius:        8px;
+  --ease:          cubic-bezier(.4,0,.2,1);
+}
+
+/* Light theme ───────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:            #fbfaf9;
+  --bg-2:          #f0ece4;
+  --bg-3:          #e6e1d8;
+  --bg-4:          #d9d3c8;
+  --border:        rgba(30,27,21,.09);
+  --border-2:      rgba(30,27,21,.18);
+  --text:          #1e1b15;
+  --text-muted:    #5c5549;
+  --text-dim:      #6e6050;
+  --accent:        #5a815f;
+  --accent-dim:    rgba(90,129,95,.1);
+  --accent-border: rgba(90,129,95,.3);
+  --primary:       #574d3d;
+  --secondary:     #acc1a4;
 }
 
 html {
@@ -88,7 +110,7 @@ body {
 .logo-text {
   font-size: .85rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   letter-spacing: -.01em;
   white-space: nowrap;
 }
@@ -235,7 +257,7 @@ body {
   padding-bottom: .25rem;
 }
 .nav-sub .nav-sub.is-open {
-  border-left-color: rgba(200,149,60,.2);
+  border-left-color: var(--accent-border);
 }
 .nav-sub .nav-sub .nav-link--leaf {
   padding-left: .75rem;
@@ -365,7 +387,7 @@ a:hover { text-decoration: underline; }
 .news-item {
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-left: 3px solid rgba(200,149,60,.35);
+  border-left: 3px solid var(--accent-border);
   border-radius: var(--radius);
   padding: 1.25rem 1.5rem;
   transition: border-color .2s, border-left-color .2s, background .2s;
@@ -453,6 +475,74 @@ a:hover { text-decoration: underline; }
   margin: 1.75rem 0 .75rem;
 }
 
+/* ── Theme toggle & sidebar actions ─────────────────────────────────────── */
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  flex-shrink: 0;
+}
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: .95rem;
+  transition: color .15s, background .15s, border-color .15s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { color: var(--accent); background: var(--bg-3); border-color: var(--border-2); }
+
+/* ── Game hero (backdrop header) ────────────────────────────────────────── */
+.game-hero {
+  position: relative;
+  margin-bottom: 2.5rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-3);
+}
+.game-hero-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 20%;
+  filter: blur(32px) brightness(.25) saturate(.5);
+  transform: scale(1.12);
+  z-index: 0;
+}
+[data-theme="light"] .game-hero-backdrop {
+  filter: blur(32px) brightness(1.6) saturate(.35);
+  opacity: .55;
+}
+.game-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.05) 100%);
+}
+[data-theme="light"] .game-hero::after {
+  background: linear-gradient(160deg, rgba(240,235,225,.7) 0%, rgba(240,235,225,.15) 100%);
+}
+.game-hero .game-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0;
+  padding: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: none;
+}
+.game-hero .game-cover img {
+  box-shadow: 0 12px 40px rgba(0,0,0,.7);
+}
+
 /* ── Game header ────────────────────────────────────────────────────────── */
 .game-header {
   display: flex;
@@ -508,7 +598,7 @@ a:hover { text-decoration: underline; }
 }
 .jump-nav a:hover {
   color: var(--accent);
-  border-color: rgba(200,149,60,.4);
+  border-color: var(--accent-border);
   background: var(--accent-dim);
   text-decoration: none;
 }
@@ -809,8 +899,8 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   letter-spacing: .07em;
   text-transform: uppercase;
   color: var(--accent);
-  background: rgba(200,149,60,.1);
-  border: 1px solid rgba(200,149,60,.2);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
   border-radius: 100px;
 }
 
@@ -907,14 +997,22 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 
 /* Full-width news list variant */
 .news-list--full { gap: 1.25rem; }
+.news-item-img,
+.news-item-placeholder {
+  display: block;
+  width: calc(100% + 3rem);
+  margin: -1.25rem -1.5rem 1.25rem;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  overflow: hidden;
+}
 .news-item-img {
-  width: 100%;
   max-height: 240px;
   object-fit: cover;
-  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+}
+.news-item-placeholder svg {
   display: block;
-  margin: -1.25rem -1.5rem 1.25rem;
-  width: calc(100% + 3rem);
+  width: 100%;
+  height: 80px;
 }
 
 /* ── Timeline ─────────────────────────────────────────────────────────────── */
@@ -946,7 +1044,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   height: 10px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px rgba(200,149,60,.3);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--accent-border);
 }
 .timeline-year {
   font-size: .68rem;
@@ -984,7 +1082,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   position: relative;
   top: -1px;
 }
-.timeline-tag--game   { background: rgba(200,149,60,.12); color: var(--accent); }
+.timeline-tag--game   { background: var(--accent-dim); color: var(--accent); }
 .timeline-tag--film   { background: rgba(120,160,220,.12); color: #7ea8d8; }
 .timeline-tag--series { background: rgba(100,200,120,.12); color: #6ec880; }
 
@@ -1068,7 +1166,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   transition: color .15s, border-color .15s, background .15s;
 }
 .char-game-link span { font-size: .67rem; color: var(--text-dim); }
-.char-game-link:hover { color: var(--accent); border-color: rgba(200,149,60,.35); background: var(--accent-dim); }
+.char-game-link:hover { color: var(--accent); border-color: var(--accent-border); background: var(--accent-dim); }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 .site-footer {
@@ -1088,7 +1186,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   display: block;
   font-size: .875rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   letter-spacing: -.01em;
   white-space: nowrap;
   margin-bottom: .65rem;
@@ -1126,6 +1224,51 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .empty-state { color: var(--text-muted); font-size: .875rem; padding: 2rem 0; }
 
 .news-view-all { margin-top: 1.25rem; }
+
+/* ── Light mode component overrides ─────────────────────────────────────── */
+
+/* Sidebar needs stronger border in light mode */
+[data-theme="light"] .sidebar {
+  border-right-color: var(--border-2);
+}
+
+/* Ensure news item left accent border survives in light mode */
+[data-theme="light"] .news-item {
+  border-left-color: var(--accent-border);
+}
+
+/* Cheat code pill contrast in light mode */
+[data-theme="light"] .cheat-code {
+  background: var(--bg-3);
+  border-color: var(--border-2);
+  color: var(--accent);
+}
+
+/* ach-trophy colour palette — works on both themes via transparency */
+.ach-trophy--bronze  { color: #b87333; }
+.ach-trophy--silver  { color: #a0a0a0; }
+.ach-trophy--gold    { color: #d4af37; }
+.ach-trophy--platinum { color: var(--accent); }
+
+/* Personality: subtle archaeology-themed corner accent on game hero */
+.game-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(ellipse at top right, var(--accent-border), transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Personality: section titles get an accent left pip */
+.section-title {
+  padding-left: .75rem;
+  border-left: 2px solid var(--accent);
+  border-bottom: none;
+}
 
 /* ── Focus ──────────────────────────────────────────────────────────────── */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
@@ -1194,7 +1337,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
     margin: 0;
   }
   .nav-leaf-list .nav-link--leaf.active {
-    border-color: rgba(200,149,60,.4);
+    border-color: var(--accent-border);
   }
   .nav-leaf-list .nav-year {
     font-size: .68rem;
