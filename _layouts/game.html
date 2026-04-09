@@ -2,7 +2,7 @@
 layout: default
 ---
 
-{% comment %}Detect gallery subfolders from static_files{% endcomment %}
+{% comment %}Detect gallery image folders{% endcomment %}
 {% if page.image_folder %}
   {% assign _base  = "/images/" | append: page.image_folder %}
   {% assign _ss_p  = _base | append: "/screenshots/thumbs/" %}
@@ -35,9 +35,6 @@ layout: default
     <div class="game-header-text">
       {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
       <h1>{{ page.title }}</h1>
-      {% if page.description %}<p class="game-desc">{{ page.description }}</p>{% endif %}
-
-      <!-- Quick jump nav -->
       <nav class="jump-nav" aria-label="Jump to section">
         {% if page.stats %}<a href="#stats">Info</a>{% endif %}
         {% if page.cheats %}<a href="#cheats">Cheats</a>{% endif %}
@@ -56,6 +53,7 @@ layout: default
     <dl class="stats-grid">
       {% if page.stats.release_date %}<div class="stat"><dt>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
       {% if page.stats.developer   %}<div class="stat"><dt>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
+      {% if page.stats.publisher   %}<div class="stat"><dt>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
       {% if page.stats.genre       %}<div class="stat"><dt>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
       {% if page.stats.platforms   %}<div class="stat"><dt>Platforms</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
       {% if page.stats.length      %}<div class="stat"><dt>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
@@ -87,12 +85,8 @@ layout: default
       {% for item in group.items %}
       <li class="cheat-item">
         <span class="cheat-name">{{ item.name }}</span>
+        {% if item.description %}<span class="cheat-desc">{{ item.description }}</span>{% endif %}
         {% if item.code %}<code class="cheat-code">{{ item.code }}</code>{% endif %}
-        {% if item.steps %}
-        <ol class="cheat-steps">
-          {% for step in item.steps %}<li>{{ step }}</li>{% endfor %}
-        </ol>
-        {% endif %}
       </li>
       {% endfor %}
     </ul>
@@ -100,20 +94,45 @@ layout: default
   </section>
   {% endif %}
 
-  <!-- Achievements -->
-  {% if page.achievements or page.trophies %}
+  <!-- Achievements & Trophies -->
+  {% if page.achievements %}
   <section id="achievements" class="game-section">
     <h2 class="section-title">Achievements{% if page.trophies %} &amp; Trophies{% endif %}</h2>
-    {% assign ach_list = page.achievements | default: page.trophies %}
+    {% for platform in page.achievements %}
+    <h3 class="subsection-title">{{ platform.platform_name }}</h3>
     <ul class="ach-list">
-      {% for ach in ach_list %}
+      {% for ach in platform.items %}
       <li class="ach-item">
-        <div class="ach-name">{{ ach.name }}</div>
-        {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
-        {% if ach.gamerscore  %}<span class="ach-score">{{ ach.gamerscore }}G</span>{% endif %}
+        {% if ach.gamerscore %}<span class="ach-score">{{ ach.gamerscore }}G</span>{% endif %}
+        {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}">{{ ach.trophy }}</span>{% endif %}
+        <div>
+          <div class="ach-name">{{ ach.name }}</div>
+          {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+        </div>
       </li>
       {% endfor %}
     </ul>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if page.trophies and page.achievements == nil %}
+  <section id="achievements" class="game-section">
+    <h2 class="section-title">Trophies</h2>
+    {% for platform in page.trophies %}
+    <h3 class="subsection-title">{{ platform.platform_name }}</h3>
+    <ul class="ach-list">
+      {% for ach in platform.items %}
+      <li class="ach-item">
+        {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}">{{ ach.trophy }}</span>{% endif %}
+        <div>
+          <div class="ach-name">{{ ach.name }}</div>
+          {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endfor %}
   </section>
   {% endif %}
 
@@ -199,7 +218,7 @@ layout: default
       <div class="video-item">
         <div class="video-embed">
           <iframe
-            src="https://www.youtube-nocookie.com/embed/{{ video.youtube_id }}"
+            src="{{ video.url }}"
             title="{{ video.title }}"
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -207,234 +226,11 @@ layout: default
           </iframe>
         </div>
         {% if video.title %}<p class="video-title">{{ video.title }}</p>{% endif %}
+        {% if video.description %}<p class="video-desc">{{ video.description }}</p>{% endif %}
       </div>
       {% endfor %}
     </div>
   </section>
-</div>
-
-
-
-<!-- STATS -->
-{% if page.stats %}
-<div id="stats" data-section-toggle class="section-expanded">
-  <div class="section-collapsible">
-    <h2>Stats</h2>
-    <i class="ph ph-caret-circle-down section-icon"></i>
-  </div>
-
-  <div class="section-content">
-    <section class="grid">
-
-      {% if page.stats.release_date %}
-      <article class="card">
-        <i class="ph ph-calendar-dot"></i>
-        <div>
-          <h3>Release date</h3>
-          <p>{{ page.stats.release_date }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.genre %}
-      <article class="card">
-        <i class="ph ph-tag"></i>
-        <div>
-          <h3>Genre</h3>
-          <p>{{ page.stats.genre }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.rating %}
-      <article class="card">
-        <i class="ph ph-info"></i>
-        <div>
-          <h3>Rating</h3>
-          <p>{{ page.stats.rating }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.length %}
-      <article class="card">
-        <i class="ph ph-timer"></i>
-        <div>
-          <h3>Main story length</h3>
-          <p>{{ page.stats.length }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.platforms %}
-      <article class="card">
-        <i class="ph ph-game-controller"></i>
-        <div>
-          <h3>Platforms</h3>
-          <p>{{ page.stats.platforms }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.developer %}
-      <article class="card">
-        <i class="ph ph-code"></i>
-        <div>
-          <h3>Developer</h3>
-          <p>{{ page.stats.developer }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.publisher %}
-      <article class="card">
-        <i class="ph ph-buildings"></i>
-        <div>
-          <h3>Publisher</h3>
-          <p>{{ page.stats.publisher }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.writer %}
-      <article class="card">
-        <i class="ph ph-pencil"></i>
-        <div>
-          <h3>Lead writer</h3>
-          <p>{{ page.stats.writer }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-      {% if page.stats.setting %}
-      <article class="card">
-        <i class="ph ph-map-trifold"></i>
-        <div>
-          <h3>Setting</h3>
-          <p>{{ page.stats.setting }}</p>
-        </div>
-      </article>
-      {% endif %}
-
-    </section>
-  </div>
-</div>
-{% endif %}
-
-
-<!-- CHEATS -->
-{% if page.cheats %}
-<div id="cheats" data-section-toggle class="section-collapsed">
-  <div class="section-collapsible">
-    <h2>Cheats and extras</h2>
-    <i class="ph ph-caret-circle-down section-icon"></i>
-  </div>
-
-  <div class="section-content">
-    <section class="cheats">
-      <div class="grid">
-        {% for platform in page.cheats %}
-        <div class="platform">
-          <h3>{{ platform.platform_name }}</h3>
-          <ul>
-            {% for cheat in platform.items %}
-            <li>
-              <div class="description">
-                <strong>{{ cheat.name }}</strong>
-                <p>{{ cheat.description }}</p>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-  </div>
-</div>
-{% endif %}
-
-
-<!-- ACHIEVEMENTS -->
-{% if page.achievements %}
-<div id="achievements" data-section-toggle class="section-collapsed">
-  <div class="section-collapsible">
-    <h2>Achievements</h2>
-    <i class="ph ph-caret-circle-down section-icon"></i>
-  </div>
-
-  <div class="section-content">
-    <section class="achievements">
-      <div class="grid">
-        {% for platform in page.achievements %}
-        <div class="platform">
-          <h3>{{ platform.platform_name }}</h3>
-          <ul>
-            {% for achievement in platform.items %}
-            <li>
-              {% if achievement.trophy %}
-              <i class="bx bx-trophy trophy-icon trophy-{{ achievement.trophy }}"></i>
-              {% elsif achievement.gamerscore %}
-              <div class="gamerscore">
-                <span>{{ achievement.gamerscore }}</span>
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" stroke="#008000" stroke-width="2" fill="none"></circle>
-                  <text x="7" y="16" fill="#ffffff" font-family="Arial" font-size="12" font-weight="bold">G</text>
-                </svg>
-              </div>
-              {% endif %}
-              <div class="description">
-                <strong>{{ achievement.name }}</strong>
-                <p>{{ achievement.description }}</p>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-  </div>
-</div>
-{% endif %}
-
-
-<!-- GALLERIES -->
-{% if page.image_folder %}
-
-  {%- assign ss_folder = "/images/" | append: page.image_folder | append: "/screenshots/" -%}
-  {%- assign renders_folder = "/images/" | append: page.image_folder | append: "/renders/" -%}
-  {%- assign hq_folder = "/images/" | append: page.image_folder | append: "/hq/" -%}
-  {%- assign art_folder = "/images/" | append: page.image_folder | append: "/artwork/" -%}
-
-  {% assign screenshot_files = site.static_files | where_exp: "file", "file.path contains ss_folder" %}
-  {% assign render_files = site.static_files | where_exp: "file", "file.path contains renders_folder" %}
-  {% assign hq_files = site.static_files | where_exp: "file", "file.path contains hq_folder" %}
-  {% assign artwork_files = site.static_files | where_exp: "file", "file.path contains art_folder" %}
-
-
-  {% if screenshot_files.size > 0 %}
-  <div id="screenshots" data-section-toggle class="section-collapsed">
-    <div class="section-collapsible">
-      <h2>Screenshots</h2>
-      <i class="ph ph-caret-circle-down section-icon"></i>
-    </div>
-
-    <div class="section-content">
-      <section class="gallery">
-        <div class="flex-grid">
-          {% for image in screenshot_files %}
-            {% unless image.path contains "/thumbs/" %}
-              {% assign thumb_path = image.path | replace: "/screenshots/", "/screenshots/thumbs/" %}
-              <a href="{{ image.path | relative_url }}" class="lightbox-trigger flex">
-                <img src="{{ thumb_path | relative_url }}" alt="Screenshot {{ forloop.index }}" loading="lazy">
-              </a>
-            {% endunless %}
-          {% endfor %}
-        </div>
-      </section>
-    </div>
-  </div>
   {% endif %}
 
   <!-- Cast -->
@@ -462,7 +258,6 @@ layout: default
 </article>
 
 {% if _has_gallery %}
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
   <button class="lb-btn lb-close" id="lbClose" aria-label="Close image viewer">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
