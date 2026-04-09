@@ -12,6 +12,27 @@ layout: default
 
   {% if page.header_image %}
   <img src="{{ page.header_image }}" alt="{{ page.title }}" class="post-header-img" loading="eager">
+  {% else %}
+  <div class="post-header-placeholder" aria-hidden="true">
+    <svg viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="pph" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity=".07"/>
+          <stop offset="100%" stop-color="var(--secondary)" stop-opacity=".03"/>
+        </linearGradient>
+      </defs>
+      <rect width="720" height="140" fill="url(#pph)"/>
+      <line x1="0"   y1="140" x2="140" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
+      <line x1="90"  y1="140" x2="230" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
+      <line x1="180" y1="140" x2="320" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
+      <line x1="270" y1="140" x2="410" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
+      <line x1="360" y1="140" x2="500" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
+      <line x1="450" y1="140" x2="590" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
+      <line x1="540" y1="140" x2="680" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
+      <polygon points="346,55 360,40 374,55 360,70" fill="var(--accent)" opacity=".11"/>
+      <polygon points="346,55 360,40 374,55 360,70" fill="none" stroke="var(--accent)" stroke-opacity=".2" stroke-width="1"/>
+    </svg>
+  </div>
   {% endif %}
 
   <header class="post-header">

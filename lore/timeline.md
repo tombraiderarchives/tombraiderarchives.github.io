@@ -4,6 +4,35 @@ title: Timeline
 ---
 
 <div class="page-hero">
+  <div class="page-hero-banner" aria-hidden="true">
+    <svg viewBox="0 0 880 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="tlgrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity=".08"/>
+          <stop offset="100%" stop-color="var(--secondary)" stop-opacity=".03"/>
+        </linearGradient>
+      </defs>
+      <rect width="880" height="100" fill="url(#tlgrad)"/>
+      <line x1="0"   y1="100" x2="100" y2="0" stroke="var(--accent)" stroke-opacity=".06" stroke-width="1"/>
+      <line x1="80"  y1="100" x2="180" y2="0" stroke="var(--accent)" stroke-opacity=".06" stroke-width="1"/>
+      <line x1="160" y1="100" x2="260" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
+      <line x1="240" y1="100" x2="340" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
+      <line x1="320" y1="100" x2="420" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
+      <line x1="400" y1="100" x2="500" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
+      <line x1="480" y1="100" x2="580" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
+      <line x1="560" y1="100" x2="660" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
+      <line x1="640" y1="100" x2="740" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
+      <line x1="720" y1="100" x2="820" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
+      <line x1="60"  y1="50"  x2="820" y2="50" stroke="var(--accent)" stroke-opacity=".08" stroke-width="1" stroke-dasharray="4 6"/>
+      <circle cx="110" cy="50" r="3" fill="var(--accent)" opacity=".2"/>
+      <circle cx="220" cy="50" r="3" fill="var(--accent)" opacity=".2"/>
+      <circle cx="330" cy="50" r="3" fill="var(--accent)" opacity=".2"/>
+      <circle cx="440" cy="50" r="5" fill="var(--accent)" opacity=".18"/>
+      <circle cx="550" cy="50" r="3" fill="var(--accent)" opacity=".2"/>
+      <circle cx="660" cy="50" r="3" fill="var(--accent)" opacity=".2"/>
+      <circle cx="770" cy="50" r="3" fill="var(--accent)" opacity=".2"/>
+    </svg>
+  </div>
   <h1>Timeline</h1>
   <p>A chronological history of the Tomb Raider franchise, from Lara Croft's creation in 1993 to the present day.</p>
 </div>
