@@ -203,6 +203,24 @@ body {
 
 .nav-group-toggle span { flex: 1; }
 
+.nav-group-toggle--section {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-height: 40px;
+  border-top: 1px solid var(--border);
+  margin-top: .25rem;
+  padding-top: .5rem;
+}
+.nav-group-toggle--section:first-of-type { border-top: none; margin-top: 0; }
+.nav-group-toggle--section .nav-icon {
+  font-size: 1rem;
+  color: var(--accent);
+  opacity: .85;
+  flex-shrink: 0;
+}
+.nav-group-toggle--section:hover .nav-icon { opacity: 1; }
+
 .nav-group-toggle--sub {
   padding-left: 2rem;
   font-size: .795rem;
@@ -230,7 +248,7 @@ body {
   overflow: hidden;
   transition: max-height .3s var(--ease);
 }
-.nav-sub.is-open { max-height: 600px; }
+.nav-sub.is-open { max-height: 1200px; }
 .nav-sub ul { list-style: none; }
 
 /* ── Overlay ────────────────────────────────────────────────────────────── */
