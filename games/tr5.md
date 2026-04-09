@@ -1,30 +1,77 @@
 ---
-layout: default
-title: Tomb Raider - Chronicles (2000)
+layout: game
+title: Tomb Raider Chronicles
+cover_image: /images/tr5/cover.png
+image_folder: tr5
+
+stats:
+  release_date: November 26, 2000
+  genre: Action adventure
+  rating: Teen
+  length: Unknown
+  platforms: Windows, Playstation, Mac OS, Dreamcast
+  developer: Core Design
+  publisher: Eidos Interactive
+  writer: Unknown
+  setting: Rome, Russia, Ireland, New York
+  
+cheats:
+  - platform_name: PC and Macintosh
+    items:
+      - name: Unlimited Small Medipacks
+        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
+      - name: Unlimited Large Medipacks
+        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
+      - name: Chapter Select Rome
+        description: From Main Menu type F I L T H Y 1.
+      - name: Chapter Select Russia
+        description: From Main Menu type F I L T H Y 2.
+      - name: Chapter Select Ireland
+        description: From Main Menu type F I L T H Y 3.
+      - name: Chapter Select New York
+        description: From Main Menu type F I L T H Y 4.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold B I T S, quit to Main Menu.
+
+  - platform_name: PlayStation Cheats
+    items:
+      - name: All Items
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down.
+      - name: Weapons and Unlimited Supplies
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Up.
+      - name: Chapter Select Rome
+        description: From Main Menu hold L1 Up and press X.
+      - name: Chapter Select Russia
+        description: From Main Menu hold L1 Up and press X.
+      - name: Chapter Select Ireland
+        description: From Main Menu hold L2 Up and press X.
+      - name: Chapter Select New York
+        description: From Main Menu hold R1 Up and press X.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down Circle, press Triangle.
+
+  - platform_name: Dreamcast Cheats
+    items:
+      - name: Chapter Select Rome
+        description: From Main Menu hold L R and press Up.
+      - name: Chapter Select Russia
+        description: From Main Menu hold L R and press Down.
+      - name: Chapter Select Ireland
+        description: From Main Menu hold L R and press Left.
+      - name: Chapter Select New York
+        description: From Main Menu hold L R and press Right.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold Y until Secrets Found shows 36, quit to Main Menu.
+  
+
+videos:
+  - url: https://www.youtube.com/embed/21DSUhxADCs
+    title: Trailer
+    description: Official Tomb Raider Chronicles trailer
 ---
 
-<div class="hero">
-  <h1>Tomb Raider: Chronicles</h1>
-  <p class="subtitle">Core Design · 2000 · Classic Era</p>
-</div>
+After enduring a harrowing entombment within the Temple of Horus at the conclusion of The Last Revelation, Lara is believed to have died. Friends and allies gather at Croft Manor to honour her memory and reflect on her past exploits.
 
-<div class="info-grid">
-  <div class="info-cell"><div class="label">Released</div><div class="value">November 17, 2000</div></div>
-  <div class="info-cell"><div class="label">Developer</div><div class="value">Core Design</div></div>
-  <div class="info-cell"><div class="label">Platforms</div><div class="value">PlayStation, Windows, Dreamcast</div></div>
-  <div class="info-cell"><div class="label">Genre</div><div class="value">Action adventure</div></div>
-  <div class="info-cell"><div class="label">Setting</div><div class="value">Rome, Russia, Ireland, VCI HQ</div></div>
-  <div class="info-cell"><div class="label">Length</div><div class="value">~10 hours</div></div>
-</div>
+Through a series of flashbacks, players relive four of her earlier adventures. These include the pursuit of the Philosopher's Stone in Rome, a deep sea dive off the Russian coast to recover the Spear of Destiny, a haunting encounter with Hellspawn in Ireland, and an infiltration of a high tech office complex to reclaim the Iris artifact.
 
-Set after the apparent death of Lara Croft at the end of The Last Revelation, Chronicles follows friends and colleagues gathering at Croft Manor to remember her. They recount four previously untold adventures — in ancient Rome, on a Russian submarine base, in Ireland, and in a high-tech corporate headquarters.
-
-The anthology structure gave the game a unique feel compared to its predecessors, though it was developed under time pressure and received a mixed reception. It represents the final entry in the Core Design era before the series moved to Crystal Dynamics.
-
-<div class="section-title">Cheats</div>
-
-<div class="cheats-group">
-  <h3>PC</h3>
-  <div class="cheat-item"><div class="cheat-name">Level Skip</div><div class="cheat-desc">Walk forward, walk backward, turn around 3 times, jump forward</div></div>
-  <div class="cheat-item"><div class="cheat-name">All Weapons</div><div class="cheat-desc">Walk forward, walk backward, turn around 3 times, backflip</div></div>
-</div>
+Lara's fate remains uncertain, but these four stories form a bridge between The Last Revelation and The Angel of Darkness.

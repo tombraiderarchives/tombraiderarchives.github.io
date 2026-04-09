@@ -1,36 +1,50 @@
 ---
-layout: default
-title: Tomb Raider III (1998)
+layout: game
+title: Tomb Raider 3
+cover_image: /images/tr3/cover.png
+image_folder: tr3
+
+stats:
+  release_date: November 20, 1998
+  genre: Action adventure
+  rating: Teen
+  length: Unknown
+  platforms: Windows, Playstation, Mac OS
+  developer: Core Design
+  publisher: Eidos Interactive
+  writer: Unknown
+  setting: Antarctica, India, London, Nevada, South Pacific
+  
+cheats:
+  - platform_name: PC and Macintosh
+    items:
+      - name: Level Skip
+        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, jump forward.
+      - name: All Weapons and Ammo
+        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, backflip.
+
+  - platform_name: PlayStation Cheats
+    items:
+      - name: Level Skip
+        description: Press L2, R2, L2, L2, R2, L2, R2, L2, R2, L2, L2, L2, L2, R2, L2, R2, R2, R2, R2, L2.
+      - name: All Weapons and Ammo
+        description: Press L2, R2, R2, L2, L2, L2, L2, R2, L2, R2, L2, R2, L2, R2, L2, L2, R2, L2, L2, R2.
+      - name: All Items and Secrets
+        description: Press L2, L2, L2, L2, L2, R2, L2, L2, L2, R2, L2, R2, L2, L2, R2, L2, L2, R2, L2, L2.
+      - name: Full Health
+        description: Press R2, R2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, R2, L2, L2, L2, L2, L2.
+      - name: Racetrack Key
+        description: In Lara's Home Press R2, L2, L2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, L2, L2, R2, L2, L2.
+  
+
+videos:
+  - url: https://www.youtube.com/embed/3yLY0nlnMi0
+    title: Trailer
+    description: Official Tomb Raider 3 trailer
 ---
 
-<div class="hero">
-  <h1>Tomb Raider III: Adventures of Lara Croft</h1>
-  <p class="subtitle">Core Design · 1998 · Classic Era</p>
-</div>
+Millions of years in the past, a meteor collided with Earth, making landfall in Antarctica, which was then a tropical haven. In the present day, the same region is under excavation by the research firm RX Tech. They have detected unusual readings emanating from the impact site of the meteorite, leading to the discovery of a sailor's remains, a member of Charles Darwin's expedition on the H.M.S. Beagle. Evidently, some sailors had ventured into the crater's interior.
 
-<div class="info-grid">
-  <div class="info-cell"><div class="label">Released</div><div class="value">November 21, 1998</div></div>
-  <div class="info-cell"><div class="label">Developer</div><div class="value">Core Design</div></div>
-  <div class="info-cell"><div class="label">Platforms</div><div class="value">PlayStation, Windows</div></div>
-  <div class="info-cell"><div class="label">Genre</div><div class="value">Action adventure</div></div>
-  <div class="info-cell"><div class="label">Setting</div><div class="value">India, South Pacific, Nevada, London, Antarctica</div></div>
-  <div class="info-cell"><div class="label">Length</div><div class="value">~14 hours</div></div>
-</div>
+Guided by insights from the sailor's journal, the researchers have expanded their exploration beyond the impact crater, tracing the Beagle's crew's journey to various corners of the world where they met their fates.
 
-The most expansive classic-era entry, Tomb Raider III features a semi-open structure where players can tackle the South Pacific, Nevada, and London levels in any order after the India opening. The game centres on four meteorite fragments with extraordinary properties scattered across the globe.
-
-Known for its steep difficulty, TR3 is notorious among fans for its punishing traps and complex level design. It remains a favourite for those who enjoyed the challenge, and its Antarctica finale is one of the series' most memorable sequences.
-
-<div class="section-title">Cheats</div>
-
-<div class="cheats-group">
-  <h3>PC</h3>
-  <div class="cheat-item"><div class="cheat-name">Level Skip</div><div class="cheat-desc">Walk forward, walk backward, turn around 3 times, jump forward</div></div>
-  <div class="cheat-item"><div class="cheat-name">All Weapons</div><div class="cheat-desc">Walk forward, walk backward, turn around 3 times, backflip</div></div>
-</div>
-
-<div class="cheats-group">
-  <h3>PlayStation</h3>
-  <div class="cheat-item"><div class="cheat-name">Level Skip</div><div class="cheat-desc">Open inventory: Up, Square, Triangle, R2, L2, L1, L2, L1 then confirm</div></div>
-  <div class="cheat-item"><div class="cheat-name">All Weapons</div><div class="cheat-desc">Open inventory: Square, L2, Triangle, L1, Circle, L1, R2, Square then confirm</div></div>
-</div>
+One such location is India, where Lara currently seeks the Infada Stone. Unaware of its authentic history, she only recognizes it through local beliefs, attributing significant powers to the stone. However, her quest will soon unveil a much deeper and intriguing narrative.
