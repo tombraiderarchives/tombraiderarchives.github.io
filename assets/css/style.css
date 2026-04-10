@@ -1085,6 +1085,25 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .timeline-tag--game   { background: var(--accent-dim); color: var(--accent); }
 .timeline-tag--film   { background: rgba(120,160,220,.12); color: #7ea8d8; }
 .timeline-tag--series { background: rgba(100,200,120,.12); color: #6ec880; }
+.timeline-era-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--text);
+  margin: 3rem 0 .25rem;
+}
+.timeline-era-title:first-child { margin-top: 0; }
+.timeline-era-sub {
+  font-size: .78rem;
+  color: var(--text-dim);
+  margin-bottom: 1.25rem;
+}
+.timeline-cover {
+  width: 60px;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: .6rem;
+}
 
 /* ── Characters page ──────────────────────────────────────────────────────── */
 .char-card-full {
@@ -1270,7 +1289,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   }
   .sidebar.is-open { transform: translateX(0); }
 
-  /* Sticky header — always visible as you scroll */
+  /* Fixed header — always visible as you scroll */
   .mobile-header {
     display: flex;
     align-items: center;
@@ -1279,16 +1298,19 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
     height: 52px;
     background: var(--bg-2);
     border-bottom: 1px solid var(--border);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
-    flex-shrink: 0;
   }
+
+  body { padding-top: 52px; }
 
   /* Show floating FAB */
   .nav-toggle { display: flex; }
 
-  /* Offset anchor scroll targets below the sticky header */
+  /* Offset anchor scroll targets below the fixed header */
   html { scroll-padding-top: 60px; }
 
   /* Overlay: present in DOM but fully non-interactive when invisible */

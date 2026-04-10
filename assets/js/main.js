@@ -49,6 +49,7 @@
   function openSidebar() {
     sidebar.classList.add('is-open');
     overlay.classList.add('is-visible');
+    document.body.style.overflow = 'hidden';
     navToggle.setAttribute('aria-expanded', 'true');
     navToggle.setAttribute('aria-label', 'Close navigation');
     var first = sidebar.querySelector('a, button');
@@ -58,6 +59,7 @@
   function closeSidebar() {
     sidebar.classList.remove('is-open');
     overlay.classList.remove('is-visible');
+    document.body.style.overflow = '';
     navToggle.setAttribute('aria-expanded', 'false');
     navToggle.setAttribute('aria-label', 'Open navigation');
     navToggle.focus();
