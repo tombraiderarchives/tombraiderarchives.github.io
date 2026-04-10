@@ -1187,6 +1187,192 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .char-game-link span { font-size: .67rem; color: var(--text-dim); }
 .char-game-link:hover { color: var(--accent); border-color: var(--accent-border); background: var(--accent-dim); }
 
+/* ── Lara biography page ──────────────────────────────────────────────────── */
+.bio-era-block {
+  margin-bottom: 3rem;
+}
+.bio-era-label {
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--accent);
+  margin-bottom: .35rem;
+}
+.bio-era-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.bio-layout {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 2rem;
+  align-items: start;
+}
+.bio-layout.bio-layout--reverse {
+  grid-template-columns: 220px 1fr;
+}
+.bio-layout--reverse .bio-text { order: 2; }
+.bio-layout--reverse .bio-image-col { order: 1; }
+.bio-text p {
+  font-size: .875rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: .9rem;
+  max-width: 72ch;
+}
+.bio-text p:last-child { margin-bottom: 0; }
+.bio-image-col { display: flex; flex-direction: column; gap: .75rem; }
+.bio-image-slot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--bg-3);
+  border: 1px dashed var(--border-2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bio-image-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+.bio-image-slot--wide {
+  aspect-ratio: 4/3;
+}
+.bio-image-caption {
+  font-size: .7rem;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.4;
+}
+.bio-placeholder-label {
+  font-size: .7rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 1rem;
+  user-select: none;
+}
+.bio-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.bio-stat dt {
+  font-size: .65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-dim);
+  margin-bottom: .2rem;
+}
+.bio-stat dd {
+  font-size: .82rem;
+  color: var(--text);
+}
+
+/* ── Comics page ──────────────────────────────────────────────────────────── */
+.comic-series-block {
+  margin-bottom: 3.5rem;
+}
+.comic-series-header {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  object-position: center 30%;
+  border-radius: var(--radius) var(--radius) 0 0;
+  display: block;
+  margin-bottom: 0;
+}
+.comic-series-header-wrap {
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.comic-series-meta {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 1.25rem 1.5rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.comic-series-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: .3rem;
+}
+.comic-series-pub {
+  font-size: .72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .75rem;
+}
+.comic-series-desc {
+  font-size: .84rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 72ch;
+}
+.comic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: .6rem;
+}
+.comic-issue {
+  display: block;
+  text-decoration: none;
+  position: relative;
+}
+.comic-issue img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  display: block;
+  transition: border-color .15s, transform .15s;
+}
+.comic-issue:hover img {
+  border-color: var(--accent-border);
+  transform: translateY(-2px);
+}
+.comic-issue-num {
+  font-size: .62rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: .3rem;
+  display: block;
+}
+
+@media (max-width: 680px) {
+  .bio-layout,
+  .bio-layout.bio-layout--reverse {
+    grid-template-columns: 1fr;
+  }
+  .bio-layout--reverse .bio-text { order: 1; }
+  .bio-layout--reverse .bio-image-col { order: 2; }
+  .bio-image-col { flex-direction: row; overflow-x: auto; }
+  .bio-image-slot { min-width: 140px; flex-shrink: 0; }
+  .comic-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: .4rem; }
+}
+
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 .site-footer {
   background: var(--bg-2);
