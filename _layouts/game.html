@@ -25,6 +25,17 @@ layout: default
 
 <article class="game-page">
 
+  <!-- Page header: title and cover art -->
+  <header class="game-page-header">
+    {% if page.cover_image %}
+    <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" class="game-cover-img" loading="eager">
+    {% endif %}
+    <div class="game-page-title">
+      {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
+      <h1>{{ page.title }}</h1>
+    </div>
+  </header>
+
   <!-- Section jump nav -->
   {% if page.stats or page.cheats or page.achievements or page.trophies or _has_gallery or page.videos or page.cast %}
   <nav class="jump-nav" aria-label="Jump to section">

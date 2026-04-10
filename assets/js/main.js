@@ -1,27 +1,30 @@
 'use strict';
 
 /* ── Theme toggle ───────────────────────────────────────────────────────── */
+/* Handles multiple .theme-toggle buttons (sidebar + mobile sticky header) */
 (function () {
-  var html   = document.documentElement;
-  var toggle = document.getElementById('themeToggle');
-  if (!toggle) return;
+  var html    = document.documentElement;
+  var toggles = document.querySelectorAll('.theme-toggle');
+  if (!toggles.length) return;
 
   function applyTheme(theme) {
     html.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
-    var icon = toggle.querySelector('i');
-    if (icon) {
-      icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
-    }
-    toggle.setAttribute('aria-label',
-      theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    toggles.forEach(function (btn) {
+      var icon = btn.querySelector('i');
+      if (icon) icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+      btn.setAttribute('aria-label',
+        theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    });
   }
 
-  // Sync icon to whatever theme was set by the FOUC script
+  // Sync all icons to whatever theme was applied by the FOUC script
   applyTheme(html.getAttribute('data-theme') || 'dark');
 
-  toggle.addEventListener('click', function () {
-    applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  toggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
   });
 }());
 
