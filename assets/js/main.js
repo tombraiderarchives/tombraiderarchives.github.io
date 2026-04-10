@@ -94,36 +94,6 @@
   });
 }());
 
-/* ── Cheat code button badges ───────────────────────────────────────────── */
-(function () {
-  // Known multi-character button names (longer variants first to avoid substr matches)
-  var KNOWN = [
-    'Triangle', 'Circle', 'Square', 'Cross',
-    'L3', 'R3', 'L2', 'R2', 'L1', 'R1',
-    'LB', 'LT', 'RB', 'RT',
-    'Start', 'Select', 'Back'
-  ];
-  var multiRe = new RegExp('\\b(' + KNOWN.join('|') + ')\\b', 'g');
-
-  document.querySelectorAll('.cheat-desc').forEach(function (el) {
-    var raw = el.textContent;
-    // Only process if the text contains at least one known button name
-    if (!multiRe.test(raw)) { multiRe.lastIndex = 0; return; }
-    multiRe.lastIndex = 0;
-
-    // Badge known multi-char button names
-    var html = raw.replace(multiRe, '<kbd>$1</kbd>');
-
-    // Badge single uppercase letters in comma-separated positions
-    // e.g. "L2, X, Y, Z, Start" → badges X, Y, Z
-    html = html.replace(/(,\s*)([A-Z])([\s,]|$)/g, function (_, pre, ch, post) {
-      return pre + '<kbd>' + ch + '</kbd>' + post;
-    });
-
-    el.innerHTML = html;
-  });
-}());
-
 /* ── Lightbox ───────────────────────────────────────────────────────────── */
 (function () {
   var lightbox  = document.getElementById('lightbox');
@@ -199,12 +169,12 @@
   });
 }());
 
-/* ── Lazy loading for content images ────────────────────────────────────── */
-/* Applies lazy loading to images inside markdown-rendered content areas
-   that don't have the attribute set in HTML (e.g. post body, game body). */
+/* ── Lazy loading — apply to any image not already marked ───────────────── */
 (function () {
-  document.querySelectorAll('.post-body img, .game-body img').forEach(function (img) {
-    if (!img.getAttribute('loading'))  img.setAttribute('loading', 'lazy');
-    if (!img.getAttribute('decoding')) img.setAttribute('decoding', 'async');
+  document.querySelectorAll('img:not([loading])').forEach(function (img) {
+    img.setAttribute('loading', 'lazy');
+  });
+  document.querySelectorAll('img:not([decoding])').forEach(function (img) {
+    img.setAttribute('decoding', 'async');
   });
 }());

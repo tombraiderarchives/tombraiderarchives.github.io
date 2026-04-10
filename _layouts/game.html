@@ -25,40 +25,17 @@ layout: default
 
 <article class="game-page">
 
-  <!-- Hero header with optional backdrop -->
-  <div class="game-hero">
-    {% assign _backdrop = page.header_image | default: page.cover_image %}
-    {% if _backdrop %}
-    <div class="game-hero-backdrop" style="background-image:url('{{ _backdrop }}')"></div>
-    {% endif %}
-    <header class="game-header">
-      <div class="game-cover">
-        {% if page.cover_image %}
-        <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" loading="eager">
-        {% else %}
-        <div class="img-ph img-ph--cover" aria-hidden="true">
-          <svg class="img-ph-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-            <circle cx="12" cy="13" r="4"/>
-          </svg>
-          <span class="img-ph-label">No cover</span>
-        </div>
-        {% endif %}
-      </div>
-      <div class="game-header-text">
-        {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
-        <h1>{{ page.title }}</h1>
-        <nav class="jump-nav" aria-label="Jump to section">
-          {% if page.stats %}<a href="#stats"><i class="ph ph-info" aria-hidden="true"></i>Info</a>{% endif %}
-          {% if page.cheats %}<a href="#cheats"><i class="ph ph-game-controller" aria-hidden="true"></i>Cheats</a>{% endif %}
-          {% if page.achievements or page.trophies %}<a href="#achievements"><i class="ph ph-trophy" aria-hidden="true"></i>Achievements</a>{% endif %}
-          {% if _has_gallery %}<a href="#gallery"><i class="ph ph-images" aria-hidden="true"></i>Gallery</a>{% endif %}
-          {% if page.videos %}<a href="#videos"><i class="ph ph-play-circle" aria-hidden="true"></i>Videos</a>{% endif %}
-          {% if page.cast %}<a href="#cast"><i class="ph ph-users" aria-hidden="true"></i>Cast</a>{% endif %}
-        </nav>
-      </div>
-    </header>
-  </div>
+  <!-- Section jump nav -->
+  {% if page.stats or page.cheats or page.achievements or page.trophies or _has_gallery or page.videos or page.cast %}
+  <nav class="jump-nav" aria-label="Jump to section">
+    {% if page.stats %}<a href="#stats"><i class="ph ph-info" aria-hidden="true"></i>Info</a>{% endif %}
+    {% if page.cheats %}<a href="#cheats"><i class="ph ph-game-controller" aria-hidden="true"></i>Cheats</a>{% endif %}
+    {% if page.achievements or page.trophies %}<a href="#achievements"><i class="ph ph-trophy" aria-hidden="true"></i>Achievements</a>{% endif %}
+    {% if _has_gallery %}<a href="#gallery"><i class="ph ph-images" aria-hidden="true"></i>Gallery</a>{% endif %}
+    {% if page.videos %}<a href="#videos"><i class="ph ph-play-circle" aria-hidden="true"></i>Videos</a>{% endif %}
+    {% if page.cast %}<a href="#cast"><i class="ph ph-users" aria-hidden="true"></i>Cast</a>{% endif %}
+  </nav>
+  {% endif %}
 
   <!-- Stats -->
   {% if page.stats %}

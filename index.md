@@ -9,7 +9,7 @@ title: Home
 </div>
 
 <section class="news-section">
-  <h2>Latest News</h2>
+  <h2 class="section-title">Latest News</h2>
   <div class="news-list">
     {% for post in site.posts limit:3 %}
     <article class="news-item" data-href="{{ post.url }}">
