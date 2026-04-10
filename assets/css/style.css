@@ -447,8 +447,6 @@ a:hover { text-decoration: underline; }
   line-height: 1.2;
   color: var(--text);
   margin-bottom: 1.5rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--accent);
 }
 .subsection-title {
   font-size: 1.05rem;
@@ -562,26 +560,35 @@ a:hover { text-decoration: underline; }
 /* Jump nav */
 .jump-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: .35rem;
-  margin-top: 1.25rem;
+  flex-wrap: nowrap;
+  gap: .4rem;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
 }
+.jump-nav::-webkit-scrollbar { display: none; }
 .jump-nav a {
   display: inline-flex;
   align-items: center;
-  height: 28px;
-  padding: 0 .75rem;
-  font-size: .72rem;
+  gap: .4rem;
+  height: 34px;
+  padding: 0 1rem;
+  font-size: .78rem;
   font-weight: 500;
-  letter-spacing: .03em;
   color: var(--text-muted);
   text-decoration: none;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  background: var(--bg-3);
+  border: 1px solid var(--border-2);
+  border-radius: 99px;
   transition: color .15s, border-color .15s, background .15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
+.jump-nav a i { font-size: .9rem; }
 .jump-nav a:hover {
-  color: var(--accent);
+  color: var(--text);
   border-color: var(--accent-border);
   background: var(--accent-dim);
   text-decoration: none;
@@ -870,7 +877,32 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   width: 100%;
   font-size: .82rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.8;
+}
+
+/* Button/key badges auto-injected into cheat descriptions */
+.cheat-desc kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.7em;
+  padding: .1em .45em;
+  font-family: inherit;
+  font-size: .8em;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg-4);
+  border: 1px solid var(--border-2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+[data-theme="light"] .cheat-desc kbd {
+  background: #fff;
+  border-color: var(--border-2);
+  color: var(--text);
 }
 
 /* Cast info wrapper (cards without images) */
@@ -1377,7 +1409,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 
   .game-header { flex-direction: column; gap: 1.25rem; }
   .game-cover img { width: 110px; }
-  .jump-nav a { height: 40px; font-size: .8rem; }
+  .jump-nav a { height: 36px; font-size: .78rem; }
 
   /* Footer */
   .footer-inner {

@@ -49,12 +49,12 @@ layout: default
         {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
         <h1>{{ page.title }}</h1>
         <nav class="jump-nav" aria-label="Jump to section">
-          {% if page.stats %}<a href="#stats">Info</a>{% endif %}
-          {% if page.cheats %}<a href="#cheats">Cheats</a>{% endif %}
-          {% if page.achievements or page.trophies %}<a href="#achievements">Achievements</a>{% endif %}
-          {% if _has_gallery %}<a href="#gallery">Gallery</a>{% endif %}
-          {% if page.videos %}<a href="#videos">Videos</a>{% endif %}
-          {% if page.cast %}<a href="#cast">Cast</a>{% endif %}
+          {% if page.stats %}<a href="#stats"><i class="ph ph-info" aria-hidden="true"></i>Info</a>{% endif %}
+          {% if page.cheats %}<a href="#cheats"><i class="ph ph-game-controller" aria-hidden="true"></i>Cheats</a>{% endif %}
+          {% if page.achievements or page.trophies %}<a href="#achievements"><i class="ph ph-trophy" aria-hidden="true"></i>Achievements</a>{% endif %}
+          {% if _has_gallery %}<a href="#gallery"><i class="ph ph-images" aria-hidden="true"></i>Gallery</a>{% endif %}
+          {% if page.videos %}<a href="#videos"><i class="ph ph-play-circle" aria-hidden="true"></i>Videos</a>{% endif %}
+          {% if page.cast %}<a href="#cast"><i class="ph ph-users" aria-hidden="true"></i>Cast</a>{% endif %}
         </nav>
       </div>
     </header>
