@@ -20,22 +20,27 @@ cheats:
   - platform_name: PC and Macintosh
     items:
       - name: Level Skip
-        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, jump forward.
+        description: Draw pistols, walk 1 step backward, walk 1 step forward, crouch and release, turn 3 times, jump forward.
       - name: All Weapons and Ammo
-        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, backflip.
+        description: Draw pistols, walk 1 step backward, walk 1 step forward, crouch and release, turn 3 times, backflip.
 
-  - platform_name: PlayStation Cheats
+  - platform_name: PlayStation
     items:
       - name: Level Skip
         description: Press L2, R2, L2, L2, R2, L2, R2, L2, R2, L2, L2, L2, L2, R2, L2, R2, R2, R2, R2, L2.
       - name: All Weapons and Ammo
-        description: Press L2, R2, R2, L2, L2, L2, L2, R2, L2, R2, L2, R2, L2, R2, L2, L2, R2, L2, L2, R2.
+        description: Press L2, R2, R2, L2, L2, L2, L2, R2, L2, R2, R2, L2, R2, R2, L2, L2, R2, L2, L2, R2.
       - name: All Items and Secrets
         description: Press L2, L2, L2, L2, L2, R2, L2, L2, L2, R2, L2, R2, L2, L2, R2, L2, L2, R2, L2, L2.
       - name: Full Health
         description: Press R2, R2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, R2, L2, L2, L2, L2, L2.
-      - name: Racetrack Key
-        description: In Lara's Home Press R2, L2, L2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, L2, L2, R2, L2, L2.
+      - name: Race Track Key
+        description: In Lara's Home — R2, L2, L2, L2, R2, L2, L2, L2, L2, L2, L2, R2, L2, L2, L2, L2, L2, R2, L2, L2.
+
+  - platform_name: PSP
+    items:
+      - name: Note
+        description: Use the same PlayStation codes, but use the Analog Stick instead of L2/R2 — Left = L2, Right = R2.
   
 
 videos:

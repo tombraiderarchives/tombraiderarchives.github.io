@@ -17,13 +17,24 @@ stats:
   setting: Paris, Prague
   
 cheats:
-  - platform_name: PlayStation 2 Cheats
+  - platform_name: Useful Bugs (All Platforms)
+    items:
+      - name: Replenish Oxygen
+        description: Save and reload while underwater to fully restore Lara's air gauge.
+      - name: Respawning Items
+        description: Items in the Parisian Ghetto respawn after completing the Bouchard's Hideout section.
+
+  - platform_name: PlayStation 2
     items:
       - name: Level Skip
-        description: Open Load Game, highlight any save file, press R2 Square, exit inventory to complete the level.
-
+        description: During gameplay, go to Load Game, highlight any save file, and press R2+Square. Exit the inventory to skip to the next level.
       - name: Level Select
-        description: Pause the game, hold L1 R2 Down Triangle, release, then press Circle Up Square Triangle Right Down to unlock Skip Level and Level Select on the Start menu.
+        description: Pause the game, hold L1+R2+Down+Triangle simultaneously, release, then quickly press Circle, Up, Square, Triangle, Right, Down. Level Skip and Level Select options will appear in the menu ring.
+
+  - platform_name: PC and Macintosh
+    items:
+      - name: Note
+        description: No standard cheat codes exist for the PC version. Debug features (Flight, God Mode, All Weapons) require the third-party TRAODSCU utility or specific command-line parameters not included in the retail release.
 
       - name: Level Select Entries
         description: |

@@ -17,34 +17,30 @@ stats:
   setting: Peru, Greece, Egypt, Atlantis
 
 cheats:
-  - platform_name: PC Cheats
+  - platform_name: PC and Macintosh
     items:
       - name: Level Skip
-        description: WALK forward, WALK backward, turn around 3 times, forward jump
-      - name: All Weapons and Ammo
-        description: WALK forward, WALK backward, turn around 3 times, backflip
+        description: Walk 1 step forward, walk 1 step backward, turn around 3 times, jump forward.
+      - name: All Weapons and Max Ammo
+        description: Walk 1 step forward, walk 1 step backward, turn around 3 times, backflip.
 
-  - platform_name: PlayStation Cheats
+  - platform_name: PlayStation
     items:
-      - name: Level Skip PAL
-        description: Open Inventory, L2, R2, Triangle, L1, L1, Circle, R2, L2 then confirm
-      - name: Level Skip NTSC U
-        description: Open Inventory, L2, R2, L1, Circle, Triangle, L1, R2, L2 then confirm
-      - name: Level Skip NTSC J
-        description: Open Inventory, R2, L2, R1, L1, R1, L2, R2, Select then confirm
-      - name: All Weapons PAL
-        description: Open Inventory, L1, Triangle, L2, R2, R2, L2, Circle, L1 then confirm
-      - name: All Weapons NTSC U
-        description: Open Inventory, L1, Triangle, R2, L2, L2, R2, Circle, L1 then confirm
-      - name: All Weapons NTSC J
-        description: Open Inventory, L1, R1, L2, R2, L2, R1, L1, Select then confirm
+      - name: Level Skip (NTSC)
+        description: Inventory screen — L2, R2, L1, Circle, Triangle, L1, R2, L2. Press Select.
+      - name: Level Skip (PAL)
+        description: Inventory screen — L2, R2, Triangle, L1, L1, Circle, R2, L2. Press Select.
+      - name: All Weapons (NTSC)
+        description: Inventory screen — L1, Triangle, R2, L2, L2, R2, Circle, L1. Press Select.
+      - name: All Weapons (PAL)
+        description: Inventory screen — L1, Triangle, L2, R2, R2, L2, Circle, L1. Press Select.
 
-  - platform_name: Sega Saturn Cheats
+  - platform_name: Sega Saturn
     items:
-      - name: Level Skip NTSC U and J
-        description: Pause, open passport, Z, Y, Z, Y, X, X, X, Start then confirm
-      - name: All Weapons NTSC U and J
-        description: Open Inventory, X, Y, X, Y, Z, Z, Z, Z, Y, Z, Y, X, X, X, Start then confirm
+      - name: Level Skip
+        description: Inventory screen — X, Y, X, Y, Z, Z, Z, Z, Y, X, X, X, Start.
+      - name: All Weapons
+        description: Inventory screen — X, Y, X, Y, Z, Z, Z, Z, Y, Z, Y, X, X, X, Start.
 ---
 
 Tomb Raider is an action adventure video game developed by Core Design and published by Eidos Interactive. It was originally released in 1996 for the Sega Saturn, PlayStation, and MS DOS platforms.

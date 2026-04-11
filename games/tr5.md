@@ -19,50 +19,32 @@ stats:
 cheats:
   - platform_name: PC and Macintosh
     items:
-      - name: Unlimited Small Medipacks
-        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
-      - name: Unlimited Large Medipacks
-        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
-      - name: Chapter Select Rome
-        description: From Main Menu type F I L T H Y 1.
-      - name: Chapter Select Russia
-        description: From Main Menu type F I L T H Y 2.
-      - name: Chapter Select Ireland
-        description: From Main Menu type F I L T H Y 3.
-      - name: Chapter Select New York
-        description: From Main Menu type F I L T H Y 4.
-      - name: Special Features
-        description: Open inventory, highlight Timex TMX, hold B I T S, quit to Main Menu.
+      - name: Unlimited Small Medipaks
+        description: Have exactly 1 small medipak and less than 100% health. Highlight it in inventory, hold Look (Numpad 0) and press 0 (top row number key).
+      - name: Unlimited Large Medipaks
+        description: Have exactly 1 large medipak and less than 100% health. Highlight it in inventory, hold Look (Numpad 0) and press 9 (top row number key).
 
-  - platform_name: PlayStation Cheats
+  - platform_name: PlayStation
     items:
-      - name: All Items
-        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down.
-      - name: Weapons and Unlimited Supplies
-        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Up.
-      - name: Chapter Select Rome
-        description: From Main Menu hold L1 Up and press X.
-      - name: Chapter Select Russia
-        description: From Main Menu hold R2 Up and press X.
-      - name: Chapter Select Ireland
-        description: From Main Menu hold L2 Up and press X.
-      - name: Chapter Select New York
-        description: From Main Menu hold R1 Up and press X.
-      - name: Special Features
-        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down Circle, press Triangle.
+      - name: All Weapons, Ammo and Medipaks
+        description: Open inventory, highlight Stopwatch, hold L1+L2+R1+R2+Up simultaneously.
+      - name: All Items (including Keys)
+        description: Open inventory, highlight Stopwatch, hold L1+L2+R1+R2+Down simultaneously.
+      - name: Chapter Select — Russian Base
+        description: At Main Menu, highlight New Game, hold L1 and press X.
+      - name: Chapter Select — Ireland
+        description: At Main Menu, highlight New Game, hold L2 and press X.
+      - name: Chapter Select — VCI Headquarters
+        description: At Main Menu, highlight New Game, hold R1 and press X.
 
-  - platform_name: Dreamcast Cheats
+  - platform_name: Dreamcast
     items:
-      - name: Chapter Select Rome
-        description: From Main Menu hold L R and press Up.
-      - name: Chapter Select Russia
-        description: From Main Menu hold L R and press Down.
-      - name: Chapter Select Ireland
-        description: From Main Menu hold L R and press Left.
-      - name: Chapter Select New York
-        description: From Main Menu hold L R and press Right.
-      - name: Special Features
-        description: Open inventory, highlight Timex TMX, hold Y until Secrets Found shows 36, quit to Main Menu.
+      - name: Chapter Select — Russian Base
+        description: At Main Menu, highlight New Game, hold L+R and press Down.
+      - name: Chapter Select — Ireland
+        description: At Main Menu, highlight New Game, hold L+R and press Left.
+      - name: Chapter Select — VCI Headquarters
+        description: At Main Menu, highlight New Game, hold L+R and press Right.
   
 
 videos:

@@ -19,36 +19,30 @@ stats:
 cheats:
   - platform_name: PC and Macintosh
     items:
+      - name: Note
+        description: Lara must face exactly North for these cheats. The compass needle turns transparent when she is correctly positioned.
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold H E L P, release, close inventory.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, hold G U N S, release, close inventory.
-      - name: All Items
-        description: Face North, open inventory, highlight Large Medipack, hold B I T S, release, close inventory.
-      - name: Unlimited Small Medipacks
-        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
-      - name: Unlimited Large Medipacks
-        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
+        description: Facing North, open inventory, highlight Load Game, hold H+E+L+P (or S+K+I+P), release, close inventory.
+      - name: All Items (No Keys)
+        description: Facing North, open inventory, highlight Small Medipak, hold G+U+N+S simultaneously, release.
+      - name: All Weapons (After All Items)
+        description: While still facing North after activating All Items, highlight Large Medipak and hold W+E+A+P+O+N+S simultaneously, release.
 
-  - platform_name: PlayStation Cheats
+  - platform_name: PlayStation
     items:
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold L1 L2 R1 R2 Up, release, press Select.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, hold L1 L2 R1 R2 Up, release, press Select.
-      - name: All Items
-        description: Face North, open inventory, highlight Large Medipack, hold L1 L2 R1 R2 Down, release, press Select.
+        description: Facing North, open inventory, highlight Load Game, hold L1+L2+R1+R2+Up simultaneously, release.
+      - name: All Weapons, Ammo and Medipaks
+        description: Facing North, open inventory, highlight Small Medipak, hold L1+L2+R1+R2+Up simultaneously, release.
+      - name: All Keys and Artefacts
+        description: Facing North, open inventory, highlight Large Medipak, hold L1+L2+R1+R2+Down simultaneously, release.
 
-  - platform_name: Dreamcast Cheats
+  - platform_name: Dreamcast
     items:
+      - name: All Weapons, Ammo and Medipaks
+        description: Facing North, open inventory, highlight Small Medipak, press L, Up, X, Up, R, Y.
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold L R Y, release, close inventory.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, press L Up X Up R Y.
-      - name: All Weapons Alternate
-        description: Face North, open inventory, highlight Small Medipack, hold L R Y, release, close inventory.
-      - name: Unlimited Ammo
-        description: Face North, open inventory, highlight Small Medipack, press L R Up, Right Up Start Start.
+        description: Facing North, open inventory, highlight Load Game, hold L+R simultaneously, then press Y.
   
 
 videos:

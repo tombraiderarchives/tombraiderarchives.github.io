@@ -18,40 +18,34 @@ stats:
   setting: China, Venice, Offshore Rig, Maria Doria, Tibetan Foothills
   
 cheats:
-  - platform_name: PC, Macintosh and iOS
+  - platform_name: PC, Mac and iOS
     items:
       - name: Level Skip
-        description: Light a flare, walk forward, walk back, turn around 3 times, jump forward.
+        description: Light a flare, walk 1 step forward, walk 1 step backward, turn 3 times, jump forward.
       - name: All Weapons and Ammo
-        description: Light a flare, walk forward, walk back, turn around 3 times, backflip.
+        description: Light a flare, walk 1 step forward, walk 1 step backward, turn 3 times, backflip.
       - name: Exploding Lara
-        description: Perform the above cheats without a flare in hand.
+        description: Perform either code without holding a flare.
 
-  - platform_name: PlayStation Cheats
+  - platform_name: PlayStation
     items:
-      - name: Level Skip NTSC
-        description: Hold walk, sidestep left, right, left, step back, step forward, release walk, turn 3 times, jump forward and roll.
-      - name: Level Skip PAL
-        description: Light a flare, hold walk, step forward, step back, release walk, turn 3 times, jump forward.
-      - name: Level Skip Alternate
-        description: Hold walk, step left, right, left, forward, back, release walk, turn 3 times, jump forward and roll.
-      - name: All Weapons and Ammo NTSC
-        description: Hold walk, sidestep left, right, left, step back, step forward, release walk, turn 3 times, backflip and roll.
-      - name: All Weapons and Ammo PAL
-        description: Light a flare, hold walk, step forward, step back, release walk, turn 3 times, backflip.
-      - name: All Weapons Alternate
-        description: Hold walk, step left, right, left, back, forward, turn 3 times, backflip and roll.
+      - name: Level Skip (NTSC)
+        description: Hold Walk, sidestep Left, Right, Left, step Back, Forward. Release Walk, turn 3 times, jump forward and roll.
+      - name: Level Skip (PAL)
+        description: Light a flare, hold Walk, step Forward, Back. Release Walk, turn 3 times, jump forward.
+      - name: All Weapons (NTSC)
+        description: Hold Walk, sidestep Left, Right, Left, step Back, Forward. Release Walk, turn 3 times, backflip and roll.
+      - name: All Weapons (PAL)
+        description: Light a flare, hold Walk, step Forward, Back. Release Walk, turn 3 times, backflip.
       - name: Infinite Flares
-        description: Enable All Weapons, draw pistols, press L2.
-      - name: Exploding Lara
-        description: Hold walk, step forward, step back, turn 3 times, backflip.
+        description: Enable All Weapons first, draw pistols, then press L2.
 
-  - platform_name: Sega Saturn Cheats
+  - platform_name: Sega Saturn
     items:
       - name: Level Skip
-        description: Pause, open passport, Z, Y, Z, Y, X, X, X, Start.
+        description: Inventory screen — Z, Y, Z, Y, X, X, X, Start.
       - name: All Weapons
-        description: Open inventory, X, Y, X, Y, Z, Z, Z, Z, Y, Z, Y, X, X, X, Start.
+        description: Inventory screen — X, Y, X, Y, Z, Z, Z, Z, Y, Z, Y, X, X, X, Start.
 
   
 
