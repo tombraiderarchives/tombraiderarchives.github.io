@@ -17,29 +17,14 @@ stats:
   setting: China, Venice, Offshore Rig, Maria Doria, Tibetan Foothills
 
 cheats:
-  - platform_name: PC, Macintosh and iOS
+  - platform_name: All Platforms (PC, PlayStation, Xbox, Switch)
     items:
       - name: Level Skip
-        description: Light a flare, walk forward, walk back, turn around 3 times, jump forward.
-      - name: All Weapons and Ammo
-        description: Light a flare, walk forward, walk back, turn around 3 times, backflip.
+        description: Draw a flare, walk one step forward, walk one step backward, turn around 3 times, jump forward (standing jump, not running jump).
+      - name: All Weapons, Max Ammo and Health Packs
+        description: Draw a flare, walk one step forward, walk one step backward, turn around 3 times, backflip.
       - name: Exploding Lara
-        description: Perform the above cheats without a flare in hand.
-
-  - platform_name: PlayStation Cheats
-    items:
-      - name: Level Skip NTSC-U
-        description: Hold Walk, sidestep left, sidestep right, sidestep left, step back, step forward, release Walk, turn around 3 times, jump forward and roll.
-      - name: Level Skip PAL
-        description: Light a flare, hold Walk, step forward, step back, release Walk, turn around 3 times, jump forward.
-      - name: All Weapons and Ammo NTSC-U
-        description: Hold Walk, sidestep left, sidestep right, sidestep left, step back, step forward, release Walk, turn around 3 times, backflip and roll.
-      - name: All Weapons and Ammo PAL
-        description: Light a flare, hold Walk, step forward, step back, release Walk, turn around 3 times, backflip.
-      - name: Infinite Flares
-        description: Enable All Weapons first, then draw pistols and press L2.
-      - name: Exploding Lara
-        description: Hold Walk, step forward, step back, turn around 3 times, backflip.
+        description: Walk one step forward, walk one step backward, turn around 3 times, backflip (without drawing a flare).
 ---
 
 Tomb Raider II Remastered is part of the Tomb Raider I-III Remastered collection, released on 14 February 2024 by Aspyr Media. This remaster of the beloved 1997 sequel brings one of the most acclaimed entries in the classic era to modern platforms with fully rebuilt visuals.

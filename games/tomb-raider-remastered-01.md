@@ -17,27 +17,12 @@ stats:
   setting: Peru, Greece, Egypt, Atlantis
 
 cheats:
-  - platform_name: PC Cheats
+  - platform_name: All Platforms (PC, PlayStation, Xbox, Switch)
     items:
       - name: Level Skip
-        description: WALK forward, WALK backward, turn around 3 times, forward jump
-      - name: All Weapons and Ammo
-        description: WALK forward, WALK backward, turn around 3 times, backflip
-
-  - platform_name: PlayStation Cheats
-    items:
-      - name: Level Skip PAL
-        description: Open Inventory, L2, R2, Triangle, L1, L1, Circle, R2, L2 then confirm
-      - name: Level Skip NTSC-U
-        description: Open Inventory, L2, R2, L1, Circle, Triangle, L1, R2, L2 then confirm
-      - name: Level Skip NTSC-J
-        description: Open Inventory, R2, L2, R1, L1, R1, L2, R2, Select then confirm
-      - name: All Weapons PAL
-        description: Open Inventory, L1, Triangle, L2, R2, R2, L2, Circle, L1 then confirm
-      - name: All Weapons NTSC-U
-        description: Open Inventory, L1, Triangle, R2, L2, L2, R2, Circle, L1 then confirm
-      - name: All Weapons NTSC-J
-        description: Open Inventory, L1, R1, L2, R2, L2, R1, L1, Select then confirm
+        description: Walk one step forward, walk one step backward, turn around 3 times, jump forward (standing jump, not running jump).
+      - name: All Weapons and Max Ammo
+        description: Walk one step forward, walk one step backward, turn around 3 times, backflip. Note — does not provide health packs.
 ---
 
 Tomb Raider I Remastered is part of the Tomb Raider I-III Remastered collection, released on 14 February 2024 by Aspyr Media. This definitive version of the 1996 classic brings Lara Croft's debut adventure to modern platforms with fully remastered visuals while preserving the original gameplay experience.

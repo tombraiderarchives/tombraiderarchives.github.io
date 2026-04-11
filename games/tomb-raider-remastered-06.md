@@ -17,12 +17,12 @@ stats:
   setting: Paris, Prague
 
 cheats:
-  - platform_name: PlayStation Cheats
+  - platform_name: All Platforms (PC, PlayStation, Xbox, Switch)
     items:
-      - name: Level Skip
-        description: Open Load Game, highlight any save file, press R2 Square, exit inventory to complete the level.
-      - name: Level Select
-        description: Pause the game, hold L1 R2 Down Triangle, release, then press Circle Up Square Triangle Right Down to unlock Skip Level and Level Select on the Start menu.
+      - name: Level Select and Level Skip
+        description: Pause the game (open inventory menu), hold Duck+Look+Down+Action simultaneously, then release. Without closing the menu, quickly press Action, Up, Walk, Action, Right, Down sequentially. Level Skip and Level Select options will appear in the menu ring.
+      - name: All Weapons and 10 Health Packs
+        description: Pause the game (open inventory menu), hold Draw Weapon+Look+Left+Action simultaneously, then release. Without closing the menu, quickly press Walk three times. Exit and re-open the menu to find all weapons with ammo and 10 large health packs.
 ---
 
 Tomb Raider VI: The Angel of Darkness Remastered is part of the Tomb Raider IV–VI Remastered collection by Aspyr Media. This remaster of the infamously troubled 2003 entry brings Core Design's final Tomb Raider to modern platforms with fully updated visuals.

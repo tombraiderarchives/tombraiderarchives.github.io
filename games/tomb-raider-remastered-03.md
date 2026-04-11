@@ -17,19 +17,14 @@ stats:
   setting: India, South Pacific, Nevada, London, Antarctica
 
 cheats:
-  - platform_name: PC and Macintosh
+  - platform_name: All Platforms (PC, PlayStation, Xbox, Switch)
     items:
       - name: Level Skip
-        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, jump forward.
-      - name: All Weapons and Ammo
-        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, backflip.
-
-  - platform_name: PlayStation Cheats
-    items:
-      - name: Level Skip
-        description: Open Inventory, Up, Square, Triangle, R2, L2, L1, L2, L1 then confirm
-      - name: All Weapons
-        description: Open Inventory, Square, L2, Triangle, L1, Circle, L1, R2, Square then confirm
+        description: Draw pistols, walk one step backward, walk one step forward, crouch and release, turn around 3 times, jump forward (standing jump, not running jump).
+      - name: All Weapons, Max Ammo and Health Packs
+        description: Draw pistols, walk one step backward, walk one step forward, crouch and release, turn around 3 times, backflip.
+      - name: Exploding Lara
+        description: Walk one step forward, walk one step backward, turn around 3 times, backflip.
 ---
 
 Tomb Raider III Remastered is part of the Tomb Raider I-III Remastered collection, released on 14 February 2024 by Aspyr Media. The remaster brings the most expansive classic-era Tomb Raider game to modern platforms, fully rebuilt with contemporary visuals.

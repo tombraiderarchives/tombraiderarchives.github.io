@@ -17,45 +17,37 @@ stats:
   setting: Rome, Russia, Ireland, New York
 
 cheats:
-  - platform_name: PC and Macintosh
+  - platform_name: PlayStation
     items:
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold H E L P, release, close inventory.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, hold G U N S, release, close inventory.
-      - name: Unlimited Small Medipacks
-        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
-      - name: Unlimited Large Medipacks
-        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
-      - name: Chapter Select Rome
-        description: From Main Menu type F I L T H Y 1.
-      - name: Chapter Select Russia
-        description: From Main Menu type F I L T H Y 2.
-      - name: Chapter Select Ireland
-        description: From Main Menu type F I L T H Y 3.
-      - name: Chapter Select New York
-        description: From Main Menu type F I L T H Y 4.
-      - name: Special Features
-        description: Open inventory, highlight Timex TMX, hold B I T S, quit to Main Menu.
+        description: Open inventory, highlight the Sunglasses icon, hold L1+Up+X simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Open inventory, highlight the Sunglasses icon, hold L1+L2+R1+R2+Up simultaneously, release. Note — only provides items available in the current level set.
+      - name: All Keys and Puzzle Items
+        description: Open inventory, highlight the Sunglasses icon, hold L1+L2+R1+R2+Down simultaneously, release.
 
-  - platform_name: PlayStation Cheats
+  - platform_name: Xbox
     items:
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold L1 L2 R1 R2 Up, release, press Select.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Up, release, press Select.
-      - name: All Items
-        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down.
-      - name: Chapter Select Rome
-        description: From Main Menu hold L1 Up and press X.
-      - name: Chapter Select Russia
-        description: From Main Menu hold R2 Up and press X.
-      - name: Chapter Select Ireland
-        description: From Main Menu hold L2 Up and press X.
-      - name: Chapter Select New York
-        description: From Main Menu hold R1 Up and press X.
-      - name: Special Features
-        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down Circle, press Triangle.
+        description: Open inventory, highlight the Sunglasses icon, hold LB+Up+A simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Open inventory, highlight the Sunglasses icon, hold LB+LT+RB+RT+Up simultaneously, release.
+      - name: All Keys and Puzzle Items
+        description: Open inventory, highlight the Sunglasses icon, hold LB+LT+RB+RT+Down simultaneously, release.
+
+  - platform_name: Nintendo Switch
+    items:
+      - name: Level Skip
+        description: Open inventory, highlight the Sunglasses icon, hold L+Up+B simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Open inventory, highlight the Sunglasses icon, hold L+ZL+R+ZR+Up simultaneously, release.
+      - name: All Keys and Puzzle Items
+        description: Open inventory, highlight the Sunglasses icon, hold L+ZL+R+ZR+Down simultaneously, release.
+
+  - platform_name: PC (controller required)
+    items:
+      - name: No keyboard cheats
+        description: No keyboard cheats exist for the Steam or GOG versions. Use a PlayStation or Xbox controller with the button combos listed above.
 ---
 
 Tomb Raider V: Chronicles Remastered is part of the Tomb Raider IV–VI Remastered collection by Aspyr Media. This remaster of the 2000 anthology-structured entry brings all four of Lara's episodes to modern platforms with fully updated visuals.

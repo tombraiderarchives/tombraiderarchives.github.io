@@ -17,27 +17,41 @@ stats:
   setting: Egypt, Cambodia
 
 cheats:
-  - platform_name: PC and Macintosh
+  - platform_name: PC
     items:
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold H E L P, release, close inventory.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, hold G U N S, release, close inventory.
-      - name: All Items
-        description: Face North, open inventory, highlight Large Medipack, hold B I T S, release, close inventory.
-      - name: Unlimited Small Medipacks
-        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
-      - name: Unlimited Large Medipacks
-        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
+        description: Face North, open inventory, highlight the Sunglasses icon, hold H+E+L+P simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Face North, open inventory, highlight the Small Medipack icon, hold G+U+N+S simultaneously, release.
+      - name: All Keys and Puzzle Items
+        description: Face North, open inventory, highlight the Large Medipack icon, hold B+I+T+S simultaneously, release.
 
-  - platform_name: PlayStation Cheats
+  - platform_name: PlayStation
     items:
       - name: Level Skip
-        description: Face North, open inventory, highlight Load Game, hold L1 L2 R1 R2 Up, release, press Select.
-      - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, hold L1 L2 R1 R2 Up, release, press Select.
-      - name: All Items
-        description: Face North, open inventory, highlight Large Medipack, hold L1 L2 R1 R2 Down, release, press Select.
+        description: Face North, open inventory, highlight the Sunglasses icon, hold L1+L2+R1+R2+Up simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Face North, open inventory, highlight the Small Medipack icon, hold L1+L2+R1+R2+Up simultaneously, release.
+      - name: All Keys and Puzzle Items
+        description: Face North, open inventory, highlight the Large Medipack icon, hold L1+L2+R1+R2+Down simultaneously, release.
+
+  - platform_name: Xbox
+    items:
+      - name: Level Skip
+        description: Face North, open inventory, highlight the Sunglasses icon, hold LB+LT+RB+RT+Up simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Face North, open inventory, highlight the Small Medipack icon, hold LB+LT+RB+RT+Up simultaneously, release.
+      - name: All Keys and Puzzle Items
+        description: Face North, open inventory, highlight the Large Medipack icon, hold LB+LT+RB+RT+Down simultaneously, release.
+
+  - platform_name: Nintendo Switch
+    items:
+      - name: Level Skip
+        description: Face North, open inventory, highlight the Sunglasses icon, hold L+ZL+R+ZR+Up simultaneously, release, close inventory.
+      - name: All Weapons, Unlimited Ammo, Health and Flares
+        description: Face North, open inventory, highlight the Small Medipack icon, hold L+ZL+R+ZR+Up simultaneously, release.
+      - name: All Keys and Puzzle Items
+        description: Face North, open inventory, highlight the Large Medipack icon, hold L+ZL+R+ZR+Down simultaneously, release.
 ---
 
 Tomb Raider IV: The Last Revelation Remastered is part of the Tomb Raider IV–VI Remastered collection by Aspyr Media. This remaster brings the 1999 classic to modern platforms with fully rebuilt visuals, while remaining completely faithful to the original's level design, gameplay, and secrets.
