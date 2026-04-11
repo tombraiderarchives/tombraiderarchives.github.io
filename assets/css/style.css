@@ -1360,6 +1360,15 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   margin-top: .3rem;
   display: block;
 }
+.comic-series-link {
+  display: inline-block;
+  margin-top: .85rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+.comic-series-link:hover { text-decoration: underline; }
 
 @media (max-width: 680px) {
   .bio-layout,
@@ -1371,6 +1380,34 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   .bio-image-col { flex-direction: row; overflow-x: auto; }
   .bio-image-slot { min-width: 140px; flex-shrink: 0; }
   .comic-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: .4rem; }
+}
+
+/* ── Comic series page ────────────────────────────────────────────────────── */
+.comic-series-banner {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0;
+  margin-bottom: 0;
+  background: var(--bg-3);
+}
+.comic-series-banner img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+/* Issue grid: tighter columns than the screenshot gallery */
+.comic-issue-grid {
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 6px;
+}
+.comic-issue-grid .gallery-thumb img {
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+@media (max-width: 480px) {
+  .comic-issue-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 4px; }
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */

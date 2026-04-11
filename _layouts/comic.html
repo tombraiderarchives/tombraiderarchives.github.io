@@ -1,0 +1,122 @@
+---
+layout: default
+---
+
+{% comment %}Detect issue images via static_files{% endcomment %}
+{% assign _base        = "/images/comics/" | append: page.image_folder %}
+{% assign _thumb_path  = _base | append: "/issues/thumbs/" %}
+{% assign _full_path   = _base | append: "/issues/" %}
+{% assign _header_path = _base | append: "/header.jpg" %}
+
+{% assign _thumbs = site.static_files | where_exp: "f", "f.path contains _thumb_path" %}
+{% assign _fulls  = site.static_files | where_exp: "f", "f.path contains _full_path" %}
+
+{% comment %}If no thumbs folder, fall back to using the full images as thumbs{% endcomment %}
+{% if _thumbs.size > 0 %}
+  {% assign _display = _thumbs %}
+  {% assign _use_thumbs = true %}
+{% else %}
+  {% assign _display = _fulls %}
+  {% assign _use_thumbs = false %}
+{% endif %}
+
+<article class="game-page">
+
+  <!-- Header -->
+  <header class="game-page-header comic-page-header">
+    {% if page.cover_image %}
+    <img src="{{ page.cover_image }}" alt="{{ page.title }} cover" class="game-cover-img" loading="eager">
+    {% endif %}
+    <div class="game-page-title">
+      {% if page.stats.publisher %}
+      <p class="game-meta">{{ page.stats.publisher }}{% if page.stats.years %} &middot; {{ page.stats.years }}{% endif %}{% if page.stats.issues %} &middot; {{ page.stats.issues }}{% endif %}</p>
+      {% endif %}
+      <h1>{{ page.title }}</h1>
+    </div>
+  </header>
+
+  <!-- Header banner (series art strip) -->
+  {% assign _has_header_img = site.static_files | where: "path", _header_path %}
+  {% if _has_header_img.size > 0 %}
+  <div class="comic-series-banner">
+    <img src="{{ _base }}/header.jpg" alt="{{ page.title }} banner" loading="eager">
+  </div>
+  {% endif %}
+
+  <!-- Jump nav -->
+  <nav class="jump-nav" aria-label="Jump to section">
+    {% if page.stats %}<a href="#info"><i class="ph ph-info" aria-hidden="true"></i>Info</a>{% endif %}
+    {% if _display.size > 0 %}<a href="#issues"><i class="ph ph-books" aria-hidden="true"></i>Issues</a>{% endif %}
+  </nav>
+
+  <!-- Stats -->
+  {% if page.stats %}
+  <section id="info" class="game-section">
+    <h2 class="section-title">Series Info</h2>
+    <dl class="stats-grid">
+      {% if page.stats.publisher  %}<div class="stat"><dt>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
+      {% if page.stats.years      %}<div class="stat"><dt>Years</dt><dd>{{ page.stats.years }}</dd></div>{% endif %}
+      {% if page.stats.issues     %}<div class="stat"><dt>Issues</dt><dd>{{ page.stats.issues }}</dd></div>{% endif %}
+      {% if page.stats.writer     %}<div class="stat"><dt>Writer(s)</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
+      {% if page.stats.artist     %}<div class="stat"><dt>Artist(s)</dt><dd>{{ page.stats.artist }}</dd></div>{% endif %}
+      {% if page.stats.colorist   %}<div class="stat"><dt>Colorist(s)</dt><dd>{{ page.stats.colorist }}</dd></div>{% endif %}
+      {% if page.stats.editor     %}<div class="stat"><dt>Editor</dt><dd>{{ page.stats.editor }}</dd></div>{% endif %}
+      {% if page.stats.continuity %}<div class="stat"><dt>Continuity</dt><dd>{{ page.stats.continuity }}</dd></div>{% endif %}
+      {% if page.stats.collect    %}<div class="stat"><dt>Collected in</dt><dd>{{ page.stats.collect }}</dd></div>{% endif %}
+    </dl>
+  </section>
+  {% endif %}
+
+  <!-- Body -->
+  {% if content != "" %}
+  <section class="game-section game-body">
+    {{ content }}
+  </section>
+  {% endif %}
+
+  <!-- Issues grid -->
+  {% if _display.size > 0 %}
+  <section id="issues" class="game-section">
+    <h2 class="section-title">Issues</h2>
+    <div class="gallery-grid comic-issue-grid" data-gallery="issues">
+      {% assign _sorted = _display | sort: "name" %}
+      {% for thumb in _sorted %}
+        {% if _use_thumbs %}
+          {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+        {% else %}
+          {% assign full = thumb.path %}
+        {% endif %}
+        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="{{ page.title }} {{ thumb.name | replace: '.jpg', '' | replace: '.JPG', '' }}">
+          <img src="{{ thumb.path }}" alt="{{ page.title }} {{ thumb.name }}" loading="lazy" decoding="async">
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+</article>
+
+{% if _display.size > 0 %}
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close image viewer">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      <line x1="15" y1="1" x2="1"  y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous image">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="lb-img-wrap">
+    <img id="lbImg" src="" alt="" decoding="async">
+  </div>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next image">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <p class="lb-counter" id="lbCounter" aria-live="polite"></p>
+</div>
+{% endif %}
