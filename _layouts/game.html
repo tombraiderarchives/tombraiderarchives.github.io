@@ -58,19 +58,19 @@ layout: default
   <section id="stats" class="game-section">
     <h2 class="section-title">Game Info</h2>
     <dl class="stats-grid">
-      {% if page.stats.release_date %}<div class="stat"><dt>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
-      {% if page.stats.developer   %}<div class="stat"><dt>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
-      {% if page.stats.publisher   %}<div class="stat"><dt>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
-      {% if page.stats.genre       %}<div class="stat"><dt>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
-      {% if page.stats.platforms   %}<div class="stat"><dt>Platforms</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
-      {% if page.stats.length      %}<div class="stat"><dt>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
-      {% if page.stats.rating      %}<div class="stat"><dt>Rating</dt><dd>{{ page.stats.rating }}</dd></div>{% endif %}
-      {% if page.stats.setting     %}<div class="stat"><dt>Setting</dt><dd>{{ page.stats.setting }}</dd></div>{% endif %}
-      {% if page.stats.writer      %}<div class="stat"><dt>Writer</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
-      {% if page.stats.director    %}<div class="stat"><dt>Director</dt><dd>{{ page.stats.director }}</dd></div>{% endif %}
-      {% if page.stats.runtime     %}<div class="stat"><dt>Runtime</dt><dd>{{ page.stats.runtime }}</dd></div>{% endif %}
-      {% if page.stats.budget      %}<div class="stat"><dt>Budget</dt><dd>{{ page.stats.budget }}</dd></div>{% endif %}
-      {% if page.stats.box_office  %}<div class="stat"><dt>Box Office</dt><dd>{{ page.stats.box_office }}</dd></div>{% endif %}
+      {% if page.stats.release_date %}<div class="stat"><dt><i class="ph ph-calendar-blank" aria-hidden="true"></i>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
+      {% if page.stats.developer   %}<div class="stat"><dt><i class="ph ph-code" aria-hidden="true"></i>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
+      {% if page.stats.publisher   %}<div class="stat"><dt><i class="ph ph-buildings" aria-hidden="true"></i>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
+      {% if page.stats.genre       %}<div class="stat"><dt><i class="ph ph-tag" aria-hidden="true"></i>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
+      {% if page.stats.platforms   %}<div class="stat"><dt><i class="ph ph-devices" aria-hidden="true"></i>Platforms</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
+      {% if page.stats.length      %}<div class="stat"><dt><i class="ph ph-clock" aria-hidden="true"></i>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
+      {% if page.stats.rating      %}<div class="stat"><dt><i class="ph ph-shield" aria-hidden="true"></i>Rating</dt><dd>{{ page.stats.rating }}</dd></div>{% endif %}
+      {% if page.stats.setting     %}<div class="stat"><dt><i class="ph ph-map-pin" aria-hidden="true"></i>Setting</dt><dd>{{ page.stats.setting }}</dd></div>{% endif %}
+      {% if page.stats.writer      %}<div class="stat"><dt><i class="ph ph-pencil-line" aria-hidden="true"></i>Writer</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
+      {% if page.stats.director    %}<div class="stat"><dt><i class="ph ph-video-camera" aria-hidden="true"></i>Director</dt><dd>{{ page.stats.director }}</dd></div>{% endif %}
+      {% if page.stats.runtime     %}<div class="stat"><dt><i class="ph ph-film-strip" aria-hidden="true"></i>Runtime</dt><dd>{{ page.stats.runtime }}</dd></div>{% endif %}
+      {% if page.stats.budget      %}<div class="stat"><dt><i class="ph ph-currency-dollar" aria-hidden="true"></i>Budget</dt><dd>{{ page.stats.budget }}</dd></div>{% endif %}
+      {% if page.stats.box_office  %}<div class="stat"><dt><i class="ph ph-chart-line-up" aria-hidden="true"></i>Box Office</dt><dd>{{ page.stats.box_office }}</dd></div>{% endif %}
     </dl>
   </section>
   {% endif %}
@@ -110,7 +110,7 @@ layout: default
     <ul class="ach-list">
       {% for ach in platform.items %}
       <li class="ach-item">
-        {% if ach.gamerscore %}<span class="ach-score"><img src="{{ site.baseurl }}/images/ui/achievements/score.png" alt="" class="ach-score-icon" aria-hidden="true"> {{ ach.gamerscore }}G</span>{% endif %}
+        {% if ach.gamerscore %}<span class="ach-score"><img src="{{ site.baseurl }}/images/ui/achievements/score.png" alt="" class="ach-score-icon" aria-hidden="true"> {{ ach.gamerscore }}</span>{% endif %}
         {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
         <div>
           <div class="ach-name">{{ ach.name }}</div>

@@ -580,6 +580,9 @@ a:hover { text-decoration: underline; }
 }
 .stat { background: var(--bg-2); padding: .8rem 1rem; }
 .stat dt {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
   font-size: .67rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -587,6 +590,7 @@ a:hover { text-decoration: underline; }
   color: var(--text-dim);
   margin-bottom: .25rem;
 }
+.stat dt i { font-size: .85rem; flex-shrink: 0; }
 .stat dd { font-size: .875rem; color: var(--text); }
 .tab-panel > * + * { margin-top: 1.75rem; }
 
@@ -631,7 +635,7 @@ a:hover { text-decoration: underline; }
 .ach-list { list-style: none; display: flex; flex-direction: column; gap: .35rem; }
 .ach-item {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 64px 1fr;
   align-items: center;
   gap: .2rem .75rem;
   background: var(--bg-2);
@@ -652,6 +656,7 @@ a:hover { text-decoration: underline; }
   border-radius: 4px;
   padding: .15rem .45rem;
   align-self: start;
+  justify-self: center;
   white-space: nowrap;
 }
 .ach-score-icon {
@@ -1524,6 +1529,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   align-items: center;
   justify-content: center;
   align-self: start;
+  justify-self: center;
   padding: .1rem;
 }
 .trophy-icon {
