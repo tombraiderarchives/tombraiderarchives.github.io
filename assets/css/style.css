@@ -1397,13 +1397,16 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   object-position: center 30%;
   display: block;
 }
-/* Issue grid: tighter columns than the screenshot gallery */
+/* Issue grid: tighter columns, portrait aspect ratio for comic covers */
 .comic-issue-grid {
   grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 6px;
 }
+.comic-issue-grid .gallery-thumb {
+  aspect-ratio: 2/3;  /* portrait — comic book proportions */
+}
 .comic-issue-grid .gallery-thumb img {
-  aspect-ratio: 2/3;
+  aspect-ratio: unset;
   object-fit: cover;
 }
 @media (max-width: 480px) {

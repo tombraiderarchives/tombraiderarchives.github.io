@@ -99,6 +99,27 @@
   });
 }());
 
+/* ── Numeric gallery sort ───────────────────────────────────────────────── */
+/* Reorders gallery-thumb items numerically (1, 2 … 9, 10, 11 …) before the
+   lightbox wires up its index array, so filenames like 1.jpg / 10.jpg /
+   100.jpg sort correctly instead of lexicographically. */
+(function () {
+  function numFromHref(href) {
+    var seg = (href || '').split('/').pop().replace(/\.[^.]+$/, '');
+    var m   = seg.match(/(\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+  document.querySelectorAll('.gallery-grid').forEach(function (grid) {
+    var items = [].slice.call(grid.querySelectorAll('.gallery-thumb'));
+    if (!items.length) return;
+    items.sort(function (a, b) {
+      return numFromHref(a.getAttribute('data-full')) -
+             numFromHref(b.getAttribute('data-full'));
+    });
+    items.forEach(function (item) { grid.appendChild(item); });
+  });
+}());
+
 /* ── Lightbox ───────────────────────────────────────────────────────────── */
 (function () {
   var lightbox  = document.getElementById('lightbox');
