@@ -15,6 +15,14 @@ stats:
   publisher: Aspyr Media
   writer: ---
   setting: Paris, Prague
+
+cheats:
+  - platform_name: PlayStation Cheats
+    items:
+      - name: Level Skip
+        description: Open Load Game, highlight any save file, press R2 Square, exit inventory to complete the level.
+      - name: Level Select
+        description: Pause the game, hold L1 R2 Down Triangle, release, then press Circle Up Square Triangle Right Down to unlock Skip Level and Level Select on the Start menu.
 ---
 
 Tomb Raider VI: The Angel of Darkness Remastered is part of the Tomb Raider IV–VI Remastered collection by Aspyr Media. This remaster of the infamously troubled 2003 entry brings Core Design's final Tomb Raider to modern platforms with fully updated visuals.

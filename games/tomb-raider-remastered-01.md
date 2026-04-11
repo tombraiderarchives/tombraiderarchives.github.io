@@ -28,12 +28,16 @@ cheats:
     items:
       - name: Level Skip PAL
         description: Open Inventory, L2, R2, Triangle, L1, L1, Circle, R2, L2 then confirm
-      - name: Level Skip NTSC U
+      - name: Level Skip NTSC-U
         description: Open Inventory, L2, R2, L1, Circle, Triangle, L1, R2, L2 then confirm
+      - name: Level Skip NTSC-J
+        description: Open Inventory, R2, L2, R1, L1, R1, L2, R2, Select then confirm
       - name: All Weapons PAL
         description: Open Inventory, L1, Triangle, L2, R2, R2, L2, Circle, L1 then confirm
-      - name: All Weapons NTSC U
+      - name: All Weapons NTSC-U
         description: Open Inventory, L1, Triangle, R2, L2, L2, R2, Circle, L1 then confirm
+      - name: All Weapons NTSC-J
+        description: Open Inventory, L1, R1, L2, R2, L2, R1, L1, Select then confirm
 ---
 
 Tomb Raider I Remastered is part of the Tomb Raider I-III Remastered collection, released on 14 February 2024 by Aspyr Media. This definitive version of the 1996 classic brings Lara Croft's debut adventure to modern platforms with fully remastered visuals while preserving the original gameplay experience.

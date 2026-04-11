@@ -25,6 +25,10 @@ cheats:
         description: Face North, open inventory, highlight Small Medipack, hold G U N S, release, close inventory.
       - name: All Items
         description: Face North, open inventory, highlight Large Medipack, hold B I T S, release, close inventory.
+      - name: Unlimited Small Medipacks
+        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
+      - name: Unlimited Large Medipacks
+        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
 
   - platform_name: PlayStation Cheats
     items:

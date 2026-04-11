@@ -23,13 +23,39 @@ cheats:
         description: Face North, open inventory, highlight Load Game, hold H E L P, release, close inventory.
       - name: All Weapons and Unlimited Supplies
         description: Face North, open inventory, highlight Small Medipack, hold G U N S, release, close inventory.
+      - name: Unlimited Small Medipacks
+        description: Lose some health, have one Small Medipack, highlight it, press 0, press Enter, reopen inventory.
+      - name: Unlimited Large Medipacks
+        description: Lose some health, have one Large Medipack, highlight it, press 9, press Enter, reopen inventory.
+      - name: Chapter Select Rome
+        description: From Main Menu type F I L T H Y 1.
+      - name: Chapter Select Russia
+        description: From Main Menu type F I L T H Y 2.
+      - name: Chapter Select Ireland
+        description: From Main Menu type F I L T H Y 3.
+      - name: Chapter Select New York
+        description: From Main Menu type F I L T H Y 4.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold B I T S, quit to Main Menu.
 
   - platform_name: PlayStation Cheats
     items:
       - name: Level Skip
         description: Face North, open inventory, highlight Load Game, hold L1 L2 R1 R2 Up, release, press Select.
       - name: All Weapons and Unlimited Supplies
-        description: Face North, open inventory, highlight Small Medipack, hold L1 L2 R1 R2 Up, release, press Select.
+        description: Face North, open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Up, release, press Select.
+      - name: All Items
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down.
+      - name: Chapter Select Rome
+        description: From Main Menu hold L1 Up and press X.
+      - name: Chapter Select Russia
+        description: From Main Menu hold R2 Up and press X.
+      - name: Chapter Select Ireland
+        description: From Main Menu hold L2 Up and press X.
+      - name: Chapter Select New York
+        description: From Main Menu hold R1 Up and press X.
+      - name: Special Features
+        description: Open inventory, highlight Timex TMX, hold L1 L2 R1 R2 Down Circle, press Triangle.
 ---
 
 Tomb Raider V: Chronicles Remastered is part of the Tomb Raider IV–VI Remastered collection by Aspyr Media. This remaster of the 2000 anthology-structured entry brings all four of Lara's episodes to modern platforms with fully updated visuals.

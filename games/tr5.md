@@ -43,7 +43,7 @@ cheats:
       - name: Chapter Select Rome
         description: From Main Menu hold L1 Up and press X.
       - name: Chapter Select Russia
-        description: From Main Menu hold L1 Up and press X.
+        description: From Main Menu hold R2 Up and press X.
       - name: Chapter Select Ireland
         description: From Main Menu hold L2 Up and press X.
       - name: Chapter Select New York

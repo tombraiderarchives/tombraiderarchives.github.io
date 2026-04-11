@@ -16,6 +16,30 @@ stats:
   writer: Unknown
   setting: Bolivia, Peru, Japan, Ghana, Kazakhstan, England, Nepal
 
+cheats:
+  - platform_name: Unlockable Cheats (All Platforms)
+    items:
+      - name: Bulletproof Lara
+        description: Complete the Bolivia Time Trial.
+      - name: Draw Enemy Health
+        description: Complete the Peru Time Trial.
+      - name: Textureless Mode
+        description: Complete the Tokyo Time Trial.
+      - name: Wield Excalibur
+        description: Complete the Ghana Time Trial.
+      - name: One Shot Kill
+        description: Complete the Kazakhstan Time Trial.
+      - name: Infinite Shotgun Ammo
+        description: Complete the England Time Trial.
+      - name: Infinite Grenades
+        description: Complete the Nepal Time Trial.
+      - name: Infinite SMG Ammo
+        description: Complete all Time Trials.
+      - name: Lara's Legend Outfit
+        description: Complete the game on Legend difficulty.
+      - name: Lara's Anniversary Outfit
+        description: Complete all Time Trials.
+
 videos:
   - url: https://www.youtube.com/embed/5amDP_PRqTs
     title: Trailer

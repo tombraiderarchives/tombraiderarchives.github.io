@@ -17,12 +17,12 @@ stats:
   setting: India, South Pacific, Nevada, London, Antarctica
 
 cheats:
-  - platform_name: PC Cheats
+  - platform_name: PC and Macintosh
     items:
       - name: Level Skip
-        description: WALK forward, WALK backward, turn around 3 times, forward jump
+        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, jump forward.
       - name: All Weapons and Ammo
-        description: WALK forward, WALK backward, turn around 3 times, backflip
+        description: Draw pistols, walk back one step, walk forward one step, crouch once, turn 3 times, backflip.
 
   - platform_name: PlayStation Cheats
     items:

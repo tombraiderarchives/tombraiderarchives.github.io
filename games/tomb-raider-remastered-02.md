@@ -28,12 +28,18 @@ cheats:
 
   - platform_name: PlayStation Cheats
     items:
-      - name: Level Skip NTSC
-        description: Open Inventory, L1, R2, L2, R1, Triangle, Down, L2, R2 then confirm
+      - name: Level Skip NTSC-U
+        description: Hold Walk, sidestep left, sidestep right, sidestep left, step back, step forward, release Walk, turn around 3 times, jump forward and roll.
       - name: Level Skip PAL
-        description: Open Inventory, R2, L2, Triangle, R1, L2, L1, R2 then confirm
-      - name: All Weapons NTSC
-        description: Open Inventory, Triangle, R2, L1, L2, L2, L2, L2, L1, then confirm
+        description: Light a flare, hold Walk, step forward, step back, release Walk, turn around 3 times, jump forward.
+      - name: All Weapons and Ammo NTSC-U
+        description: Hold Walk, sidestep left, sidestep right, sidestep left, step back, step forward, release Walk, turn around 3 times, backflip and roll.
+      - name: All Weapons and Ammo PAL
+        description: Light a flare, hold Walk, step forward, step back, release Walk, turn around 3 times, backflip.
+      - name: Infinite Flares
+        description: Enable All Weapons first, then draw pistols and press L2.
+      - name: Exploding Lara
+        description: Hold Walk, step forward, step back, turn around 3 times, backflip.
 ---
 
 Tomb Raider II Remastered is part of the Tomb Raider I-III Remastered collection, released on 14 February 2024 by Aspyr Media. This remaster of the beloved 1997 sequel brings one of the most acclaimed entries in the classic era to modern platforms with fully rebuilt visuals.
