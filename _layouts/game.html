@@ -28,7 +28,12 @@ layout: default
   <!-- Page header: title and cover art -->
   <header class="game-page-header">
     {% if page.cover_image %}
-    <img src="{{ page.cover_image }}" alt="{{ page.title }} cover art" class="game-cover-img" loading="eager">
+    {% assign _cfile = page.cover_image | split: '/' | last %}
+    {% assign _cname = _cfile | split: '.' | first %}
+    {% assign _cdir  = page.cover_image | remove: _cfile %}
+    {% assign _cover_thumb = _cdir | append: 'thumbs/' | append: _cname | append: '.jpg' %}
+    <img src="{{ _cover_thumb }}" alt="{{ page.title }} cover art" class="game-cover-img" loading="eager"
+         onerror="this.onerror=null;this.src='{{ page.cover_image }}'">
     {% endif %}
     <div class="game-page-title">
       {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}
