@@ -263,9 +263,120 @@ body {
   overflow: hidden;
   transition: grid-template-rows .3s var(--ease);
 }
-.nav-sub > ul { min-height: 0; }
+.nav-sub > ul {
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
 .nav-sub.is-open { grid-template-rows: 1fr; }
+.nav-sub.is-open > ul {
+  opacity: 1;
+  transform: none;
+  transition-delay: .05s;
+}
 .nav-sub ul { list-style: none; }
+
+/* ── Mobile navigation (.main-navigation) ────────────────────────────────── */
+.main-navigation {
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  padding: 1rem 0;
+}
+.main-navigation-inner { display: flex; flex-direction: column; }
+
+.main-navigation .close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: .5rem 1rem;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color .15s var(--ease);
+}
+.main-navigation .close-menu:hover { color: var(--text); }
+
+.main-navigation .menu-item { border-bottom: 1px solid var(--border); }
+.main-navigation .menu-item > a {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .8rem 1.25rem;
+  color: var(--text-muted);
+  font-size: .875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color .15s var(--ease), background .15s var(--ease);
+}
+.main-navigation .menu-item > a:hover { color: var(--text); background: var(--bg-3); }
+.main-navigation .menu-item > a i { color: var(--accent); font-size: 1rem; }
+
+/* Submenu panel — grid-rows animation */
+.main-navigation .submenu {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows .3s var(--ease);
+}
+.main-navigation .submenu.is-open { grid-template-rows: 1fr; }
+.main-navigation .submenu-inner {
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .22s var(--ease), transform .22s var(--ease);
+}
+.main-navigation .submenu.is-open .submenu-inner {
+  opacity: 1;
+  transform: none;
+  transition-delay: .05s;
+}
+
+.main-navigation .submenu-item > a {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .6rem 1.5rem;
+  color: var(--text-dim);
+  font-size: .835rem;
+  text-decoration: none;
+  transition: color .15s var(--ease), background .15s var(--ease);
+  cursor: pointer;
+}
+.main-navigation .submenu-item > a:hover { color: var(--text); background: var(--bg-3); }
+
+/* Sub-links panel — grid-rows animation */
+.main-navigation .sub-links {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows .25s var(--ease);
+}
+.main-navigation .sub-links.is-open { grid-template-rows: 1fr; }
+.main-navigation .sub-links-inner {
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .18s var(--ease), transform .18s var(--ease);
+}
+.main-navigation .sub-links.is-open .sub-links-inner {
+  opacity: 1;
+  transform: none;
+  transition-delay: .04s;
+}
+.main-navigation .sub-links-inner a {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1.75rem;
+  color: var(--text-dim);
+  font-size: .815rem;
+  text-decoration: none;
+  transition: color .15s var(--ease), background .15s var(--ease);
+}
+.main-navigation .sub-links-inner a:hover { color: var(--text); background: var(--bg-3); }
 
 /* ── Theme iris wipe — circle expands from the toggle button ─────────────── */
 #themeWipe {

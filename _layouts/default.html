@@ -65,7 +65,7 @@
           <!-- ── GAMES ── -->
           <li class="nav-section-item">
             <button class="nav-group-toggle nav-group-toggle--section"
-                    aria-expanded="{% if page.url contains '/games/' %}true{% else %}false{% endif %}"
+                    aria-expanded="{% if page.url contains 'remastered' or page.url contains '/games/tr' or page.url contains 'trlegend' or page.url contains 'tranniversary' or page.url contains 'trunderworld' or page.url contains 'tr2013' or page.url contains 'rottr' or page.url contains 'sottr' %}true{% else %}false{% endif %}"
                     aria-controls="nav-section-games">
               <i class="ph ph-game-controller nav-icon" aria-hidden="true"></i>
               <span>Games</span>
@@ -158,6 +158,43 @@
                   </div>
                 </li>
 
+                <!-- Upcoming -->
+                <li>
+                  <button class="nav-group-toggle nav-group-toggle--sub"
+                          aria-expanded="{% if page.url contains 'tr-legacy-of-atlantis' or page.url contains 'tr-catalyst' %}true{% else %}false{% endif %}"
+                          aria-controls="nav-upcoming">
+                    <span>Upcoming</span>
+                    <svg class="chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <div class="nav-sub" id="nav-upcoming">
+                    <ul role="list" class="nav-leaf-list">
+                      <li><a href="{{ site.baseurl }}/games/tr-legacy-of-atlantis/" class="nav-link nav-link--leaf{% if page.url contains 'tr-legacy-of-atlantis' %} active{% endif %}"{% if page.url contains 'tr-legacy-of-atlantis' %} aria-current="page"{% endif %}>Legacy of Atlantis <span class="nav-year">TBA</span></a></li>
+                      <li><a href="{{ site.baseurl }}/games/tr-catalyst/" class="nav-link nav-link--leaf{% if page.url contains 'tr-catalyst' %} active{% endif %}"{% if page.url contains 'tr-catalyst' %} aria-current="page"{% endif %}>Catalyst <span class="nav-year">TBA</span></a></li>
+                    </ul>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <!-- ── LARA CROFT SERIES ── -->
+          <li class="nav-section-item">
+            <button class="nav-group-toggle nav-group-toggle--section"
+                    aria-expanded="{% if page.url contains 'lc-guardian-of-light' or page.url contains 'lc-temple-of-osiris' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-section-lara-croft-series">
+              <i class="ph ph-person-simple-run nav-icon" aria-hidden="true"></i>
+              <span>Lara Croft Series</span>
+              <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-sub" id="nav-section-lara-croft-series">
+              <ul role="list" class="nav-leaf-list">
+                <li><a href="{{ site.baseurl }}/games/lc-guardian-of-light/" class="nav-link nav-link--leaf{% if page.url contains 'lc-guardian-of-light' %} active{% endif %}"{% if page.url contains 'lc-guardian-of-light' %} aria-current="page"{% endif %}>Guardian of Light <span class="nav-year">2010</span></a></li>
+                <li><a href="{{ site.baseurl }}/games/lc-temple-of-osiris/"  class="nav-link nav-link--leaf{% if page.url contains 'lc-temple-of-osiris'  %} active{% endif %}"{% if page.url contains 'lc-temple-of-osiris'  %} aria-current="page"{% endif %}>Temple of Osiris <span class="nav-year">2014</span></a></li>
               </ul>
             </div>
           </li>
@@ -265,6 +302,7 @@
                 <li><a href="{{ site.baseurl }}/games/tr1/">Classic Era</a></li>
                 <li><a href="{{ site.baseurl }}/games/trlegend/">Legend Era</a></li>
                 <li><a href="{{ site.baseurl }}/games/tr2013/">Survivor Era</a></li>
+                <li><a href="{{ site.baseurl }}/games/lc-guardian-of-light/">Lara Croft Series</a></li>
               </ul>
             </div>
             <div class="footer-col">

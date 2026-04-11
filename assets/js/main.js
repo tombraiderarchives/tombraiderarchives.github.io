@@ -234,6 +234,80 @@
   });
 }());
 
+/* ── Mobile navigation (.main-navigation) dropdowns ─────────────────────── */
+/* Handles submenu and sub-links open/close with accordion behaviour.
+   Expects .submenu-inner / .sub-links-inner wrappers inside each panel
+   so the grid-template-rows animation works correctly. */
+(function () {
+  var mainNav = document.querySelector('.main-navigation');
+  if (!mainNav) return;
+
+  function openPanel(panel) {
+    panel.classList.add('is-open');
+  }
+  function closePanel(panel) {
+    panel.classList.remove('is-open');
+    // Also close any nested sub-links inside this panel
+    panel.querySelectorAll('.sub-links.is-open').forEach(function (sub) {
+      sub.classList.remove('is-open');
+    });
+  }
+
+  // Top-level menu items — toggle .submenu
+  mainNav.querySelectorAll('.menu-item').forEach(function (item) {
+    var submenu = item.querySelector(':scope > .submenu');
+    if (!submenu) return;
+    var trigger = item.querySelector(':scope > a');
+    if (!trigger) return;
+
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      var opening = !submenu.classList.contains('is-open');
+      // Accordion: close sibling submenus first
+      [].forEach.call(item.parentElement.children, function (sib) {
+        if (sib === item) return;
+        var sibSub = sib.querySelector(':scope > .submenu');
+        if (sibSub && sibSub.classList.contains('is-open')) closePanel(sibSub);
+      });
+      if (opening) openPanel(submenu); else closePanel(submenu);
+    });
+  });
+
+  // Submenu items — toggle .sub-links (only for items that have them)
+  mainNav.querySelectorAll('.submenu-item').forEach(function (item) {
+    var subLinks = item.querySelector(':scope > .sub-links');
+    if (!subLinks) return;
+    var trigger = item.querySelector(':scope > a');
+    if (!trigger) return;
+
+    trigger.addEventListener('click', function (e) {
+      // If the link goes somewhere real, let it navigate; only intercept # hrefs
+      if (trigger.getAttribute('href') && trigger.getAttribute('href') !== '#') return;
+      e.preventDefault();
+      var opening = !subLinks.classList.contains('is-open');
+      // Accordion: close sibling sub-links
+      [].forEach.call(item.parentElement.children, function (sib) {
+        if (sib === item) return;
+        var sibLinks = sib.querySelector(':scope > .sub-links');
+        if (sibLinks && sibLinks.classList.contains('is-open')) {
+          sibLinks.classList.remove('is-open');
+        }
+      });
+      subLinks.classList.toggle('is-open', opening);
+    });
+  });
+
+  // Close-menu button — collapses everything
+  var closeBtn = mainNav.querySelector('.close-menu');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function () {
+      mainNav.querySelectorAll('.submenu.is-open, .sub-links.is-open').forEach(function (p) {
+        p.classList.remove('is-open');
+      });
+    });
+  }
+}());
+
 /* ── Lazy loading — apply to any image not already marked ───────────────── */
 (function () {
   document.querySelectorAll('img:not([loading])').forEach(function (img) {
