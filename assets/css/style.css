@@ -233,9 +233,10 @@ body {
 .nav-sub .nav-sub {
   border-left: 2px solid transparent;
   margin-left: 2rem;
-  padding-bottom: .25rem;
   transition: border-color .25s var(--ease);
 }
+/* padding inside the grid item so it's hidden when collapsed */
+.nav-sub .nav-sub > ul { padding-bottom: .25rem; }
 .nav-sub .nav-sub.is-open {
   border-left-color: var(--accent-border);
 }
@@ -641,6 +642,9 @@ a:hover { text-decoration: underline; }
 .ach-name { font-size: .85rem; font-weight: 500; }
 .ach-desc { font-size: .78rem; color: var(--text-muted); }
 .ach-score {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
   font-size: .72rem;
   font-weight: 600;
   color: var(--accent);
@@ -649,6 +653,12 @@ a:hover { text-decoration: underline; }
   padding: .15rem .45rem;
   align-self: start;
   white-space: nowrap;
+}
+.ach-score-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 /* ── Gallery ────────────────────────────────────────────────────────────── */
@@ -1508,11 +1518,20 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   color: var(--accent);
 }
 
-/* ach-trophy colour palette — works on both themes via transparency */
-.ach-trophy--bronze  { color: #b87333; }
-.ach-trophy--silver  { color: #a0a0a0; }
-.ach-trophy--gold    { color: #d4af37; }
-.ach-trophy--platinum { color: var(--accent); }
+/* ach-trophy — image icon, aligned same as ach-score */
+.ach-trophy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  padding: .1rem;
+}
+.trophy-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
 
 
 /* ── Focus ──────────────────────────────────────────────────────────────── */
