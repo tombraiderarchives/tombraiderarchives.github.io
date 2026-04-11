@@ -1,8 +1,9 @@
 'use strict';
 
-/* ── Theme toggle + screenwipe ──────────────────────────────────────────── */
+/* ── Theme toggle + iris wipe ───────────────────────────────────────────── */
 /* Handles multiple .theme-toggle buttons (sidebar + mobile sticky header).
-   Plays a left→right screenwipe, switches theme at the midpoint, exits. */
+   Plays a circle iris expanding from the button centre, switches theme at
+   the midpoint (50 %), then fades the iris out. */
 (function () {
   var html    = document.documentElement;
   var toggles = document.querySelectorAll('.theme-toggle');
@@ -29,11 +30,16 @@
 
       if (!wipe) { applyTheme(newTheme); return; }
 
+      // Pin iris origin to the centre of whichever button was clicked
+      var rect = btn.getBoundingClientRect();
+      wipe.style.setProperty('--cx', Math.round(rect.left + rect.width  / 2) + 'px');
+      wipe.style.setProperty('--cy', Math.round(rect.top  + rect.height / 2) + 'px');
+
       wipe.classList.remove('is-wiping');           // reset if mid-animation
       void wipe.offsetWidth;                        // force reflow
       wipe.classList.add('is-wiping');
-      setTimeout(function () { applyTheme(newTheme); }, 168); // ~38% of 440ms
-      setTimeout(function () { wipe.classList.remove('is-wiping'); }, 460);
+      setTimeout(function () { applyTheme(newTheme); }, 260); // 50% of 520ms
+      setTimeout(function () { wipe.classList.remove('is-wiping'); }, 540);
     });
   });
 }());

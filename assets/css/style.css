@@ -255,32 +255,35 @@ body {
   opacity: 1;
 }
 
-/* Collapsible panels — max-height approach, reliable across all browsers */
+/* Collapsible panels — grid-rows approach: animates to exact content height */
 .nav-sub {
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
   overflow: hidden;
-  transition: max-height .3s var(--ease);
+  transition: grid-template-rows .3s var(--ease);
 }
-.nav-sub.is-open { max-height: 1200px; }
+.nav-sub > ul { min-height: 0; }
+.nav-sub.is-open { grid-template-rows: 1fr; }
 .nav-sub ul { list-style: none; }
 
-/* ── Theme screenwipe ────────────────────────────────────────────────────── */
+/* ── Theme iris wipe — circle expands from the toggle button ─────────────── */
 #themeWipe {
   position: fixed;
   inset: 0;
   z-index: 9997;
   pointer-events: none;
   background: var(--accent);
-  opacity: 0;
+  clip-path: circle(0px at var(--cx, 50%) var(--cy, 50%));
+  will-change: clip-path;
 }
 #themeWipe.is-wiping {
-  animation: theme-sweep .44s ease-in-out forwards;
+  animation: iris-wipe .52s ease-in-out forwards;
 }
-@keyframes theme-sweep {
-  0%   { transform: translateX(-101%); opacity: .1;  }
-  38%  { transform: translateX(0);     opacity: .14; }
-  62%  { transform: translateX(0);     opacity: .14; }
-  100% { transform: translateX(101%);  opacity: 0;   }
+@keyframes iris-wipe {
+  0%   { clip-path: circle(0px    at var(--cx, 50%) var(--cy, 50%)); opacity: 0;   }
+  15%  { opacity: .18; }
+  50%  { clip-path: circle(150vmax at var(--cx, 50%) var(--cy, 50%)); opacity: .18; }
+  100% { clip-path: circle(150vmax at var(--cx, 50%) var(--cy, 50%)); opacity: 0;   }
 }
 
 /* ── Overlay ────────────────────────────────────────────────────────────── */
