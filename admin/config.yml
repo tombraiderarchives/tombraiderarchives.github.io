@@ -1,0 +1,203 @@
+backend:
+  name: github
+  repo: tombraiderarchives/tombraiderarchives.github.io
+  branch: main
+  # Netlify acts as a free OAuth proxy so you don't need your own server.
+  # See setup instructions in the repo README.
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+# ── Collections ──────────────────────────────────────────────────────────────
+
+collections:
+
+  # ── Games ──────────────────────────────────────────────────────────────────
+  - name: "games"
+    label: "Games"
+    folder: "games"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "game"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Cover Image", name: "cover_image", widget: "string", required: false,
+         hint: "Path relative to site root, e.g. /images/tr1/cover.png"}
+      - {label: "Image Folder", name: "image_folder", widget: "string", required: false,
+         hint: "Folder name inside /images/, e.g. tr1"}
+      - label: "Era"
+        name: "era"
+        widget: "select"
+        options:
+          - "Classic Era"
+          - "Legend Era"
+          - "Survivor Era"
+          - "Remastered Era"
+          - "Lara Croft Series"
+          - "Unified Era"
+      - {label: "Quote", name: "quote", widget: "string", required: false}
+
+      - label: "Stats"
+        name: "stats"
+        widget: "object"
+        required: false
+        collapsed: false
+        summary: "{{fields.developer}} · {{fields.release_date}}"
+        fields:
+          - {label: "Release Date",  name: "release_date", widget: "string", required: false}
+          - {label: "Genre",         name: "genre",        widget: "string", required: false}
+          - {label: "Rating",        name: "rating",       widget: "string", required: false}
+          - {label: "Length",        name: "length",       widget: "string", required: false}
+          - {label: "Platforms",     name: "platforms",    widget: "string", required: false}
+          - {label: "Developer",     name: "developer",    widget: "string", required: false}
+          - {label: "Publisher",     name: "publisher",    widget: "string", required: false}
+          - {label: "Writer",        name: "writer",       widget: "string", required: false}
+          - {label: "Setting",       name: "setting",      widget: "string", required: false}
+
+      - label: "Cheats & Codes"
+        name: "cheats"
+        widget: "list"
+        required: false
+        collapsed: true
+        summary: "{{fields.platform_name}}"
+        fields:
+          - {label: "Platform", name: "platform_name", widget: "string"}
+          - label: "Items"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - {label: "Name",        name: "name",        widget: "string"}
+              - {label: "Description", name: "description", widget: "text",   required: false}
+              - {label: "Code",        name: "code",        widget: "string", required: false}
+
+      - label: "Achievements"
+        name: "achievements"
+        widget: "list"
+        required: false
+        collapsed: true
+        summary: "{{fields.platform_name}}"
+        fields:
+          - {label: "Platform", name: "platform_name", widget: "string"}
+          - label: "Items"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - {label: "Name",        name: "name",        widget: "string"}
+              - {label: "Description", name: "description", widget: "string", required: false}
+              - {label: "Gamerscore",  name: "gamerscore",  widget: "number", required: false, value_type: "int"}
+              - label: "Trophy Type"
+                name: "trophy"
+                widget: "select"
+                required: false
+                options:
+                  - {label: "Bronze",   value: "bronze"}
+                  - {label: "Silver",   value: "silver"}
+                  - {label: "Gold",     value: "gold"}
+                  - {label: "Platinum", value: "platinum"}
+
+      - label: "Videos"
+        name: "videos"
+        widget: "list"
+        required: false
+        collapsed: true
+        summary: "{{fields.title}}"
+        fields:
+          - {label: "Embed URL",   name: "url",         widget: "string",
+             hint: "YouTube embed URL — https://www.youtube.com/embed/VIDEO_ID"}
+          - {label: "Title",       name: "title",       widget: "string"}
+          - {label: "Description", name: "description", widget: "string", required: false}
+
+      - label: "Cast"
+        name: "cast"
+        widget: "list"
+        required: false
+        collapsed: true
+        summary: "{{fields.name}} — {{fields.role}}"
+        fields:
+          - {label: "Name",  name: "name",  widget: "string"}
+          - {label: "Role",  name: "role",  widget: "string", required: false}
+          - {label: "Image", name: "image", widget: "string", required: false,
+             hint: "Path e.g. /images/actors/name.jpg"}
+
+      - {label: "Body", name: "body", widget: "markdown", required: false}
+
+  # ── Media (movies, series) ──────────────────────────────────────────────────
+  - name: "media"
+    label: "Media"
+    folder: "media"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "game"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Cover Image", name: "cover_image", widget: "string", required: false}
+
+      - label: "Stats"
+        name: "stats"
+        widget: "object"
+        required: false
+        collapsed: false
+        fields:
+          - {label: "Release Date", name: "release_date", widget: "string", required: false}
+          - {label: "Genre",        name: "genre",        widget: "string", required: false}
+          - {label: "Rating",       name: "rating",       widget: "string", required: false}
+          - {label: "Runtime",      name: "runtime",      widget: "string", required: false}
+          - {label: "Director",     name: "director",     widget: "string", required: false}
+          - {label: "Writer",       name: "writer",       widget: "string", required: false}
+          - {label: "Budget",       name: "budget",       widget: "string", required: false}
+          - {label: "Box Office",   name: "box_office",   widget: "string", required: false}
+
+      - label: "Videos"
+        name: "videos"
+        widget: "list"
+        required: false
+        summary: "{{fields.title}}"
+        fields:
+          - {label: "Embed URL",   name: "url",         widget: "string"}
+          - {label: "Title",       name: "title",       widget: "string"}
+          - {label: "Description", name: "description", widget: "string", required: false}
+
+      - label: "Cast"
+        name: "cast"
+        widget: "list"
+        required: false
+        summary: "{{fields.name}} — {{fields.role}}"
+        fields:
+          - {label: "Name",  name: "name",  widget: "string"}
+          - {label: "Role",  name: "role",  widget: "string", required: false}
+          - {label: "Image", name: "image", widget: "string", required: false}
+
+      - {label: "Body", name: "body", widget: "markdown", required: false}
+
+  # ── News posts ──────────────────────────────────────────────────────────────
+  - name: "news"
+    label: "News"
+    folder: "news/_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: title
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Title",   name: "title",        widget: "string"}
+      - {label: "Date",    name: "date",          widget: "datetime",
+         date_format: "YYYY-MM-DD", time_format: false}
+      - {label: "Tags",    name: "tags",          widget: "list",   required: false}
+      - {label: "Excerpt", name: "excerpt_text",  widget: "text",   required: false}
+      - {label: "Body",    name: "body",          widget: "markdown"}
+
+  # ── Lore pages ──────────────────────────────────────────────────────────────
+  - name: "lore"
+    label: "Lore"
+    folder: "lore"
+    create: false
+    identifier_field: title
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "default"}
+      - {label: "Title",  name: "title",  widget: "string"}
+      - {label: "Body",   name: "body",   widget: "markdown"}

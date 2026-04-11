@@ -219,14 +219,21 @@ body {
 .nav-group-toggle--section:hover .nav-icon { opacity: 1; }
 
 .nav-group-toggle--sub {
-  padding-left: 1.5rem;
+  padding-left: 2rem;
   font-size: .795rem;
   font-weight: 500;
   color: var(--text-dim);
-  margin-top: .1rem;
+  margin-top: .35rem;
 }
 .nav-group-toggle--sub:hover { color: var(--text); }
 .nav-group-toggle--sub[aria-expanded="true"] { color: var(--text-muted); }
+
+/* Separator line between sub-group toggles */
+.nav-sub > ul > li + li > .nav-group-toggle--sub {
+  border-top: 1px solid var(--border);
+  margin-top: .5rem;
+  padding-top: .55rem;
+}
 
 /* Leaf link list — styled panel with left accent line */
 .nav-leaf-list { list-style: none; }
