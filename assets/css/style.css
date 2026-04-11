@@ -170,11 +170,7 @@ body {
 .nav-link--leaf.active { color: var(--accent); }
 
 .nav-year {
-  font-size: .7rem;
-  color: var(--text-dim);
-  margin-left: auto;
-  padding-left: .5rem;
-  flex-shrink: 0;
+  display: none;
 }
 .nav-link--leaf:hover .nav-year,
 .nav-link--leaf.active .nav-year { color: inherit; opacity: .6; }
@@ -235,9 +231,10 @@ body {
 /* Leaf link list — styled panel with left accent line */
 .nav-leaf-list { list-style: none; }
 .nav-sub .nav-sub {
-  border-left: 2px solid rgba(255,255,255,.06);
+  border-left: 2px solid transparent;
   margin-left: 2rem;
   padding-bottom: .25rem;
+  transition: border-color .25s var(--ease);
 }
 .nav-sub .nav-sub.is-open {
   border-left-color: var(--accent-border);
@@ -266,6 +263,25 @@ body {
 }
 .nav-sub.is-open { max-height: 1200px; }
 .nav-sub ul { list-style: none; }
+
+/* ── Theme screenwipe ────────────────────────────────────────────────────── */
+#themeWipe {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  background: var(--accent);
+  opacity: 0;
+}
+#themeWipe.is-wiping {
+  animation: theme-sweep .44s ease-in-out forwards;
+}
+@keyframes theme-sweep {
+  0%   { transform: translateX(-101%); opacity: .1;  }
+  38%  { transform: translateX(0);     opacity: .14; }
+  62%  { transform: translateX(0);     opacity: .14; }
+  100% { transform: translateX(101%);  opacity: 0;   }
+}
 
 /* ── Overlay ────────────────────────────────────────────────────────────── */
 /* Always in DOM but invisible and non-interactive until sidebar opens */

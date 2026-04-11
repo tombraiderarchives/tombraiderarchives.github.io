@@ -1,7 +1,8 @@
 'use strict';
 
-/* ── Theme toggle ───────────────────────────────────────────────────────── */
-/* Handles multiple .theme-toggle buttons (sidebar + mobile sticky header) */
+/* ── Theme toggle + screenwipe ──────────────────────────────────────────── */
+/* Handles multiple .theme-toggle buttons (sidebar + mobile sticky header).
+   Plays a left→right screenwipe, switches theme at the midpoint, exits. */
 (function () {
   var html    = document.documentElement;
   var toggles = document.querySelectorAll('.theme-toggle');
@@ -23,7 +24,16 @@
 
   toggles.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      var newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      var wipe     = document.getElementById('themeWipe');
+
+      if (!wipe) { applyTheme(newTheme); return; }
+
+      wipe.classList.remove('is-wiping');           // reset if mid-animation
+      void wipe.offsetWidth;                        // force reflow
+      wipe.classList.add('is-wiping');
+      setTimeout(function () { applyTheme(newTheme); }, 168); // ~38% of 440ms
+      setTimeout(function () { wipe.classList.remove('is-wiping'); }, 460);
     });
   });
 }());
@@ -79,14 +89,20 @@
   });
 }());
 
-/* ── Nav group collapsibles ─────────────────────────────────────────────── */
+/* ── Nav group collapsibles — accordion ─────────────────────────────────── */
+/* Only one panel can be open per level: opening a sibling collapses others. */
 (function () {
+  function collapse(btn, panel) {
+    btn.setAttribute('aria-expanded', 'false');
+    panel.classList.remove('is-open');
+  }
+
   document.querySelectorAll('.nav-group-toggle').forEach(function (btn) {
     var panelId = btn.getAttribute('aria-controls');
     var panel   = panelId ? document.getElementById(panelId) : null;
     if (!panel) return;
 
-    // Restore open state set server-side
+    // Restore open state set server-side (current-page highlight)
     if (btn.getAttribute('aria-expanded') === 'true') {
       panel.classList.add('is-open');
     }
@@ -95,6 +111,23 @@
       var opening = btn.getAttribute('aria-expanded') !== 'true';
       btn.setAttribute('aria-expanded', String(opening));
       panel.classList.toggle('is-open', opening);
+
+      // Accordion: close sibling panels at the same list level
+      if (opening) {
+        var li         = btn.closest('li');
+        var parentList = li && li.parentElement;
+        if (!parentList) return;
+        [].forEach.call(parentList.children, function (sibLi) {
+          if (sibLi === li) return;
+          var sibBtn = sibLi.querySelector(':scope > .nav-group-toggle');
+          if (!sibBtn) return;
+          var sibId    = sibBtn.getAttribute('aria-controls');
+          var sibPanel = sibId ? document.getElementById(sibId) : null;
+          if (sibPanel && sibPanel.classList.contains('is-open')) {
+            collapse(sibBtn, sibPanel);
+          }
+        });
+      }
     });
   });
 }());
