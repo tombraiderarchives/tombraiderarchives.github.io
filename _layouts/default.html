@@ -201,6 +201,28 @@
             </div>
           </li>
 
+          <!-- ── COMICS ── -->
+          <li class="nav-section-item">
+            <button class="nav-group-toggle nav-group-toggle--section"
+                    aria-expanded="{% if page.url contains '/media/comics' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-section-comics">
+              <i class="ph ph-book-open-text nav-icon" aria-hidden="true"></i>
+              <span>Comics</span>
+              <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-sub" id="nav-section-comics">
+              <ul role="list" class="nav-leaf-list">
+                <li><a href="{{ site.baseurl }}/media/comics/"                       class="nav-link nav-link--leaf{% if page.url == '/media/comics/'                              %} active{% endif %}"{% if page.url == '/media/comics/'                              %} aria-current="page"{% endif %}>All Comics</a></li>
+                <li><a href="{{ site.baseurl }}/media/comics/tomb-raider-the-series/" class="nav-link nav-link--leaf{% if page.url contains 'tomb-raider-the-series'  %} active{% endif %}"{% if page.url contains 'tomb-raider-the-series'  %} aria-current="page"{% endif %}>The Series</a></li>
+                <li><a href="{{ site.baseurl }}/media/comics/tomb-raider-journeys/"   class="nav-link nav-link--leaf{% if page.url contains 'tomb-raider-journeys'    %} active{% endif %}"{% if page.url contains 'tomb-raider-journeys'    %} aria-current="page"{% endif %}>Journeys</a></li>
+                <li><a href="{{ site.baseurl }}/media/comics/tomb-raider-one-shots/"  class="nav-link nav-link--leaf{% if page.url contains 'tomb-raider-one-shots'   %} active{% endif %}"{% if page.url contains 'tomb-raider-one-shots'   %} aria-current="page"{% endif %}>One-Shots &amp; Specials</a></li>
+                <li><a href="{{ site.baseurl }}/media/comics/tomb-raider-crossovers/" class="nav-link nav-link--leaf{% if page.url contains 'tomb-raider-crossovers'  %} active{% endif %}"{% if page.url contains 'tomb-raider-crossovers'  %} aria-current="page"{% endif %}>Crossovers</a></li>
+              </ul>
+            </div>
+          </li>
+
           <!-- ── LORE ── -->
           <li class="nav-section-item">
             <button class="nav-group-toggle nav-group-toggle--section"
@@ -250,6 +272,7 @@
               <ul>
                 <li><a href="{{ site.baseurl }}/media/lara-croft-tomb-raider/">Movies</a></li>
                 <li><a href="{{ site.baseurl }}/media/legend-of-lara-croft/">Series</a></li>
+                <li><a href="{{ site.baseurl }}/media/comics/">Comics</a></li>
               </ul>
             </div>
             <div class="footer-col">
@@ -257,7 +280,7 @@
               <ul>
                 <li><a href="{{ site.baseurl }}/news/">News</a></li>
                 <li><a href="{{ site.baseurl }}/lore/timeline/">Timeline</a></li>
-                <li><a href="{{ site.baseurl }}/lore/characters/">Characters</a></li>
+                <li><a href="{{ site.baseurl }}/lore/characters/">Lara Croft</a></li>
               </ul>
             </div>
           </nav>
