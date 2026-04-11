@@ -3,7 +3,7 @@ layout: game
 title: Tomb Raider&#58; Legacy of Atlantis
 cover_image: /images/tr-legacy-of-atlantis/cover.png
 image_folder: tr-legacy-of-atlantis
-era: Upcoming
+era: Unified Era
 
 stats:
   release_date: TBA

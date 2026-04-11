@@ -3,7 +3,7 @@ layout: game
 title: Tomb Raider&#58; Catalyst
 cover_image: /images/tr-catalyst/cover.png
 image_folder: tr-catalyst
-era: Upcoming
+era: Unified Era
 
 stats:
   release_date: TBA
