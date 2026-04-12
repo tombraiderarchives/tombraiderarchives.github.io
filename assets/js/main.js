@@ -308,9 +308,10 @@
   }
 }());
 
-/* ── Random screenshot (homepage) ──────────────────────────────────────── */
+/* ── Random image (homepage) ────────────────────────────────────────────── */
 /* Reads window._archiveShots built by Jekyll/Liquid in index.md, picks a
-   random entry, and renders a thumbnail + caption into #randomShot. */
+   random entry, renders a thumbnail card, and wires up a mini lightbox.
+   Clicking the image opens it full-size; the game page link stays separate. */
 (function () {
   var container = document.getElementById('randomShot');
   var shots     = window._archiveShots;
@@ -318,19 +319,23 @@
 
   var entry = shots[Math.floor(Math.random() * shots.length)];
 
-  // Escape a string for safe use inside an HTML attribute value
   function esc(str) {
     return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  // ── Render card ───────────────────────────────────────────────────────────
   container.innerHTML =
-    '<a class="random-shot-img-wrap" href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer" aria-label="View full screenshot from ' + esc(entry.title) + '">' +
-      '<img class="random-shot-img" src="' + esc(entry.thumb) + '" alt="Screenshot from ' + esc(entry.title) + '" loading="lazy" decoding="async">' +
-    '</a>' +
+    '<button class="random-shot-img-wrap" aria-label="Open image from ' + esc(entry.title) + ' in lightbox">' +
+      '<img class="random-shot-img" src="' + esc(entry.thumb) + '" alt="Image from ' + esc(entry.title) + '" loading="lazy" decoding="async">' +
+      '<span class="random-shot-zoom" aria-hidden="true">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>' +
+          '<line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>' +
+        '</svg>' +
+      '</span>' +
+    '</button>' +
     '<div class="random-shot-meta">' +
       '<a class="random-shot-game" href="' + esc(entry.url) + '">' +
         '<i class="ph ph-game-controller" aria-hidden="true"></i>' +
@@ -338,6 +343,56 @@
       '</a>' +
       '<a class="random-shot-view" href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer">View full <span aria-hidden="true">&#8599;</span></a>' +
     '</div>';
+
+  // ── Mini lightbox (built dynamically, not tied to gallery-grid) ───────────
+  var lb = document.createElement('div');
+  lb.className = 'rand-lb';
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.setAttribute('aria-label', 'Image viewer');
+  lb.innerHTML =
+    '<div class="rand-lb-inner">' +
+      '<button class="rand-lb-close" aria-label="Close image viewer">' +
+        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none">' +
+          '<line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>' +
+          '<line x1="15" y1="1" x2="1" y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>' +
+        '</svg>' +
+      '</button>' +
+      '<img class="rand-lb-img" src="" alt="' + esc(entry.title) + '" decoding="async">' +
+      '<div class="rand-lb-caption">' +
+        '<a href="' + esc(entry.url) + '" class="rand-lb-game">' +
+          '<i class="ph ph-game-controller" aria-hidden="true"></i> ' + esc(entry.title) +
+        '</a>' +
+        '<a href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer" class="rand-lb-view">' +
+          'View full <span aria-hidden="true">&#8599;</span>' +
+        '</a>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(lb);
+
+  var lbImg   = lb.querySelector('.rand-lb-img');
+  var trigger = container.querySelector('.random-shot-img-wrap');
+
+  function openLb() {
+    lbImg.src = entry.full;
+    lb.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    lb.querySelector('.rand-lb-close').focus();
+  }
+
+  function closeLb() {
+    lb.classList.remove('is-open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openLb);
+  lb.querySelector('.rand-lb-close').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lb.classList.contains('is-open')) { e.preventDefault(); closeLb(); }
+  });
 }());
 
 /* ── Lazy loading — apply to any image not already marked ───────────────── */

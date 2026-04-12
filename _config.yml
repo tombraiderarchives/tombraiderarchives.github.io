@@ -14,3 +14,10 @@ exclude:
   - node_modules
   - package.json
   - vercel.json
+
+# YouTube channel ID for the Latest Videos section on the homepage.
+# The bot fetches the channel's public RSS feed — no API key needed.
+# To find the ID: go to the YouTube channel page, view page source, search for "channelId".
+# Official Tomb Raider channel: https://www.youtube.com/@tombraider
+youtube_channel_id: "UCO_MlRMBJSI3k3RNbcR_wxA"
+

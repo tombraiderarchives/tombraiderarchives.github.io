@@ -35,6 +35,12 @@ const MAX_PER_RUN      = 5;      // posts per run — don't flood
 const MAX_AGE_DAYS     = 7;      // ignore articles older than this
 const MAX_ARTICLE_CHARS = 5000;  // max chars of article text sent to Claude
 
+// YouTube — official Tomb Raider channel RSS (no API key needed, public feed).
+// Channel ID: go to youtube.com/@tombraider → view-source → search "channelId"
+const YT_CHANNEL_ID = 'UCO_MlRMBJSI3k3RNbcR_wxA';
+const YT_DATA_FILE  = path.join(__dirname, '..', '_data', 'youtube_videos.json');
+const YT_MAX_VIDEOS = 4;
+
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
   '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
@@ -222,6 +228,43 @@ function cleanBody(text, maxLen = 4000) {
   }
 
   return body;
+}
+
+// ── YouTube latest videos ─────────────────────────────────────────────────────
+
+async function fetchYouTubeVideos() {
+  if (!YT_CHANNEL_ID) return [];
+  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`;
+  console.log('Fetching YouTube feed…');
+  let xml;
+  try {
+    xml = await fetchUrl(feedUrl);
+  } catch (err) {
+    console.warn(`  ⚠  YouTube fetch failed: ${err.message}`);
+    return [];
+  }
+
+  const videos = [];
+  const entries = xml.match(/<entry>([\s\S]*?)<\/entry>/g) || [];
+  for (const entry of entries.slice(0, YT_MAX_VIDEOS)) {
+    const videoId   = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1]?.trim();
+    const rawTitle  = entry.match(/<title[^>]*>([^<]+)<\/title>/)?.[1]?.trim() || '';
+    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1]?.trim() || '';
+    // Prefer media:thumbnail url attr (higher quality than mqdefault)
+    const thumbM    = entry.match(/<media:thumbnail[^>]+url="([^"]+)"/);
+    const thumb     = thumbM ? thumbM[1]
+                             : (videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : '');
+    if (!videoId || !rawTitle) continue;
+    videos.push({
+      id:        videoId,
+      title:     decodeEntities(rawTitle),
+      thumb,
+      url:       `https://www.youtube.com/watch?v=${videoId}`,
+      published,
+    });
+  }
+  console.log(`  ✓  ${videos.length} YouTube video(s) fetched`);
+  return videos;
 }
 
 // ── Claude summarisation ──────────────────────────────────────────────────────
@@ -494,6 +537,13 @@ async function main() {
   console.log(process.env.ANTHROPIC_API_KEY
     ? '(Claude summaries enabled)'
     : '(No ANTHROPIC_API_KEY — used extracted article text / RSS excerpts)');
+
+  // ── 5. Fetch YouTube latest videos and write _data/youtube_videos.json ────
+  console.log('');
+  const videos = await fetchYouTubeVideos();
+  const dataDir = path.join(__dirname, '..', '_data');
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+  fs.writeFileSync(YT_DATA_FILE, JSON.stringify(videos, null, 2) + '\n', 'utf8');
 }
 
 main().catch((err) => { console.error('Fatal:', err); process.exit(1); });

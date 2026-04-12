@@ -52,16 +52,16 @@ jobs:
         run: |
           git config user.name  "Tomb Raider News Bot"
           git config user.email "news-bot@users.noreply.github.com"
-          mkdir -p news/_posts/
-          git add news/_posts/
+          mkdir -p news/_posts/ _data/
+          git add news/_posts/ _data/
           if git diff --staged --quiet; then
-            echo "No new posts — nothing to commit."
+            echo "No new posts or YouTube data changes — nothing to commit."
             echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
-            COUNT=$(git diff --staged --name-only | wc -l | tr -d ' ')
-            git commit -m "bot: add ${COUNT} Tomb Raider news post(s)"
+            COUNT=$(git diff --staged --name-only -- 'news/_posts/' | wc -l | tr -d ' ')
+            git commit -m "bot: add ${COUNT} Tomb Raider news post(s), update YouTube data"
             git push origin main
-            echo "Pushed ${COUNT} new post(s)."
+            echo "Pushed ${COUNT} new post(s) + YouTube data."
             echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
 
