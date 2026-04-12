@@ -24,21 +24,21 @@ layout: default
 
   <header class="post-header">
     <div class="post-header-meta">
-      <p class="post-meta">{{ page.date | date: "%B %d, %Y" }}</p>
+      <p class="post-meta">{{ page.date | date: "%B %d, %Y" }}{% if page.source_name %} &middot; <span class="post-source-name">{{ page.source_name }}</span>{% endif %}</p>
       {% if page.category %}
-      <span class="category-badge">{{ page.category }}</span>
+      <a href="/news/?category={{ page.category | url_encode }}" class="category-badge category-link">{{ page.category }}</a>
       {% endif %}
       {% if page.tags and page.tags.size > 0 %}
       <ul class="tag-list" aria-label="Tags">
         {% for tag in page.tags %}
-        <li><span class="tag">{% if tag.tag %}{{ tag.tag }}{% else %}{{ tag }}{% endif %}</span></li>
+        {% assign tv = "" %}{% if tag.tag %}{% assign tv = tag.tag %}{% else %}{% assign tv = tag %}{% endif %}
+        <li><a href="/news/?tag={{ tv | url_encode }}" class="tag tag-link">{{ tv }}</a></li>
         {% endfor %}
       </ul>
       {% endif %}
     </div>
     <h1>{{ page.title }}</h1>
     {% if page.author %}<p class="post-author"><i class="ph ph-user" aria-hidden="true"></i> {{ page.author }}</p>{% endif %}
-    {% if page.excerpt_text %}<p class="post-lead">{{ page.excerpt_text }}</p>{% endif %}
   </header>
 
   <div class="post-body">

@@ -30,15 +30,31 @@ window._archiveShots = [
 
 <section class="news-section">
   <h2 class="section-title">Latest News</h2>
-  <div class="news-list">
-    {% for post in site.posts limit:3 %}
-    <article class="news-item" data-href="{{ post.url }}">
-      <p class="news-item-meta">{{ post.date | date: "%B %d, %Y" }}</p>
-      <h3 class="news-item-title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
-      {% if post.excerpt_text %}
-      <p class="news-item-excerpt">{{ post.excerpt_text }}</p>
+  <div class="news-list news-list--full">
+    {% for post in site.posts limit:5 %}
+    <article class="news-item{% unless post.header_image %} news-item--no-img{% endunless %}" data-href="{{ post.url }}">
+      {% if post.header_image %}
+      <img src="{{ post.header_image }}" alt="" class="news-item-img" loading="lazy" decoding="async">
+      {% else %}
+      <div class="news-item-placeholder" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+      </div>
       {% endif %}
-      <span class="news-read-more">Read more <span aria-hidden="true">&rarr;</span></span>
+      <div class="news-item-body">
+        <div class="news-item-top">
+          <span class="news-item-meta">{{ post.date | date: "%b %d, %Y" }}</span>
+          {% if post.source_name %}<span class="news-source">{{ post.source_name }}</span>{% endif %}
+          {% if post.category %}<span class="category-badge">{{ post.category }}</span>{% endif %}
+        </div>
+        <h3 class="news-item-title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
+        {% if post.excerpt_text %}
+        <p class="news-item-excerpt">{{ post.excerpt_text }}</p>
+        {% endif %}
+        <span class="news-read-more">Read more <span aria-hidden="true">&rarr;</span></span>
+      </div>
     </article>
     {% endfor %}
   </div>

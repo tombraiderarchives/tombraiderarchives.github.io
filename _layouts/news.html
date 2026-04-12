@@ -8,43 +8,138 @@ title: News
   <p>Updates, announcements, and archive additions.</p>
 </div>
 
+<!-- ── Filter bar ──────────────────────────────────────────────────────────── -->
+<div class="news-filter-bar">
+  <form class="news-search-form" action="/news/" method="get" role="search" id="news-search-form">
+    <input type="search" name="q" id="news-search" class="news-search-input"
+           placeholder="Search news…" autocomplete="off" spellcheck="false">
+    <button type="submit" class="news-search-btn" aria-label="Search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+  </form>
+
+  <div class="news-cat-filters" role="group" aria-label="Filter by category">
+    <a href="/news/" class="filter-btn" data-filter-cat="">All</a>
+    {% assign categories = site.posts | map: 'category' | compact | uniq | sort %}
+    {% for cat in categories %}
+    <a href="/news/?category={{ cat | url_encode }}" class="filter-btn" data-filter-cat="{{ cat }}">{{ cat }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="active-filter" class="active-filter-banner" hidden>
+  Filtered by: <strong id="active-filter-label"></strong>
+  <a href="/news/" class="active-filter-clear">Clear ×</a>
+</div>
+
+<!-- ── Post list ───────────────────────────────────────────────────────────── -->
 {% if site.posts.size > 0 %}
-<div class="news-list news-list--full">
+<div class="news-list news-list--full" id="news-list">
   {% for post in site.posts %}
-  <article class="news-item{% unless post.header_image %} news-item--no-img{% endunless %}" data-href="{{ post.url }}">
+  {% capture tag_list %}{% for tag in post.tags %}{% if tag.tag %}{{ tag.tag }}{% else %}{{ tag }}{% endif %}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
+  <article class="news-item{% unless post.header_image %} news-item--no-img{% endunless %}"
+           data-href="{{ post.url }}"
+           data-news-item
+           data-category="{{ post.category | downcase }}"
+           data-tags="{{ tag_list | downcase }}"
+           data-title="{{ post.title | downcase | escape }}"
+           data-excerpt="{{ post.excerpt_text | downcase | escape }}">
+
     {% if post.header_image %}
     <img src="{{ post.header_image }}" alt="" class="news-item-img" loading="lazy" decoding="async">
     {% else %}
     <div class="news-item-placeholder" aria-hidden="true">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
         <circle cx="12" cy="13" r="4"/>
       </svg>
     </div>
     {% endif %}
+
     <div class="news-item-body">
       <div class="news-item-top">
-        <p class="news-item-meta">{{ post.date | date: "%B %d, %Y" }}</p>
-        {% if post.category %}
-        <span class="category-badge">{{ post.category }}</span>
+        <span class="news-item-meta">{{ post.date | date: "%b %d, %Y" }}</span>
+        {% if post.source_name %}
+        <span class="news-source">{{ post.source_name }}</span>
         {% endif %}
-        {% if post.tags and post.tags.size > 0 %}
-        <ul class="tag-list" aria-label="Tags">
-          {% for tag in post.tags %}
-          <li><span class="tag">{% if tag.tag %}{{ tag.tag }}{% else %}{{ tag }}{% endif %}</span></li>
-          {% endfor %}
-        </ul>
+        {% if post.category %}
+        <a href="/news/?category={{ post.category | url_encode }}" class="category-badge category-link">{{ post.category }}</a>
         {% endif %}
       </div>
+
       <h2 class="news-item-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+
       {% if post.excerpt_text %}
       <p class="news-item-excerpt">{{ post.excerpt_text }}</p>
       {% endif %}
+
+      {% if post.tags and post.tags.size > 0 %}
+      <ul class="tag-list news-tag-list">
+        {% for tag in post.tags %}
+        {% assign tv = "" %}{% if tag.tag %}{% assign tv = tag.tag %}{% else %}{% assign tv = tag %}{% endif %}
+        <li><a href="/news/?tag={{ tv | url_encode }}" class="tag tag-link">{{ tv }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
       <span class="news-read-more">Read more <span aria-hidden="true">&rarr;</span></span>
     </div>
   </article>
   {% endfor %}
 </div>
+
+<p id="no-results" class="empty-state" hidden>No posts match your filter.</p>
+
 {% else %}
 <p class="empty-state">No news posts yet. Check back soon.</p>
 {% endif %}
+
+<script>
+(function () {
+  var params   = new URLSearchParams(location.search);
+  var filterCat = (params.get('category') || '').trim().toLowerCase();
+  var filterTag = (params.get('tag')      || '').trim().toLowerCase();
+  var query     = (params.get('q')        || '').trim().toLowerCase();
+
+  /* Populate search box */
+  var searchEl = document.getElementById('news-search');
+  if (searchEl && params.get('q')) searchEl.value = params.get('q');
+
+  /* Active-filter banner */
+  var banner = document.getElementById('active-filter');
+  var label  = document.getElementById('active-filter-label');
+  if (filterCat || filterTag || query) {
+    label.textContent = filterCat || (filterTag ? '#' + filterTag : '"' + query + '"');
+    banner.removeAttribute('hidden');
+  }
+
+  /* Highlight active category button */
+  document.querySelectorAll('[data-filter-cat]').forEach(function (btn) {
+    if (btn.dataset.filterCat.toLowerCase() === filterCat) btn.classList.add('active');
+  });
+
+  /* Filter items */
+  var items   = document.querySelectorAll('[data-news-item]');
+  var visible = 0;
+  items.forEach(function (item) {
+    var cat   = item.dataset.category || '';
+    var tags  = (item.dataset.tags || '').split(',').map(function(t){ return t.trim(); });
+    var title = item.dataset.title   || '';
+    var exc   = item.dataset.excerpt || '';
+
+    var ok = (!filterCat || cat === filterCat)
+          && (!filterTag || tags.indexOf(filterTag) !== -1)
+          && (!query     || title.indexOf(query) !== -1 || exc.indexOf(query) !== -1);
+
+    item.hidden = !ok;
+    if (ok) visible++;
+  });
+
+  var noResults = document.getElementById('no-results');
+  if (noResults) noResults.hidden = visible > 0;
+}());
+</script>

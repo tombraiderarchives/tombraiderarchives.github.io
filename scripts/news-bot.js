@@ -146,6 +146,38 @@ function inferCategory(title, text) {
   return 'News';
 }
 
+/** Strip " - Source Name" suffix that Google News appends to RSS titles. */
+function cleanTitle(rawTitle, sourceName) {
+  let title = rawTitle;
+  if (sourceName) {
+    const esc = sourceName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const cleaned = title.replace(new RegExp(`\\s*[-–|]\\s*${esc}\\s*$`, 'i'), '').trim();
+    if (cleaned && cleaned.length > 10) title = cleaned;
+  }
+  // Fallback: strip generic " - Publication" trailing pattern
+  if (title === rawTitle) {
+    const fallback = title.replace(/\s*[-–]\s*[A-Z][^-–]{2,50}$/, '').trim();
+    if (fallback && fallback.length > 10) title = fallback;
+  }
+  return title || rawTitle;
+}
+
+/** Truncate to first complete sentence within maxLen, or word boundary + ellipsis. */
+function makeExcerpt(text, maxLen = 220) {
+  if (!text) return '';
+  const firstPara = text.split(/\n\n+/)[0].replace(/\n/g, ' ').trim();
+  if (firstPara.length <= maxLen) return firstPara;
+  const trimmed = firstPara.slice(0, maxLen);
+  const sentenceEnd = Math.max(
+    trimmed.lastIndexOf('. '),
+    trimmed.lastIndexOf('! '),
+    trimmed.lastIndexOf('? ')
+  );
+  if (sentenceEnd > maxLen * 0.5) return trimmed.slice(0, sentenceEnd + 1).trim();
+  const lastSpace = trimmed.lastIndexOf(' ');
+  return (lastSpace > maxLen * 0.4 ? trimmed.slice(0, lastSpace) : trimmed).trim() + '…';
+}
+
 // ── Claude summarisation ──────────────────────────────────────────────────────
 
 async function summariseWithClaude(title, articleText, rssExcerpt, sourceUrl) {
@@ -285,8 +317,13 @@ async function fetchArticlePage(browser, googleNewsLink) {
 // ── Post writer ───────────────────────────────────────────────────────────────
 
 async function writePost(item, existingUrls, browser) {
+  // Resolve source name early so we can clean the title
+  const sourceName = item.sourceName ||
+    (() => { try { return new URL(item.link).hostname.replace(/^www\./, ''); } catch { return ''; } })();
+
+  const title    = cleanTitle(item.title, sourceName);
   const date     = formatDate(item.pubDate);
-  const slug     = slugify(item.title);
+  const slug     = slugify(title);
   const filename = `${date}-${slug}.md`;
   const filepath = path.join(POSTS_DIR, filename);
 
@@ -295,7 +332,7 @@ async function writePost(item, existingUrls, browser) {
     return null;
   }
 
-  console.log(`  → ${item.title.slice(0, 70)}…`);
+  console.log(`  → ${title.slice(0, 70)}…`);
   const { finalUrl, imageUrl, articleText } = await fetchArticlePage(browser, item.link);
 
   // Dedup against real URL — must happen after redirect resolution
@@ -304,23 +341,24 @@ async function writePost(item, existingUrls, browser) {
     return null;
   }
 
-  const sourceName = item.sourceName ||
+  // Re-derive source name from final URL if not available from RSS
+  const resolvedSource = sourceName ||
     (() => { try { return new URL(finalUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
-  const category = inferCategory(item.title, item.description + ' ' + articleText);
+  const category = inferCategory(title, item.description + ' ' + articleText);
 
   const summary =
-    await summariseWithClaude(item.title, articleText, item.description, finalUrl) ||
+    await summariseWithClaude(title, articleText, item.description, finalUrl) ||
     articleText.slice(0, 600).trim() ||
     item.description.slice(0, 400).trim();
 
-  const excerpt = summary.split('\n')[0].slice(0, 280);
+  const excerpt = makeExcerpt(summary);
   const yamlStr = (s) => JSON.stringify(String(s));
 
   const lines = [
     '---',
     `layout: post`,
-    `title: ${yamlStr(item.title)}`,
+    `title: ${yamlStr(title)}`,
     `date: ${date}`,
     `category: ${yamlStr(category)}`,
     `tags:`,
@@ -333,14 +371,14 @@ async function writePost(item, existingUrls, browser) {
     `excerpt_text: ${yamlStr(excerpt)}`,
     `source_url: ${yamlStr(finalUrl)}`,
     `source_rss_url: ${yamlStr(item.link)}`,
-    `source_name: ${yamlStr(sourceName)}`,
+    `source_name: ${yamlStr(resolvedSource)}`,
     '---',
     '',
     summary,
     '',
     `---`,
     ``,
-    `*Source: [${sourceName}](${finalUrl})*`
+    `*Source: [${resolvedSource}](${finalUrl})*`
   );
 
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
