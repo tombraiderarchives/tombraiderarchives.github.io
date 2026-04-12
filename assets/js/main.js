@@ -308,6 +308,38 @@
   }
 }());
 
+/* ── Random screenshot (homepage) ──────────────────────────────────────── */
+/* Reads window._archiveShots built by Jekyll/Liquid in index.md, picks a
+   random entry, and renders a thumbnail + caption into #randomShot. */
+(function () {
+  var container = document.getElementById('randomShot');
+  var shots     = window._archiveShots;
+  if (!container || !shots || !shots.length) return;
+
+  var entry = shots[Math.floor(Math.random() * shots.length)];
+
+  // Escape a string for safe use inside an HTML attribute value
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  container.innerHTML =
+    '<a class="random-shot-img-wrap" href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer" aria-label="View full screenshot from ' + esc(entry.title) + '">' +
+      '<img class="random-shot-img" src="' + esc(entry.thumb) + '" alt="Screenshot from ' + esc(entry.title) + '" loading="lazy" decoding="async">' +
+    '</a>' +
+    '<div class="random-shot-meta">' +
+      '<a class="random-shot-game" href="' + esc(entry.url) + '">' +
+        '<i class="ph ph-game-controller" aria-hidden="true"></i>' +
+        esc(entry.title) +
+      '</a>' +
+      '<a class="random-shot-view" href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer">View full <span aria-hidden="true">&#8599;</span></a>' +
+    '</div>';
+}());
+
 /* ── Lazy loading — apply to any image not already marked ───────────────── */
 (function () {
   document.querySelectorAll('img:not([loading])').forEach(function (img) {
