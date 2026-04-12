@@ -15,231 +15,13 @@ public_folder: "/images/uploads"
 
 collections:
 
-  # ── Games ──────────────────────────────────────────────────────────────────
-  - name: "games"
-    label: "Games"
-    label_singular: "Game"
-    folder: "games"
-    create: true
-    slug: "{{slug}}"
-    identifier_field: title
-    preview_path: "games/{{slug}}"
-    summary: "{{title}}"
-    sortable_fields: ["title", "era"]
-    view_filters:
-      - label: "Classic Era"
-        field: era
-        pattern: "Classic Era"
-      - label: "Legend Era"
-        field: era
-        pattern: "Legend Era"
-      - label: "Survivor Era"
-        field: era
-        pattern: "Survivor Era"
-      - label: "Remastered Era"
-        field: era
-        pattern: "Remastered Era"
-      - label: "Lara Croft Series"
-        field: era
-        pattern: "Lara Croft Series"
-      - label: "Unified Era"
-        field: era
-        pattern: "Unified Era"
-    view_groups:
-      - label: "Era"
-        field: era
-    fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "game"}
-      - {label: "Title", name: "title", widget: "string"}
-      - label: "Cover Image"
-        name: "cover_image"
-        widget: "image"
-        required: false
-        hint: "Upload or select a cover image. Uploaded files go to /images/uploads/"
-      - {label: "Image Folder", name: "image_folder", widget: "string", required: false,
-         hint: "Folder name inside /images/ used for the screenshot gallery, e.g. tr1"}
-      - label: "Era"
-        name: "era"
-        widget: "select"
-        options:
-          - "Classic Era"
-          - "Legend Era"
-          - "Survivor Era"
-          - "Remastered Era"
-          - "Lara Croft Series"
-          - "Unified Era"
-      - {label: "Quote", name: "quote", widget: "string", required: false,
-         hint: "A short tagline or memorable quote shown on the page"}
-
-      - label: "Stats"
-        name: "stats"
-        widget: "object"
-        required: false
-        collapsed: false
-        summary: "{{fields.developer}} · {{fields.release_date}}"
-        fields:
-          - {label: "Release Date",  name: "release_date", widget: "string", required: false,
-             hint: "e.g. October 25, 1996"}
-          - {label: "Genre",         name: "genre",        widget: "string", required: false}
-          - {label: "Age Rating",    name: "rating",       widget: "string", required: false,
-             hint: "e.g. PEGI 16 · ESRB Teen"}
-          - {label: "Length",        name: "length",       widget: "string", required: false,
-             hint: "e.g. ~10 hours"}
-          - {label: "Platforms",     name: "platforms",    widget: "string", required: false,
-             hint: "e.g. PS4, Xbox One, Windows"}
-          - {label: "Developer",     name: "developer",    widget: "string", required: false}
-          - {label: "Publisher",     name: "publisher",    widget: "string", required: false}
-          - {label: "Writer",        name: "writer",       widget: "string", required: false}
-          - {label: "Setting",       name: "setting",      widget: "string", required: false,
-             hint: "e.g. Peru, Egypt, Siberia"}
-
-      - label: "Videos"
-        name: "videos"
-        widget: "list"
-        required: false
-        collapsed: true
-        summary: "{{fields.title}}"
-        fields:
-          - {label: "Title",       name: "title",       widget: "string",
-             hint: "e.g. Official Reveal Trailer"}
-          - {label: "Embed URL",   name: "url",         widget: "string",
-             hint: "YouTube embed URL — open YouTube, click Share → Embed, copy the src URL: https://www.youtube.com/embed/VIDEO_ID"}
-          - {label: "Description", name: "description", widget: "string", required: false}
-
-      - label: "Cast"
-        name: "cast"
-        widget: "list"
-        required: false
-        collapsed: true
-        summary: "{{fields.name}} — {{fields.role}}"
-        fields:
-          - {label: "Name",  name: "name",  widget: "string"}
-          - {label: "Role",  name: "role",  widget: "string", required: false,
-             hint: "e.g. Lara Croft, voice actor, motion capture"}
-          - label: "Photo"
-            name: "image"
-            widget: "image"
-            required: false
-
-      - label: "Cheats & Codes"
-        name: "cheats"
-        widget: "list"
-        required: false
-        collapsed: true
-        summary: "{{fields.platform_name}}"
-        fields:
-          - {label: "Platform", name: "platform_name", widget: "string",
-             hint: "e.g. PlayStation, PC, Nintendo 64"}
-          - label: "Codes"
-            name: "items"
-            widget: "list"
-            summary: "{{fields.name}}"
-            fields:
-              - {label: "Name",        name: "name",        widget: "string"}
-              - {label: "Description", name: "description", widget: "text",   required: false}
-              - {label: "Code",        name: "code",        widget: "string", required: false}
-
-      - label: "Achievements / Trophies"
-        name: "achievements"
-        widget: "list"
-        required: false
-        collapsed: true
-        summary: "{{fields.platform_name}}"
-        fields:
-          - {label: "Platform", name: "platform_name", widget: "string",
-             hint: "e.g. Xbox, PlayStation, Steam"}
-          - label: "Items"
-            name: "items"
-            widget: "list"
-            summary: "{{fields.name}}"
-            fields:
-              - {label: "Name",        name: "name",        widget: "string"}
-              - {label: "Description", name: "description", widget: "string", required: false}
-              - {label: "Gamerscore",  name: "gamerscore",  widget: "number", required: false,
-                 value_type: "int", hint: "Xbox Gamerscore points, e.g. 10"}
-              - label: "Trophy Type"
-                name: "trophy"
-                widget: "select"
-                required: false
-                hint: "PlayStation trophy tier"
-                options:
-                  - {label: "Bronze",   value: "bronze"}
-                  - {label: "Silver",   value: "silver"}
-                  - {label: "Gold",     value: "gold"}
-                  - {label: "Platinum", value: "platinum"}
-
-      - {label: "Body", name: "body", widget: "markdown", required: false,
-         hint: "Main page content — overview, story details, reception, etc."}
-
-  # ── Media (movies, series) ──────────────────────────────────────────────────
-  - name: "media"
-    label: "Media"
-    label_singular: "Media Entry"
-    folder: "media"
-    create: true
-    slug: "{{slug}}"
-    identifier_field: title
-    preview_path: "media/{{slug}}"
-    summary: "{{title}}"
-    fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "game"}
-      - {label: "Title", name: "title", widget: "string"}
-      - label: "Cover Image"
-        name: "cover_image"
-        widget: "image"
-        required: false
-
-      - label: "Stats"
-        name: "stats"
-        widget: "object"
-        required: false
-        collapsed: false
-        fields:
-          - {label: "Release Date", name: "release_date", widget: "string", required: false}
-          - {label: "Genre",        name: "genre",        widget: "string", required: false}
-          - {label: "Age Rating",   name: "rating",       widget: "string", required: false}
-          - {label: "Runtime",      name: "runtime",      widget: "string", required: false,
-             hint: "e.g. 115 minutes"}
-          - {label: "Director",     name: "director",     widget: "string", required: false}
-          - {label: "Writer",       name: "writer",       widget: "string", required: false}
-          - {label: "Budget",       name: "budget",       widget: "string", required: false,
-             hint: "e.g. $90 million"}
-          - {label: "Box Office",   name: "box_office",   widget: "string", required: false}
-
-      - label: "Videos"
-        name: "videos"
-        widget: "list"
-        required: false
-        collapsed: true
-        summary: "{{fields.title}}"
-        fields:
-          - {label: "Title",       name: "title",       widget: "string"}
-          - {label: "Embed URL",   name: "url",         widget: "string",
-             hint: "YouTube embed URL — https://www.youtube.com/embed/VIDEO_ID"}
-          - {label: "Description", name: "description", widget: "string", required: false}
-
-      - label: "Cast"
-        name: "cast"
-        widget: "list"
-        required: false
-        collapsed: true
-        summary: "{{fields.name}} — {{fields.role}}"
-        fields:
-          - {label: "Name",  name: "name",  widget: "string"}
-          - {label: "Role",  name: "role",  widget: "string", required: false}
-          - label: "Photo"
-            name: "image"
-            widget: "image"
-            required: false
-
-      - {label: "Body", name: "body", widget: "markdown", required: false}
-
   # ── News posts ──────────────────────────────────────────────────────────────
   - name: "news"
     label: "News"
-    label_singular: "News Post"
+    label_singular: "Post"
     folder: "news/_posts"
     create: true
+    delete: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     identifier_field: title
     preview_path: "news/{{year}}/{{month}}/{{day}}/{{slug}}"
@@ -249,15 +31,22 @@ collections:
       - label: "Category"
         field: category
     fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
-      - {label: "Title",   name: "title",  widget: "string"}
+      - {label: "Layout",  name: "layout", widget: "hidden", default: "post"}
+
+      # ── Core ──────────────────────────────────────────────────────────────
+      - {label: "Title",   name: "title",  widget: "string",
+         hint: "The headline — keep it clear and specific"}
+
       - {label: "Date",    name: "date",   widget: "datetime",
-         date_format: "YYYY-MM-DD", time_format: false}
+         date_format: "YYYY-MM-DD", time_format: false,
+         hint: "Publish date"}
+
+      # ── Categorisation ────────────────────────────────────────────────────
       - label: "Category"
         name: "category"
         widget: "select"
         required: false
-        hint: "Primary category shown as a badge on the post and news listing"
+        hint: "Primary label shown as a badge on the post"
         options:
           - "Announcement"
           - "Trailer"
@@ -267,65 +56,28 @@ collections:
           - "Media"
           - "Merchandise"
           - "Event"
+          - "Rumour"
+
       - label: "Tags"
         name: "tags"
         widget: "list"
         required: false
-        hint: "Add as many tags as you like — click '+ Add tags' for each one. e.g. crystal-dynamics, pc, switch"
+        hint: "Click '+ Add tags' for each keyword. e.g. crystal-dynamics, pc, switch"
         field: {label: "Tag", name: "tag", widget: "string"}
+
+      # ── Media ─────────────────────────────────────────────────────────────
       - label: "Header Image"
         name: "header_image"
         widget: "image"
         required: false
-        hint: "Banner image shown at the top of the post and on the news listing card"
+        hint: "Banner image shown at the top of the post and on the news card"
+
+      # ── Meta ──────────────────────────────────────────────────────────────
       - {label: "Author",  name: "author", widget: "string", required: false,
-         hint: "Optional byline shown below the post title"}
+         hint: "Optional byline"}
+
       - {label: "Excerpt", name: "excerpt_text", widget: "text", required: false,
-         hint: "Short summary shown on the news listing page (1–2 sentences)"}
+         hint: "Short teaser shown on the news listing (1–2 sentences)"}
+
+      # ── Body ──────────────────────────────────────────────────────────────
       - {label: "Body",    name: "body",   widget: "markdown"}
-
-  # ── Lore pages ──────────────────────────────────────────────────────────────
-  - name: "lore"
-    label: "Lore"
-    label_singular: "Lore Page"
-    folder: "lore"
-    create: true
-    identifier_field: title
-    fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "default"}
-      - {label: "Title",  name: "title",  widget: "string"}
-      - {label: "Body",   name: "body",   widget: "markdown"}
-
-  # ── Standalone pages ─────────────────────────────────────────────────────────
-  # For creating custom one-off pages (About, FAQ, etc.) with any layout.
-  # Delete and Duplicate are available via the ⋯ menu in the top-right of
-  # any entry editor.
-  - name: "pages"
-    label: "Pages"
-    label_singular: "Page"
-    folder: "pages"
-    create: true
-    slug: "{{slug}}"
-    identifier_field: title
-    preview_path: "pages/{{slug}}"
-    summary: "{{title}} ({{fields.layout}})"
-    fields:
-      - label: "Layout / Template"
-        name: "layout"
-        widget: "select"
-        hint: "Controls how the page is rendered — Default is a plain text page, Game shows stats/gallery/videos, Post shows a news-style article"
-        options:
-          - {label: "Default (plain page)",  value: "default"}
-          - {label: "Game page",             value: "game"}
-          - {label: "Post / Article",        value: "post"}
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Permalink", name: "permalink", widget: "string", required: false,
-         hint: "Custom URL path e.g. /about/ — leave blank to use the filename"}
-      - label: "Header Image"
-        name: "header_image"
-        widget: "image"
-        required: false
-        hint: "Optional banner image (used by the Post and Default layouts)"
-      - {label: "Excerpt / Tagline", name: "excerpt_text", widget: "text", required: false,
-         hint: "Short description shown as a subtitle or used in meta tags"}
-      - {label: "Body", name: "body", widget: "markdown", required: false}

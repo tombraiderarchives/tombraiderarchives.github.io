@@ -6,52 +6,176 @@
   <title>Content Manager — Tomb Raider Archives</title>
   <link rel="icon" href="/images/ui/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ── Site design tokens (mirrors the main site) ─────────────────────── */
+    /* ── Site tokens ──────────────────────────────────────────────────────── */
     :root {
-      --bg:     #060504;
-      --bg-2:   #0f0d09;
-      --border: rgba(234,231,225,.07);
-      --text:   #eae7e1;
-      --muted:  #9a9388;
-      --accent: #7ea583;
+      --bg:        #060504;
+      --bg-2:      #0f0d09;
+      --bg-3:      #181410;
+      --bg-4:      #201c17;
+      --border:    rgba(234,231,225,.07);
+      --border-2:  rgba(234,231,225,.14);
+      --text:      #eae7e1;
+      --muted:     #9a9388;
+      --dim:       #8f8071;
+      --accent:    #7ea583;
+      --accent-bg: rgba(126,165,131,.12);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Dark canvas — forms the background on the login screen and frames the
-       CMS pane once logged in. The editing area itself stays light so body
-       text is easy to read — clearly "you are in edit mode". */
-    html { background: var(--bg); color-scheme: dark; }
+    /* Dark canvas — the body shows on the login screen and as the outer
+       frame once logged in. The editing pane itself stays light so text
+       is easy to read and it's clearly "you are in editing mode." */
+    html {
+      background: var(--bg);
+      color-scheme: dark;
+      height: 100%;
+    }
+
     body {
       background: var(--bg) !important;
       font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
       min-height: 100vh;
+      height: 100%;
     }
 
-    /* Apply Inter throughout the CMS */
-    #nc-root { font-family: 'Inter', system-ui, sans-serif !important; }
+    /* ── Apply Inter throughout the React app ────────────────────────────── */
+    #nc-root,
+    #nc-root * {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    }
 
-    /* Login screen — give the auth card a dark canvas to sit on */
-    [class*="AuthenticationPage"] { background: var(--bg) !important; }
+    /* ── Login / auth screen ─────────────────────────────────────────────── */
+    /* Decap floats its auth card on whatever the body background is, so the
+       dark canvas is our main lever here */
 
-    /* Nudge any CMS links toward the site's accent green */
+    /* Auth page wrapper */
+    [class*="AuthenticationPage"],
+    [class*="authPage"],
+    [class*="auth-page"] {
+      background: var(--bg) !important;
+    }
+
+    /* The login card */
+    [class*="LoginButton"],
+    [class*="loginButton"] {
+      background: var(--accent) !important;
+      color: #000 !important;
+      font-weight: 600 !important;
+      border-radius: 6px !important;
+    }
+
+    /* ── Top app bar ─────────────────────────────────────────────────────── */
+    /* Ghost-style: dark strip across the top */
+    #nc-root header,
+    [class*="AppHeader"],
+    [class*="appHeader"],
+    [class*="Toolbar"],
+    [class*="toolbar"] {
+      background: var(--bg-2) !important;
+      border-bottom: 1px solid var(--border-2) !important;
+    }
+
+    /* Buttons in the toolbar */
+    #nc-root header button,
+    #nc-root [class*="Toolbar"] button {
+      color: var(--muted) !important;
+    }
+    #nc-root header button:hover,
+    #nc-root [class*="Toolbar"] button:hover {
+      color: var(--text) !important;
+    }
+
+    /* ── Left sidebar / collection nav ──────────────────────────────────── */
+    /* Dark sidebar — same tone as the main site sidebar */
+    #nc-root nav,
+    #nc-root aside,
+    [class*="Sidebar"],
+    [class*="sidebar"],
+    [class*="Nav"],
+    [class*="CollectionList"],
+    [class*="collectionList"] {
+      background: var(--bg-2) !important;
+      border-right: 1px solid var(--border-2) !important;
+      color: var(--muted) !important;
+    }
+
+    /* Active/selected collection item */
+    [class*="activeLink"],
+    [class*="active"],
+    [aria-current="page"] {
+      color: var(--accent) !important;
+      background: var(--accent-bg) !important;
+    }
+
+    /* Nav links */
+    #nc-root nav a,
+    #nc-root aside a {
+      color: var(--muted) !important;
+    }
+    #nc-root nav a:hover,
+    #nc-root aside a:hover {
+      color: var(--text) !important;
+    }
+
+    /* ── Entry list (post cards) ─────────────────────────────────────────── */
+    [class*="EntryCard"],
+    [class*="entryCard"],
+    [class*="CollectionEntry"],
+    [class*="collectionEntry"] {
+      border: 1px solid var(--border-2) !important;
+      border-radius: 8px !important;
+    }
+
+    /* ── Accent colour for primary actions ───────────────────────────────── */
+    button[class*="primary"],
+    button[class*="Primary"],
+    [class*="PublishButton"],
+    [class*="publishButton"] {
+      background: var(--accent) !important;
+      color: #000 !important;
+      font-weight: 600 !important;
+    }
+
+    /* All CMS links → accent green */
     #nc-root a { color: var(--accent) !important; }
+    #nc-root a:hover { opacity: .85; }
 
-    /* Top toolbar */
-    [class*="AppHeaderContent"],
-    [class*="appHeader"] {
-      background: var(--bg-2) !important;
-      border-bottom: 1px solid var(--border) !important;
-      font-family: 'Inter', system-ui, sans-serif !important;
+    /* ── Entry editor — keep it clean and white for readability ─────────── */
+    /* The white editing pane signals "edit mode" — intentionally kept light */
+    #nc-root main,
+    [class*="EditorContainer"],
+    [class*="editorContainer"] {
+      background: #fafaf9 !important;
     }
 
-    /* Left navigation sidebar */
-    [class*="Nav"], nav[class*="nav"] {
-      background: var(--bg-2) !important;
-      border-color: var(--border) !important;
+    /* Title field: big, prominent, Ghost-style */
+    #nc-root input[id*="title"],
+    #nc-root input[id*="Title"],
+    #nc-root input[placeholder*="title" i] {
+      font-size: 1.6rem !important;
+      font-weight: 700 !important;
+      letter-spacing: -.02em !important;
+    }
+
+    /* The markdown editor body textarea */
+    #nc-root .CodeMirror,
+    #nc-root .cm-editor,
+    #nc-root textarea[id*="body"],
+    #nc-root textarea[id*="Body"] {
       font-family: 'Inter', system-ui, sans-serif !important;
+      font-size: 1rem !important;
+      line-height: 1.7 !important;
+    }
+
+    /* Field labels */
+    #nc-root label {
+      font-weight: 600 !important;
+      font-size: .8rem !important;
+      letter-spacing: .03em !important;
+      text-transform: uppercase !important;
     }
   </style>
 </head>
