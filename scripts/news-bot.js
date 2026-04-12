@@ -179,26 +179,49 @@ function makeExcerpt(text, maxLen = 220) {
 }
 
 /**
- * Truncate body text at the last complete sentence within maxLen.
- * Prevents posts from ending mid-sentence when article text was cut off.
+ * Truncate body text gracefully:
+ * - If over maxLen, cut at the last complete sentence within that limit.
+ * - Always ensure the final text ends at a sentence boundary, even for
+ *   short texts that arrived pre-truncated mid-word (e.g. RSS excerpts,
+ *   raw article slices). Never leave the reader mid-sentence.
  */
 function cleanBody(text, maxLen = 4000) {
-  if (!text || text.length <= maxLen) return (text || '').trim();
-  const trimmed = text.slice(0, maxLen);
-  // Prefer a sentence boundary
-  const sentenceEnd = Math.max(
-    trimmed.lastIndexOf('. '),
-    trimmed.lastIndexOf('! '),
-    trimmed.lastIndexOf('? '),
-    trimmed.lastIndexOf('.\n'),
-    trimmed.lastIndexOf('!\n'),
-    trimmed.lastIndexOf('?\n')
-  );
-  if (sentenceEnd > maxLen * 0.4) return trimmed.slice(0, sentenceEnd + 1).trim();
-  // Fall back to paragraph break
-  const lastPara = trimmed.lastIndexOf('\n\n');
-  if (lastPara > maxLen * 0.4) return trimmed.slice(0, lastPara).trim();
-  return trimmed.trim();
+  if (!text) return '';
+  let body = text.trim();
+
+  // Step 1 — hard length cap at sentence boundary
+  if (body.length > maxLen) {
+    const chunk = body.slice(0, maxLen);
+    const sentEnd = Math.max(
+      chunk.lastIndexOf('. '), chunk.lastIndexOf('! '),
+      chunk.lastIndexOf('? '), chunk.lastIndexOf('.\n'),
+      chunk.lastIndexOf('!\n'), chunk.lastIndexOf('?\n')
+    );
+    if (sentEnd > maxLen * 0.4) {
+      body = chunk.slice(0, sentEnd + 1).trim();
+    } else {
+      const lastPara = chunk.lastIndexOf('\n\n');
+      body = (lastPara > maxLen * 0.4 ? chunk.slice(0, lastPara) : chunk).trim();
+    }
+  }
+
+  // Step 2 — if it still doesn't end cleanly, trim to last complete sentence
+  // This catches pre-sliced text that ends mid-word or mid-sentence.
+  if (!/[.!?]["']?\s*$/.test(body)) {
+    const lastSent = Math.max(
+      body.lastIndexOf('. '), body.lastIndexOf('! '),
+      body.lastIndexOf('? '), body.lastIndexOf('.\n')
+    );
+    if (lastSent > body.length * 0.2) {
+      body = body.slice(0, lastSent + 1).trim();
+    } else {
+      // No sentence found — at minimum trim to the last complete word
+      const lastSpace = body.lastIndexOf(' ');
+      if (lastSpace > body.length * 0.3) body = body.slice(0, lastSpace).trim();
+    }
+  }
+
+  return body;
 }
 
 // ── Claude summarisation ──────────────────────────────────────────────────────
@@ -262,8 +285,12 @@ async function fetchArticlePage(browser, googleNewsLink) {
     // Navigate — Google News link redirects to the real article URL
     await page.goto(googleNewsLink, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
-    // Allow a brief JS redirect to settle
-    await new Promise(r => setTimeout(r, 1500));
+    // Wait for any JS redirect to leave news.google.com, then let page settle
+    await page.waitForFunction(
+      () => !location.href.includes('news.google.com'),
+      { timeout: 6000 }
+    ).catch(() => {});
+    await new Promise(r => setTimeout(r, 800));
 
     const finalUrl = page.url();
 
@@ -372,8 +399,8 @@ async function writePost(item, existingUrls, browser) {
 
   const summary =
     await summariseWithClaude(title, articleText, item.description, finalUrl) ||
-    articleText.slice(0, 600).trim() ||
-    item.description.slice(0, 400).trim();
+    articleText ||
+    item.description;
 
   const excerpt = makeExcerpt(summary);
   const body    = cleanBody(summary);

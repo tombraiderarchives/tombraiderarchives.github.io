@@ -49,7 +49,9 @@ title: News
            data-excerpt="{{ post.excerpt_text | downcase | escape }}">
 
     {% if post.header_image %}
-    <img src="{{ post.header_image }}" alt="" class="news-item-img" loading="lazy" decoding="async">
+    <div class="news-item-img-wrap" style="--blur-bg: url('{{ post.header_image | escape }}')">
+      <img src="{{ post.header_image }}" alt="" class="news-item-img" loading="lazy" decoding="async">
+    </div>
     {% else %}
     <div class="news-item-placeholder" aria-hidden="true">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"

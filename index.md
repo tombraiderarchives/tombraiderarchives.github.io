@@ -34,7 +34,9 @@ window._archiveShots = [
     {% for post in site.posts limit:5 %}
     <article class="news-item{% unless post.header_image %} news-item--no-img{% endunless %}" data-href="{{ post.url }}">
       {% if post.header_image %}
-      <img src="{{ post.header_image }}" alt="" class="news-item-img" loading="lazy" decoding="async">
+      <div class="news-item-img-wrap" style="--blur-bg: url('{{ post.header_image | escape }}')">
+        <img src="{{ post.header_image }}" alt="" class="news-item-img" loading="lazy" decoding="async">
+      </div>
       {% else %}
       <div class="news-item-placeholder" aria-hidden="true">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
