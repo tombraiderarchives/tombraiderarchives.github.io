@@ -243,16 +243,44 @@ collections:
     preview_path: "news/{{year}}/{{month}}/{{day}}/{{slug}}"
     summary: "{{date}} — {{title}}"
     sortable_fields: ["date", "title"]
+    view_groups:
+      - label: "Category"
+        field: category
     fields:
       - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
-      - {label: "Title",   name: "title",        widget: "string"}
-      - {label: "Date",    name: "date",          widget: "datetime",
+      - {label: "Title",   name: "title",  widget: "string"}
+      - {label: "Date",    name: "date",   widget: "datetime",
          date_format: "YYYY-MM-DD", time_format: false}
-      - {label: "Tags",    name: "tags",          widget: "list", required: false,
-         hint: "e.g. announcement, trailer, release — press Enter after each tag"}
-      - {label: "Excerpt", name: "excerpt_text",  widget: "text", required: false,
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        required: false
+        hint: "Primary category shown as a badge on the post and news listing"
+        options:
+          - "Announcement"
+          - "Trailer"
+          - "Release"
+          - "Development Update"
+          - "Archive Update"
+          - "Media"
+          - "Merchandise"
+          - "Event"
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        required: false
+        hint: "Add as many tags as you like — click '+ Add tags' for each one. e.g. crystal-dynamics, pc, switch"
+        field: {label: "Tag", name: "tag", widget: "string"}
+      - label: "Header Image"
+        name: "header_image"
+        widget: "image"
+        required: false
+        hint: "Banner image shown at the top of the post and on the news listing card"
+      - {label: "Author",  name: "author", widget: "string", required: false,
+         hint: "Optional byline shown below the post title"}
+      - {label: "Excerpt", name: "excerpt_text", widget: "text", required: false,
          hint: "Short summary shown on the news listing page (1–2 sentences)"}
-      - {label: "Body",    name: "body",          widget: "markdown"}
+      - {label: "Body",    name: "body",   widget: "markdown"}
 
   # ── Lore pages ──────────────────────────────────────────────────────────────
   - name: "lore"
