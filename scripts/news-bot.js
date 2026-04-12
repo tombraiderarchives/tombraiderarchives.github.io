@@ -178,6 +178,29 @@ function makeExcerpt(text, maxLen = 220) {
   return (lastSpace > maxLen * 0.4 ? trimmed.slice(0, lastSpace) : trimmed).trim() + '…';
 }
 
+/**
+ * Truncate body text at the last complete sentence within maxLen.
+ * Prevents posts from ending mid-sentence when article text was cut off.
+ */
+function cleanBody(text, maxLen = 4000) {
+  if (!text || text.length <= maxLen) return (text || '').trim();
+  const trimmed = text.slice(0, maxLen);
+  // Prefer a sentence boundary
+  const sentenceEnd = Math.max(
+    trimmed.lastIndexOf('. '),
+    trimmed.lastIndexOf('! '),
+    trimmed.lastIndexOf('? '),
+    trimmed.lastIndexOf('.\n'),
+    trimmed.lastIndexOf('!\n'),
+    trimmed.lastIndexOf('?\n')
+  );
+  if (sentenceEnd > maxLen * 0.4) return trimmed.slice(0, sentenceEnd + 1).trim();
+  // Fall back to paragraph break
+  const lastPara = trimmed.lastIndexOf('\n\n');
+  if (lastPara > maxLen * 0.4) return trimmed.slice(0, lastPara).trim();
+  return trimmed.trim();
+}
+
 // ── Claude summarisation ──────────────────────────────────────────────────────
 
 async function summariseWithClaude(title, articleText, rssExcerpt, sourceUrl) {
@@ -353,6 +376,7 @@ async function writePost(item, existingUrls, browser) {
     item.description.slice(0, 400).trim();
 
   const excerpt = makeExcerpt(summary);
+  const body    = cleanBody(summary);
   const yamlStr = (s) => JSON.stringify(String(s));
 
   const lines = [
@@ -374,11 +398,7 @@ async function writePost(item, existingUrls, browser) {
     `source_name: ${yamlStr(resolvedSource)}`,
     '---',
     '',
-    summary,
-    '',
-    `---`,
-    ``,
-    `*Source: [${resolvedSource}](${finalUrl})*`
+    body
   );
 
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
