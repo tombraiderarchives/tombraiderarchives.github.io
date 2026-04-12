@@ -1,0 +1,15 @@
+---
+layout: post
+title: "Lara Croft from Tomb Raider Returns - for a Collab with the Shooter Delta Force - ixbt.games"
+date: 2026-04-12
+category: "News"
+tags:
+  - tag: tomb-raider
+excerpt_text: "Lara Croft from Tomb Raider Returns - for a Collab with the Shooter Delta Force &nbsp;&nbsp; ixbt.games"
+source_url: "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQR2x0aXgxOWo5YWFjNlFTaVJ5b0E5Q01tNC1iVEpOTmFjTkhVZExSdzJEQVFDamJfRW96XzdpSld6YzdKaTlpT1N5bHBBQVRhTEdTbDl4Rk1OVk81bkhOb3J3ZEdmQzNGY21LX2dFNEZ4Nm03NVhSOE83RHFSRHlqMThnTWVoemxEcEhhOGlWN1BRSEVlUDF6UFJ4S2xwTHQ1ZmRoLTQ2bWQ5eEZEeE9WS3pKdG5UaDF2U0dJ0gHAAUFVX3lxTE9CZUtoZEhJZG1IZll2WVJKbXpqNWgzN2dVdEN0WXdld2ZRUng3bllhbGsyLTkwS3VLTjFWMmQ3QW1mcnBZUU5jSzRYN3hFR3JRY29DM1o4bnJRQUVoSk13RFhVdXVqR05NV2ZHTVlES3gzdVV4Q0dWRjRfMEVnY0VEeUNrX0owR3VFVmtSYzN3U1B0RndBaXNzU1F1dWxMY3gyQTEydmFJejdXUFN3OXEwU2RCaUNReERuOXJmQ2Z4LQ?oc=5"
+source_name: "ixbt.games"
+---
+
+Lara Croft from Tomb Raider Returns - for a Collab with the Shooter Delta Force &nbsp;&nbsp; ixbt.games
+
+[Read the full article at ixbt.games →](https://news.google.com/rss/articles/CBMiuwFBVV95cUxQR2x0aXgxOWo5YWFjNlFTaVJ5b0E5Q01tNC1iVEpOTmFjTkhVZExSdzJEQVFDamJfRW96XzdpSld6YzdKaTlpT1N5bHBBQVRhTEdTbDl4Rk1OVk81bkhOb3J3ZEdmQzNGY21LX2dFNEZ4Nm03NVhSOE83RHFSRHlqMThnTWVoemxEcEhhOGlWN1BRSEVlUDF6UFJ4S2xwTHQ1ZmRoLTQ2bWQ5eEZEeE9WS3pKdG5UaDF2U0dJ0gHAAUFVX3lxTE9CZUtoZEhJZG1IZll2WVJKbXpqNWgzN2dVdEN0WXdld2ZRUng3bllhbGsyLTkwS3VLTjFWMmQ3QW1mcnBZUU5jSzRYN3hFR3JRY29DM1o4bnJRQUVoSk13RFhVdXVqR05NV2ZHTVlES3gzdVV4Q0dWRjRfMEVnY0VEeUNrX0owR3VFVmtSYzN3U1B0RndBaXNzU1F1dWxMY3gyQTEydmFJejdXUFN3OXEwU2RCaUNReERuOXJmQ2Z4LQ?oc=5)
