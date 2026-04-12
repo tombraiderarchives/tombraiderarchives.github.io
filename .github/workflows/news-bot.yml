@@ -4,7 +4,8 @@ name: Tomb Raider News Bot
 # GitHub Actions tab (Actions → Tomb Raider News Bot → Run workflow).
 on:
   schedule:
-    - cron: '0 9 * * *'
+    # 5 times a day at equal ~5-hour intervals: 00:00, 05:00, 10:00, 15:00, 20:00 UTC
+    - cron: '0 0,5,10,15,20 * * *'
   workflow_dispatch:
 
 # Needs write access to commit new post files
