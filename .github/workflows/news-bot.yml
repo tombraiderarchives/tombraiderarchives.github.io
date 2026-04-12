@@ -7,9 +7,10 @@ on:
     - cron: '0 0,5,10,15,20 * * *'
   workflow_dispatch:
 
-# Needs write access to commit new post files
+# Needs write access to commit new post files and trigger the deploy workflow
 permissions:
   contents: write
+  actions: write
 
 jobs:
   fetch-news:
@@ -47,6 +48,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: Commit and push new posts (if any)
+        id: commit
         run: |
           git config user.name  "Tomb Raider News Bot"
           git config user.email "news-bot@users.noreply.github.com"
@@ -54,12 +56,24 @@ jobs:
           git add news/_posts/
           if git diff --staged --quiet; then
             echo "No new posts — nothing to commit."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
             COUNT=$(git diff --staged --name-only | wc -l | tr -d ' ')
-            # No [skip ci] — we WANT the push to trigger the deploy workflow
-            # so new posts go live automatically. No recursion risk: this
-            # workflow only runs on 'schedule' and 'workflow_dispatch'.
             git commit -m "bot: add ${COUNT} Tomb Raider news post(s)"
             git push origin main
             echo "Pushed ${COUNT} new post(s)."
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # GITHUB_TOKEN pushes do NOT trigger push-event workflows (GitHub's
+      # anti-recursion rule). So we manually fire the deploy workflow via the
+      # API to ensure new posts are built and go live immediately.
+      - name: Trigger site deploy
+        if: steps.commit.outputs.pushed == 'true'
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches" \
+            -d '{"ref":"main"}'
+          echo "Deploy workflow triggered — site will rebuild shortly."
