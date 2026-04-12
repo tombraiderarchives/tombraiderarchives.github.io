@@ -6,6 +6,8 @@ backend:
   auth_endpoint: auth
   site_domain: dreamy-sherbet-28174d.netlify.app
 
+logo_url: /images/ui/favicon.png
+
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
@@ -293,3 +295,37 @@ collections:
       - {label: "Layout", name: "layout", widget: "hidden", default: "default"}
       - {label: "Title",  name: "title",  widget: "string"}
       - {label: "Body",   name: "body",   widget: "markdown"}
+
+  # ── Standalone pages ─────────────────────────────────────────────────────────
+  # For creating custom one-off pages (About, FAQ, etc.) with any layout.
+  # Delete and Duplicate are available via the ⋯ menu in the top-right of
+  # any entry editor.
+  - name: "pages"
+    label: "Pages"
+    label_singular: "Page"
+    folder: "pages"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    preview_path: "pages/{{slug}}"
+    summary: "{{title}} ({{fields.layout}})"
+    fields:
+      - label: "Layout / Template"
+        name: "layout"
+        widget: "select"
+        hint: "Controls how the page is rendered — Default is a plain text page, Game shows stats/gallery/videos, Post shows a news-style article"
+        options:
+          - {label: "Default (plain page)",  value: "default"}
+          - {label: "Game page",             value: "game"}
+          - {label: "Post / Article",        value: "post"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Permalink", name: "permalink", widget: "string", required: false,
+         hint: "Custom URL path e.g. /about/ — leave blank to use the filename"}
+      - label: "Header Image"
+        name: "header_image"
+        widget: "image"
+        required: false
+        hint: "Optional banner image (used by the Post and Default layouts)"
+      - {label: "Excerpt / Tagline", name: "excerpt_text", widget: "text", required: false,
+         hint: "Short description shown as a subtitle or used in meta tags"}
+      - {label: "Body", name: "body", widget: "markdown", required: false}
