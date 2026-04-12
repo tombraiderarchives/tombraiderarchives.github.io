@@ -2,33 +2,6 @@
 layout: default
 title: Lara Croft
 ---
-
-<div class="page-hero">
-  <div class="page-hero-banner" aria-hidden="true">
-    <svg viewBox="0 0 880 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="biograd" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="var(--accent)" stop-opacity=".08"/>
-          <stop offset="100%" stop-color="var(--secondary)" stop-opacity=".03"/>
-        </linearGradient>
-      </defs>
-      <rect width="880" height="100" fill="url(#biograd)"/>
-      <line x1="0"   y1="100" x2="100" y2="0" stroke="var(--accent)" stroke-opacity=".06" stroke-width="1"/>
-      <line x1="80"  y1="100" x2="180" y2="0" stroke="var(--accent)" stroke-opacity=".06" stroke-width="1"/>
-      <line x1="160" y1="100" x2="260" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
-      <line x1="240" y1="100" x2="340" y2="0" stroke="var(--accent)" stroke-opacity=".05" stroke-width="1"/>
-      <line x1="320" y1="100" x2="420" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
-      <line x1="400" y1="100" x2="500" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
-      <line x1="480" y1="100" x2="580" y2="0" stroke="var(--accent)" stroke-opacity=".04" stroke-width="1"/>
-      <line x1="560" y1="100" x2="660" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
-      <line x1="640" y1="100" x2="740" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
-      <line x1="720" y1="100" x2="820" y2="0" stroke="var(--accent)" stroke-opacity=".03" stroke-width="1"/>
-      <polygon points="420,30 440,10 460,30 440,50" fill="var(--accent)" opacity=".1"/>
-      <polygon points="420,30 440,10 460,30 440,50" fill="none" stroke="var(--accent)" stroke-opacity=".22" stroke-width="1"/>
-      <polygon points="390,55 408,38 426,55 408,72" fill="var(--accent)" opacity=".06"/>
-      <polygon points="454,55 472,38 490,55 472,72" fill="var(--accent)" opacity=".06"/>
-    </svg>
-  </div>
   <h1>Lara Croft</h1>
   <p>The iconic protagonist of the Tomb Raider franchise, created by Toby Gard in 1993. Across three distinct continuities, Lara has been reimagined twice — each version defined by the era and studio that brought her to life.</p>
 </div>
