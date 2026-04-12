@@ -228,19 +228,13 @@ body {
 .nav-group-toggle--sub:hover { color: var(--text); }
 .nav-group-toggle--sub[aria-expanded="true"] { color: var(--text-muted); }
 
-/* Separator line between sub-group toggles */
-.nav-sub > ul > li + li > .nav-group-toggle--sub {
-  border-top: 1px solid var(--border);
-  margin-top: .5rem;
-  padding-top: .55rem;
-}
-
 /* Leaf link list — styled panel with left accent line */
 .nav-leaf-list { list-style: none; }
 .nav-sub .nav-sub {
   border-left: 2px solid transparent;
   margin-left: 2rem;
-  transition: border-color .25s var(--ease);
+  /* Preserve both the height and the border-colour animations on nested panels */
+  transition: border-color .25s var(--ease), grid-template-rows .3s var(--ease);
 }
 /* padding inside the grid item so it's hidden when collapsed */
 .nav-sub .nav-sub > ul { padding-bottom: .25rem; }
@@ -1743,6 +1737,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
     margin-left: .75rem;
     border-left: none;
     padding-left: 0;
+    transition: grid-template-rows .3s var(--ease);
   }
   .nav-sub .nav-sub .nav-link--leaf {
     padding-left: .9rem;
