@@ -1,228 +1,37 @@
 #!/usr/bin/env node
 /**
- * Tomb Raider Archives — News Bot
+ * Tomb Raider Archives — News Bot (Puppeteer edition)
  *
- * 1. Fetches Tomb Raider news from Google News RSS
- * 2. Follows each link to the real article page
- * 3. Scrapes the article's og:image and readable text
- * 4. If ANTHROPIC_API_KEY is set, Claude writes an original summary from
- *    the actual article text — otherwise the RSS excerpt is used
- * 5. Writes Jekyll post files to news/_posts/
+ * 1. Launches a headless Chrome browser via Puppeteer
+ * 2. Navigates to the Google News search page for "tomb raider"
+ * 3. Extracts article cards: title, source, publish time, thumbnail image, link
+ * 4. Visits each article link → follows redirects to get the real article URL,
+ *    scrapes the og:image (full quality) and readable article text from the DOM
+ * 5. If ANTHROPIC_API_KEY is set, Claude Haiku writes a proper summary
+ * 6. Writes Jekyll post files to news/_posts/
  *
  * Run manually:  node scripts/news-bot.js
- * Scheduled:     via .github/workflows/news-bot.yml (daily at 9 AM UTC)
+ * Scheduled:     via .github/workflows/news-bot.yml
  */
 
 'use strict';
 
-const https = require('https');
-const http  = require('http');
-const fs    = require('fs');
-const path  = require('path');
+const puppeteer = require('puppeteer');
+const https     = require('https');
+const fs        = require('fs');
+const path      = require('path');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const RSS_URL          = 'https://news.google.com/rss/search?q=tomb+raider&hl=en-US&gl=US&ceid=US:en';
+const GOOGLE_NEWS_URL  = 'https://news.google.com/search?q=tomb+raider&hl=en-CA&gl=CA&ceid=CA:en';
 const POSTS_DIR        = path.join(__dirname, '..', 'news', '_posts');
-const MAX_PER_RUN      = 5;     // posts per run — don't flood
-const MAX_AGE_DAYS     = 7;     // ignore articles older than this
-const ARTICLE_TIMEOUT  = 10000; // ms to wait for each article page
-const MAX_ARTICLE_CHARS = 5000; // max chars of article text sent to Claude
+const MAX_PER_RUN      = 5;      // posts per run — don't flood
+const MAX_AGE_DAYS     = 7;      // ignore articles older than this
+const MAX_ARTICLE_CHARS = 5000;  // max chars of article text sent to Claude
 
-// ── HTTP ──────────────────────────────────────────────────────────────────────
-
-/**
- * Fetch a URL, follow redirects, return { body, finalUrl }.
- * finalUrl is the URL after all redirects — used to resolve the true
- * article URL from Google News tracking links.
- */
-function fetch(url, redirects = 0, timeoutMs = 15000) {
-  return new Promise((resolve, reject) => {
-    if (redirects > 8) return reject(new Error('Too many redirects'));
-    const client = url.startsWith('https') ? https : http;
-    const req = client.get(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; TombRaiderArchivesBot/1.0)',
-        'Accept':     'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9'
-      }
-    }, (res) => {
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        // Resolve relative redirects
-        let next = res.headers.location;
-        if (next.startsWith('/')) {
-          try { next = new URL(next, url).href; } catch {}
-        }
-        res.resume(); // discard body
-        return resolve(fetch(next, redirects + 1, timeoutMs));
-      }
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => resolve({ body, finalUrl: url }));
-    });
-    req.on('error', reject);
-    req.setTimeout(timeoutMs, () => { req.destroy(); reject(new Error('Timeout')); });
-  });
-}
-
-// ── HTML extraction ───────────────────────────────────────────────────────────
-
-function decodeEntities(str) {
-  return str
-    .replace(/&amp;/g,  '&')
-    .replace(/&lt;/g,   '<')
-    .replace(/&gt;/g,   '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g,  "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)));
-}
-
-/** Extract og:image or twitter:image URL from HTML. */
-function extractOgImage(html, baseUrl) {
-  const patterns = [
-    // og:image — both attribute orders
-    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
-    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
-    // twitter:image
-    /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
-    /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
-    // twitter:image:src
-    /<meta[^>]+name=["']twitter:image:src["'][^>]+content=["']([^"']+)["']/i,
-  ];
-  for (const re of patterns) {
-    const m = html.match(re);
-    if (!m || !m[1]) continue;
-    let imgUrl = decodeEntities(m[1]);
-    // Resolve protocol-relative URLs
-    if (imgUrl.startsWith('//')) imgUrl = 'https:' + imgUrl;
-    // Resolve root-relative URLs against the page's base URL
-    else if (imgUrl.startsWith('/') && baseUrl) {
-      try { imgUrl = new URL(imgUrl, baseUrl).href; } catch { continue; }
-    }
-    if (imgUrl.startsWith('http')) return imgUrl;
-  }
-  return null;
-}
-
-/** Extract readable article text from HTML. Returns plain paragraphs. */
-function extractArticleText(html) {
-  // Remove noise elements entirely
-  let cleaned = html
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<noscript[\s\S]*?<\/noscript>/gi, '')
-    .replace(/<svg[\s\S]*?<\/svg>/gi, '')
-    .replace(/<nav[\s\S]*?<\/nav>/gi, '')
-    .replace(/<header[\s\S]*?<\/header>/gi, '')
-    .replace(/<footer[\s\S]*?<\/footer>/gi, '')
-    .replace(/<aside[\s\S]*?<\/aside>/gi, '')
-    .replace(/<form[\s\S]*?<\/form>/gi, '')
-    .replace(/<figure[\s\S]*?<\/figure>/gi, '')
-    .replace(/<!--[\s\S]*?-->/g, '');
-
-  // Strip ad/cookie/social/modal blocks by class name
-  const noiseClass = /\b(?:ad|advert|banner|cookie|gdpr|modal|popup|overlay|social|share|sharing|subscribe|newsletter|sidebar|related|recommend|comment|promo|sticky|sticky-bar|notification)\b/i;
-  cleaned = cleaned.replace(/<(?:div|section)[^>]+class=["'][^"']*["'][^>]*>[\s\S]*?<\/(?:div|section)>/gi, (block) => {
-    const classMatch = block.match(/class=["']([^"']+)["']/);
-    if (classMatch && noiseClass.test(classMatch[1])) return '';
-    return block;
-  });
-
-  // Try to narrow to the article body first
-  const articleRe  = /<article[^>]*>([\s\S]*?)<\/article>/i;
-  const mainRe     = /<main[^>]*>([\s\S]*?)<\/main>/i;
-  const contentRe  = /<div[^>]+class=["'][^"']*(?:article[-_]body|post[-_]body|post[-_]content|entry[-_]content|story[-_]body|article[-_]content|article[-_]text)[^"']*["'][^>]*>([\s\S]*?)<\/div>/i;
-
-  for (const re of [articleRe, mainRe, contentRe]) {
-    const m = re.exec(cleaned);
-    if (m) { cleaned = m[1]; break; }
-  }
-
-  // Collect non-trivial paragraphs
-  const paragraphs = [];
-  const seen = new Set();
-  let total = 0;
-
-  // Use separate regex objects to avoid stale lastIndex state
-  const pRe  = /<p[^>]*>([\s\S]*?)<\/p>/gi;
-  const liRe = /<li[^>]*>([\s\S]*?)<\/li>/gi;
-
-  for (const re of [pRe, liRe]) {
-    re.lastIndex = 0;
-    let m;
-    while ((m = re.exec(cleaned)) !== null) {
-      const text = decodeEntities(m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
-      // Skip short text, duplicates, and common noise strings
-      if (text.length < 60) continue;
-      if (seen.has(text)) continue;
-      if (/\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored)\b/i.test(text)) continue;
-      seen.add(text);
-      paragraphs.push(text);
-      total += text.length;
-      if (total >= MAX_ARTICLE_CHARS) break;
-    }
-    if (total >= MAX_ARTICLE_CHARS) break;
-  }
-
-  return paragraphs.join('\n\n').slice(0, MAX_ARTICLE_CHARS).trim();
-}
-
-/**
- * Fetch an article page and extract useful data.
- * Returns { imageUrl, articleText, finalUrl } — all fields may be null/empty
- * if the fetch fails or the site blocks us.
- */
-async function fetchArticle(url) {
-  try {
-    const { body, finalUrl } = await fetch(url, 0, ARTICLE_TIMEOUT);
-    return {
-      imageUrl:    extractOgImage(body, finalUrl),
-      articleText: extractArticleText(body),
-      finalUrl
-    };
-  } catch {
-    return { imageUrl: null, articleText: '', finalUrl: url };
-  }
-}
-
-// ── RSS parsing ───────────────────────────────────────────────────────────────
-
-function extractCDATA(str) {
-  const m = str.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/);
-  return m ? m[1] : str;
-}
-
-function tagContent(xml, tag) {
-  const m = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-  return m ? decodeEntities(extractCDATA(m[1].trim())) : '';
-}
-
-function parseItems(xml) {
-  const items   = [];
-  const matches = xml.match(/<item>([\s\S]*?)<\/item>/gi) || [];
-
-  for (const block of matches) {
-    const title      = tagContent(block, 'title');
-    const link       = tagContent(block, 'link').replace(/\s/g, '');
-    const pubDate    = tagContent(block, 'pubDate');
-    const sourceName = block.match(/<source[^>]*>([^<]*)<\/source>/i)?.[1]?.trim() || '';
-    const description = tagContent(block, 'description')
-      .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-
-    if (!title || !link) continue;
-
-    const published = pubDate ? new Date(pubDate) : null;
-    if (published && !isNaN(published)) {
-      const ageMs = Date.now() - published.getTime();
-      if (ageMs > MAX_AGE_DAYS * 24 * 60 * 60 * 1000) continue;
-    }
-
-    items.push({ title, link, description, pubDate, sourceName });
-  }
-
-  return items;
-}
+const USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+  '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
 // ── Deduplication ─────────────────────────────────────────────────────────────
 
@@ -232,7 +41,6 @@ function getExistingSourceUrls() {
   for (const file of fs.readdirSync(POSTS_DIR)) {
     if (!file.endsWith('.md')) continue;
     const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-    // Collect both source_url (real article URL) and source_rss_url (Google tracking URL)
     for (const field of ['source_url', 'source_rss_url']) {
       const m = content.match(new RegExp(`^${field}:\\s*["']?([^"'\\n]+)`, 'm'));
       if (m) urls.add(m[1].trim());
@@ -254,8 +62,8 @@ function formatDate(dateStr) {
   return (isNaN(d) ? new Date() : d).toISOString().slice(0, 10);
 }
 
-function inferCategory(title, desc) {
-  const t = (title + ' ' + desc).toLowerCase();
+function inferCategory(title, text) {
+  const t = (title + ' ' + text).toLowerCase();
   if (/\btrailer\b|\bgameplay\b/.test(t))                      return 'Trailer';
   if (/\bannounce|\breveal\b|\bteaser\b/.test(t))              return 'Announcement';
   if (/\brelease\b|\blaunch\b|\bout now\b|\bships\b/.test(t)) return 'Release';
@@ -268,41 +76,24 @@ function inferCategory(title, desc) {
 
 // ── Claude summarisation ──────────────────────────────────────────────────────
 
-async function summariseWithClaude(title, articleText, rssExcerpt, sourceUrl) {
+async function summariseWithClaude(title, articleText, sourceUrl) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey || !articleText || articleText.length < 100) return null;
 
-  // Use actual article text if we got it, fall back to RSS excerpt
-  const sourceContent = articleText && articleText.length > 100
-    ? articleText
-    : rssExcerpt;
-
-  if (!sourceContent) return null;
-
-  const prompt = articleText && articleText.length > 100
-    ? `You are writing a news post for the Tomb Raider Archives fan website.
-Based on the article text below, write 2–4 clear paragraphs summarising the news in your own words.
-Be factual, informative, and engaging. Do not copy sentences verbatim. Do not use an intro phrase like "In a recent article".
-Do not mention that you're summarising — write as if you're reporting the news directly.
-
-Title: ${title}
-Article text:
-${sourceContent}
-
-Write only the summary paragraphs.`
-    : `You are writing a short news blurb for the Tomb Raider Archives fan website.
-Summarise this in 2–3 sentences. Be factual and concise. No editorialising.
-
-Title: ${title}
-Excerpt: ${sourceContent}
-URL: ${sourceUrl}
-
-Write only the summary.`;
+  const prompt =
+    `You are writing a news post for the Tomb Raider Archives fan website.\n` +
+    `Based on the article text below, write 2–4 clear paragraphs summarising the news in your own words.\n` +
+    `Be factual, informative, and engaging. Do not copy sentences verbatim.\n` +
+    `Do not use an intro phrase like "In a recent article".\n` +
+    `Write as if you are reporting the news directly.\n\n` +
+    `Title: ${title}\n` +
+    `Article text:\n${articleText}\n\n` +
+    `Write only the summary paragraphs.`;
 
   const body = JSON.stringify({
-    model: 'claude-haiku-4-5-20251001',
+    model:      'claude-haiku-4-5-20251001',
     max_tokens: 500,
-    messages: [{ role: 'user', content: prompt }]
+    messages:   [{ role: 'user', content: prompt }]
   });
 
   return new Promise((resolve) => {
@@ -330,39 +121,215 @@ Write only the summary.`;
   });
 }
 
-// ── Post writer ───────────────────────────────────────────────────────────────
+// ── Step 1: scrape Google News search page ────────────────────────────────────
 
-async function writePost(item, existingUrls) {
-  const date     = formatDate(item.pubDate);
+async function scrapeGoogleNews(browser) {
+  console.log('  Opening Google News search page…');
+  const page = await browser.newPage();
+  await page.setUserAgent(USER_AGENT);
+  // Block images/fonts on the listing page — we only need the DOM
+  await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    if (['image', 'font', 'media'].includes(req.resourceType())) req.abort();
+    else req.continue();
+  });
+
+  await page.goto(GOOGLE_NEWS_URL, { waitUntil: 'networkidle2', timeout: 30000 });
+
+  // Wait for article cards
+  await page.waitForSelector('article', { timeout: 15000 }).catch(() =>
+    console.warn('  ⚠  No <article> elements found within timeout — continuing anyway')
+  );
+
+  const cutoffMs = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+  const items = await page.evaluate((cutoffMs) => {
+    const results = [];
+
+    document.querySelectorAll('article').forEach((article) => {
+      // ── Title + link ──────────────────────────────────────────────────────
+      // Google News uses hashed class names, so target by element role/tag
+      const titleLink =
+        article.querySelector('h3 a, h4 a') ||
+        article.querySelector('a[href*="/articles/"]') ||
+        article.querySelector('a[href*="news.google.com"]');
+      if (!titleLink) return;
+
+      const title = titleLink.textContent.trim();
+      if (!title || title.length < 10) return;
+
+      const link = titleLink.href;
+      if (!link || !link.startsWith('http')) return;
+
+      // ── Source name ───────────────────────────────────────────────────────
+      // Appears in a <cite>, an <a> near a time element, or an element with
+      // aria-label. Fall back to empty string.
+      const sourceEl =
+        article.querySelector('cite') ||
+        article.querySelector('time')?.closest('div')?.querySelector('a') ||
+        article.querySelector('[class*="source"], [class*="publisher"]');
+      const sourceName = sourceEl?.textContent.trim() || '';
+
+      // ── Publish time ──────────────────────────────────────────────────────
+      const timeEl  = article.querySelector('time');
+      const timeStr = timeEl?.getAttribute('datetime') || timeEl?.textContent.trim() || '';
+
+      // Age filter
+      if (timeStr) {
+        const pub = new Date(timeStr);
+        if (!isNaN(pub) && pub.getTime() < cutoffMs) return;
+      }
+
+      // ── Thumbnail image ───────────────────────────────────────────────────
+      // Google News card images are loaded lazily; src is usually populated.
+      // We blocked image requests in setRequestInterception so src won't be
+      // a blob/data URI here — it'll be the real CDN URL or empty.
+      let cardImage = '';
+      for (const img of article.querySelectorAll('img')) {
+        const src = img.getAttribute('src') || img.getAttribute('data-src') || '';
+        if (src && src.startsWith('http') && !src.startsWith('data:')) {
+          cardImage = src;
+          break;
+        }
+      }
+
+      results.push({ title, link, sourceName, timeStr, cardImage });
+    });
+
+    return results;
+  }, cutoffMs);
+
+  await page.close();
+  console.log(`  Found ${items.length} article card(s)\n`);
+  return items;
+}
+
+// ── Step 2: visit article page ────────────────────────────────────────────────
+
+async function fetchArticlePage(browser, googleNewsLink) {
+  const page = await browser.newPage();
+  await page.setUserAgent(USER_AGENT);
+
+  try {
+    // Google News links redirect to the real article.
+    // waitUntil: 'domcontentloaded' is enough — we just need the HTML.
+    await page.goto(googleNewsLink, { waitUntil: 'domcontentloaded', timeout: 20000 });
+
+    // Some sites do a second JS redirect; wait briefly for it to settle.
+    await new Promise(r => setTimeout(r, 1500));
+
+    const finalUrl = page.url();
+
+    // ── og:image ─────────────────────────────────────────────────────────────
+    const imageUrl = await page.evaluate(() => {
+      for (const sel of [
+        'meta[property="og:image"]',
+        'meta[name="twitter:image"]',
+        'meta[name="twitter:image:src"]',
+      ]) {
+        const content = document.querySelector(sel)?.getAttribute('content');
+        if (content && content.startsWith('http')) return content;
+      }
+      return null;
+    });
+
+    // ── Article text ──────────────────────────────────────────────────────────
+    // Manipulate the live DOM for cleaner extraction than regex on raw HTML.
+    const articleText = await page.evaluate((maxChars) => {
+      // Remove noise elements
+      [
+        'script', 'style', 'noscript', 'svg', 'nav', 'header', 'footer',
+        'aside', 'form', 'figure', 'iframe',
+        '[class*="cookie"]', '[class*="gdpr"]', '[class*="subscribe"]',
+        '[class*="newsletter"]', '[class*="social"]', '[class*="share"]',
+        '[class*="related"]', '[class*="recommend"]', '[class*="sidebar"]',
+        '[class*="comment"]', '[class*="ad"]', '[class*="promo"]',
+        '[class*="popup"]', '[class*="modal"]', '[class*="sticky"]',
+      ].forEach(sel => {
+        try { document.querySelectorAll(sel).forEach(el => el.remove()); }
+        catch (_) {}
+      });
+
+      // Find the main content container
+      const container =
+        document.querySelector('article') ||
+        document.querySelector('main') ||
+        document.querySelector('[class*="article-body"]') ||
+        document.querySelector('[class*="article-content"]') ||
+        document.querySelector('[class*="article-text"]') ||
+        document.querySelector('[class*="post-body"]') ||
+        document.querySelector('[class*="post-content"]') ||
+        document.querySelector('[class*="entry-content"]') ||
+        document.querySelector('[class*="story-body"]') ||
+        document.body;
+
+      // Collect non-trivial paragraphs and list items
+      const seen = new Set();
+      const paras = [];
+      let total = 0;
+      const noiseRe = /\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored)\b/i;
+
+      for (const el of container.querySelectorAll('p, li')) {
+        const text = el.innerText?.replace(/\s+/g, ' ').trim() || '';
+        if (text.length < 60) continue;
+        if (seen.has(text)) continue;
+        if (noiseRe.test(text)) continue;
+        seen.add(text);
+        paras.push(text);
+        total += text.length;
+        if (total >= maxChars) break;
+      }
+
+      return paras.join('\n\n').slice(0, maxChars).trim();
+    }, MAX_ARTICLE_CHARS);
+
+    await page.close();
+    return { finalUrl, imageUrl, articleText };
+
+  } catch (err) {
+    await page.close().catch(() => {});
+    console.warn(`    ⚠  Could not fetch article page: ${err.message}`);
+    return { finalUrl: googleNewsLink, imageUrl: null, articleText: '' };
+  }
+}
+
+// ── Step 3: write Jekyll post ─────────────────────────────────────────────────
+
+async function writePost(item, existingUrls, browser) {
+  const date     = formatDate(item.timeStr);
   const slug     = slugify(item.title);
   const filename = `${date}-${slug}.md`;
   const filepath = path.join(POSTS_DIR, filename);
-  if (fs.existsSync(filepath)) return null;
 
-  console.log(`  → fetching article: ${item.link.slice(0, 80)}…`);
-  const { imageUrl, articleText, finalUrl } = await fetchArticle(item.link);
+  if (fs.existsSync(filepath)) {
+    console.log(`  ↩  ${filename} already exists — skipping`);
+    return null;
+  }
 
-  const realUrl = finalUrl || item.link;
+  console.log(`  → fetching: ${item.link.slice(0, 80)}…`);
+  const { finalUrl, imageUrl: ogImage, articleText } = await fetchArticlePage(browser, item.link);
 
-  // Dedup against the REAL URL (after redirect) — Google News tracking links
-  // never match stored source_url values, so this check must happen here.
-  if (existingUrls.has(realUrl)) {
+  // Dedup against stored real URLs (check AFTER redirect resolution)
+  if (existingUrls.has(finalUrl)) {
     console.log('  ↩  Skipping (real URL already posted)');
     return null;
   }
-  const sourceName = item.sourceName
-    || (() => { try { return new URL(realUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
-  const rssExcerpt = item.description.slice(0, 400).trim();
-  const category   = inferCategory(item.title, item.description + ' ' + articleText);
+  // Best available image: og:image from article > thumbnail from news card
+  const imageUrl = ogImage || (item.cardImage.startsWith('http') ? item.cardImage : null);
 
-  // Summarise — tries Claude with article text first
-  const summary = await summariseWithClaude(item.title, articleText, rssExcerpt, realUrl)
-    || articleText.slice(0, 600).trim()
-    || rssExcerpt;
+  const sourceName = item.sourceName ||
+    (() => { try { return new URL(finalUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
-  const excerpt = summary.split('\n')[0].slice(0, 280);
-  const yamlStr = (s) => JSON.stringify(String(s));
+  const category = inferCategory(item.title, articleText);
+
+  const summary =
+    await summariseWithClaude(item.title, articleText, finalUrl) ||
+    articleText.slice(0, 600).trim() ||
+    item.title;
+
+  const excerpt  = summary.split('\n')[0].slice(0, 280);
+  const yamlStr  = (s) => JSON.stringify(String(s));
 
   const lines = [
     '---',
@@ -378,7 +345,7 @@ async function writePost(item, existingUrls) {
 
   lines.push(
     `excerpt_text: ${yamlStr(excerpt)}`,
-    `source_url: ${yamlStr(realUrl)}`,
+    `source_url: ${yamlStr(finalUrl)}`,
     `source_rss_url: ${yamlStr(item.link)}`,
     `source_name: ${yamlStr(sourceName)}`,
     '---',
@@ -387,19 +354,19 @@ async function writePost(item, existingUrls) {
     '',
     `---`,
     ``,
-    `*Source: [${sourceName}](${realUrl})*`
+    `*Source: [${sourceName}](${finalUrl})*`
   );
 
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
   fs.writeFileSync(filepath, lines.join('\n') + '\n', 'utf8');
 
   // Register both URLs so within-run duplicates are also caught
-  existingUrls.add(realUrl);
+  existingUrls.add(finalUrl);
   existingUrls.add(item.link);
 
-  const imgStatus = imageUrl ? '🖼' : '  ';
-  const txtStatus = articleText.length > 100 ? '📄' : '  ';
-  console.log(`  ✓  ${filename} ${imgStatus}${txtStatus}`);
+  const imgMark = imageUrl ? '🖼 ' : '   ';
+  const txtMark = articleText.length > 100 ? '📄' : '  ';
+  console.log(`  ✓  ${filename} ${imgMark}${txtMark}`);
   return filename;
 }
 
@@ -408,42 +375,49 @@ async function writePost(item, existingUrls) {
 async function main() {
   console.log('Tomb Raider Archives — News Bot\n');
 
-  let xml;
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--window-size=1280,800',
+    ],
+  });
+
   try {
-    console.log(`Fetching RSS…`);
-    ({ body: xml } = await fetch(RSS_URL));
-  } catch (err) {
-    console.error('Failed to fetch RSS:', err.message);
-    process.exit(1);
-  }
-
-  const items = parseItems(xml);
-  console.log(`${items.length} item(s) in feed (within ${MAX_AGE_DAYS} days)\n`);
-  if (!items.length) return;
-
-  const existingUrls = getExistingSourceUrls();
-  // NOTE: don't pre-filter by item.link — Google News tracking URLs never
-  // match stored source_url values. Dedup happens inside writePost() after
-  // following the redirect to get the real article URL.
-  const batch   = items.slice(0, MAX_PER_RUN);
-  let   created = 0;
-
-  for (const item of batch) {
-    try {
-      const result = await writePost(item, existingUrls);
-      if (result) created++;
-    } catch (err) {
-      console.error(`  ✗  Failed: ${item.title}: ${err.message}`);
+    // ── 1. Scrape Google News listing ────────────────────────────────────────
+    const items = await scrapeGoogleNews(browser);
+    if (!items.length) {
+      console.log('No articles found on the page. Exiting.');
+      return;
     }
-    // Brief pause between article fetches — be a polite bot
-    await new Promise(r => setTimeout(r, 1500));
-  }
 
-  console.log(`\nDone — created ${created} post(s).`);
-  if (process.env.ANTHROPIC_API_KEY) {
-    console.log('(Claude summaries enabled)');
-  } else {
-    console.log('(No ANTHROPIC_API_KEY — used extracted article text / RSS excerpts)');
+    // ── 2. Dedup + batch ─────────────────────────────────────────────────────
+    const existingUrls = getExistingSourceUrls();
+    const batch = items.slice(0, MAX_PER_RUN);
+    console.log(`Processing up to ${batch.length} article(s)…\n`);
+
+    let created = 0;
+    for (const item of batch) {
+      try {
+        const result = await writePost(item, existingUrls, browser);
+        if (result) created++;
+      } catch (err) {
+        console.error(`  ✗  Failed (${item.title}): ${err.message}`);
+      }
+      // Brief pause — be a polite bot
+      await new Promise(r => setTimeout(r, 2000));
+    }
+
+    console.log(`\nDone — created ${created} post(s).`);
+    console.log(process.env.ANTHROPIC_API_KEY
+      ? '(Claude summaries enabled)'
+      : '(No ANTHROPIC_API_KEY — used extracted article text)');
+
+  } finally {
+    await browser.close();
   }
 }
 

@@ -1,10 +1,9 @@
 name: Tomb Raider News Bot
 
-# Runs daily at 9 AM UTC. Can also be triggered manually from the
-# GitHub Actions tab (Actions → Tomb Raider News Bot → Run workflow).
+# Runs 5× daily at equal ~5-hour intervals.
+# Can also be triggered manually from the GitHub Actions tab.
 on:
   schedule:
-    # 5 times a day at equal ~5-hour intervals: 00:00, 05:00, 10:00, 15:00, 20:00 UTC
     - cron: '0 0,5,10,15,20 * * *'
   workflow_dispatch:
 
@@ -19,7 +18,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Use a PAT or the default GITHUB_TOKEN (write access needed for push)
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
@@ -28,11 +26,23 @@ jobs:
         with:
           node-version: '20'
 
+      # Cache the Puppeteer-managed Chrome binary so it doesn't re-download
+      # on every run (~170 MB). Key only changes when package.json changes.
+      - name: Cache Puppeteer Chrome
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-chrome-${{ hashFiles('package.json') }}
+          restore-keys: puppeteer-chrome-
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Fetch and write news posts
         run: node scripts/news-bot.js
         env:
           # Optional — if set, Claude Haiku writes a proper article summary.
-          # Add this in GitHub → Settings → Secrets → Actions → New secret.
+          # Add in GitHub → Settings → Secrets → Actions → New secret.
           # Name: ANTHROPIC_API_KEY   Value: your key from console.anthropic.com
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
@@ -41,16 +51,14 @@ jobs:
           git config user.name  "Tomb Raider News Bot"
           git config user.email "news-bot@users.noreply.github.com"
           git add news/_posts/
-          # Only commit if something actually changed
           if git diff --staged --quiet; then
             echo "No new posts — nothing to commit."
           else
             COUNT=$(git diff --staged --name-only | wc -l | tr -d ' ')
-            # No [skip ci] here — we WANT the push to trigger the deploy
-            # workflow so the new posts go live on the site automatically.
-            # There is no recursion risk: this workflow only runs on
-            # 'schedule' and 'workflow_dispatch', never on 'push'.
+            # No [skip ci] — we WANT the push to trigger the deploy workflow
+            # so new posts go live automatically. No recursion risk: this
+            # workflow only runs on 'schedule' and 'workflow_dispatch'.
             git commit -m "bot: add ${COUNT} Tomb Raider news post(s)"
             git push origin main
-            echo "Pushed ${COUNT} new post(s). Deploy workflow will now rebuild the site."
+            echo "Pushed ${COUNT} new post(s)."
           fi
