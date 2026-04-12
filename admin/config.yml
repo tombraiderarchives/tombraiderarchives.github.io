@@ -2,10 +2,9 @@ backend:
   name: github
   repo: tombraiderarchives/tombraiderarchives.github.io
   branch: main
-  # Netlify acts as a free OAuth proxy so you don't need your own server.
-  # See setup instructions in the repo README.
   base_url: https://api.netlify.com
   auth_endpoint: auth
+  site_domain: dreamy-sherbet-28174d.netlify.app
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
