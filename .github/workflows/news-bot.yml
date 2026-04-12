@@ -45,7 +45,11 @@ jobs:
             echo "No new posts — nothing to commit."
           else
             COUNT=$(git diff --staged --name-only | wc -l | tr -d ' ')
-            git commit -m "bot: add ${COUNT} Tomb Raider news post(s) [skip ci]"
+            # No [skip ci] here — we WANT the push to trigger the deploy
+            # workflow so the new posts go live on the site automatically.
+            # There is no recursion risk: this workflow only runs on
+            # 'schedule' and 'workflow_dispatch', never on 'push'.
+            git commit -m "bot: add ${COUNT} Tomb Raider news post(s)"
             git push origin main
-            echo "Pushed ${COUNT} new post(s)."
+            echo "Pushed ${COUNT} new post(s). Deploy workflow will now rebuild the site."
           fi

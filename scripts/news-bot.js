@@ -2,11 +2,12 @@
 /**
  * Tomb Raider Archives — News Bot
  *
- * Fetches Tomb Raider news from Google News RSS, deduplicates against
- * existing posts, and writes new Jekyll post files to news/_posts/.
- *
- * If ANTHROPIC_API_KEY is set, Claude is used to write a proper summary
- * for each article. Otherwise the RSS excerpt is used as-is.
+ * 1. Fetches Tomb Raider news from Google News RSS
+ * 2. Follows each link to the real article page
+ * 3. Scrapes the article's og:image and readable text
+ * 4. If ANTHROPIC_API_KEY is set, Claude writes an original summary from
+ *    the actual article text — otherwise the RSS excerpt is used
+ * 5. Writes Jekyll post files to news/_posts/
  *
  * Run manually:  node scripts/news-bot.js
  * Scheduled:     via .github/workflows/news-bot.yml (daily at 9 AM UTC)
@@ -14,44 +15,57 @@
 
 'use strict';
 
-const https   = require('https');
-const http    = require('http');
-const fs      = require('fs');
-const path    = require('path');
+const https = require('https');
+const http  = require('http');
+const fs    = require('fs');
+const path  = require('path');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const RSS_URL       = 'https://news.google.com/rss/search?q=tomb+raider&hl=en-US&gl=US&ceid=US:en';
-const POSTS_DIR     = path.join(__dirname, '..', 'news', '_posts');
-const MAX_PER_RUN   = 5;    // posts to create per run — don't flood
-const MAX_AGE_DAYS  = 7;    // ignore articles older than this
+const RSS_URL          = 'https://news.google.com/rss/search?q=tomb+raider&hl=en-US&gl=US&ceid=US:en';
+const POSTS_DIR        = path.join(__dirname, '..', 'news', '_posts');
+const MAX_PER_RUN      = 5;     // posts per run — don't flood
+const MAX_AGE_DAYS     = 7;     // ignore articles older than this
+const ARTICLE_TIMEOUT  = 10000; // ms to wait for each article page
+const MAX_ARTICLE_CHARS = 5000; // max chars of article text sent to Claude
 
-// ── HTTP helpers ──────────────────────────────────────────────────────────────
+// ── HTTP ──────────────────────────────────────────────────────────────────────
 
-function get(url, redirects = 0) {
+/**
+ * Fetch a URL, follow redirects, return { body, finalUrl }.
+ * finalUrl is the URL after all redirects — used to resolve the true
+ * article URL from Google News tracking links.
+ */
+function fetch(url, redirects = 0, timeoutMs = 15000) {
   return new Promise((resolve, reject) => {
-    if (redirects > 5) return reject(new Error('Too many redirects'));
+    if (redirects > 8) return reject(new Error('Too many redirects'));
     const client = url.startsWith('https') ? https : http;
     const req = client.get(url, {
       headers: {
-        'User-Agent': 'TombRaiderArchivesNewsBot/1.0 (https://tombraiderarchives.github.io)',
-        'Accept': 'application/rss+xml, application/xml, text/xml, */*'
+        'User-Agent': 'Mozilla/5.0 (compatible; TombRaiderArchivesBot/1.0)',
+        'Accept':     'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9'
       }
     }, (res) => {
-      // Follow redirects
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return resolve(get(res.headers.location, redirects + 1));
+        // Resolve relative redirects
+        let next = res.headers.location;
+        if (next.startsWith('/')) {
+          try { next = new URL(next, url).href; } catch {}
+        }
+        res.resume(); // discard body
+        return resolve(fetch(next, redirects + 1, timeoutMs));
       }
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => resolve(data));
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve({ body, finalUrl: url }));
     });
     req.on('error', reject);
-    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Request timeout')); });
+    req.setTimeout(timeoutMs, () => { req.destroy(); reject(new Error('Timeout')); });
   });
 }
 
-// ── RSS parsing ───────────────────────────────────────────────────────────────
+// ── HTML extraction ───────────────────────────────────────────────────────────
 
 function decodeEntities(str) {
   return str
@@ -60,8 +74,92 @@ function decodeEntities(str) {
     .replace(/&gt;/g,   '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g,  "'")
+    .replace(/&nbsp;/g, ' ')
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)));
 }
+
+/** Extract og:image or twitter:image URL from HTML. */
+function extractOgImage(html) {
+  const patterns = [
+    // og:image — both attribute orders
+    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+    // twitter:image
+    /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
+    // twitter:image:src
+    /<meta[^>]+name=["']twitter:image:src["'][^>]+content=["']([^"']+)["']/i,
+  ];
+  for (const re of patterns) {
+    const m = html.match(re);
+    if (m && m[1] && m[1].startsWith('http')) return decodeEntities(m[1]);
+  }
+  return null;
+}
+
+/** Extract readable article text from HTML. Returns plain paragraphs. */
+function extractArticleText(html) {
+  // Remove noise: scripts, styles, invisible blocks, nav, footer etc.
+  let cleaned = html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, '')
+    .replace(/<nav[\s\S]*?<\/nav>/gi, '')
+    .replace(/<header[\s\S]*?<\/header>/gi, '')
+    .replace(/<footer[\s\S]*?<\/footer>/gi, '')
+    .replace(/<aside[\s\S]*?<\/aside>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '');
+
+  // Try to narrow to the article body first
+  for (const re of [
+    /<article[^>]*>([\s\S]*?)<\/article>/i,
+    /<main[^>]*>([\s\S]*?)<\/main>/i,
+    /<div[^>]+class=["'][^"']*(?:article|post|content|story|body)[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+  ]) {
+    const m = cleaned.match(re);
+    if (m) { cleaned = m[1]; break; }
+  }
+
+  // Collect non-trivial paragraphs
+  const paragraphs = [];
+  let total = 0;
+
+  for (const re of [/<p[^>]*>([\s\S]*?)<\/p>/gi, /<li[^>]*>([\s\S]*?)<\/li>/gi]) {
+    let m;
+    // eslint-disable-next-line no-cond-assign
+    while ((m = re.exec(cleaned)) !== null) {
+      const text = decodeEntities(m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
+      if (text.length >= 60 && !paragraphs.includes(text)) {
+        paragraphs.push(text);
+        total += text.length;
+        if (total >= MAX_ARTICLE_CHARS) break;
+      }
+    }
+    if (total >= MAX_ARTICLE_CHARS) break;
+  }
+
+  return paragraphs.join('\n\n').slice(0, MAX_ARTICLE_CHARS).trim();
+}
+
+/**
+ * Fetch an article page and extract useful data.
+ * Returns { imageUrl, articleText, finalUrl } — all fields may be null/empty
+ * if the fetch fails or the site blocks us.
+ */
+async function fetchArticle(url) {
+  try {
+    const { body, finalUrl } = await fetch(url, 0, ARTICLE_TIMEOUT);
+    return {
+      imageUrl:    extractOgImage(body),
+      articleText: extractArticleText(body),
+      finalUrl
+    };
+  } catch {
+    return { imageUrl: null, articleText: '', finalUrl: url };
+  }
+}
+
+// ── RSS parsing ───────────────────────────────────────────────────────────────
 
 function extractCDATA(str) {
   const m = str.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/);
@@ -82,15 +180,11 @@ function parseItems(xml) {
     const link       = tagContent(block, 'link').replace(/\s/g, '');
     const pubDate    = tagContent(block, 'pubDate');
     const sourceName = block.match(/<source[^>]*>([^<]*)<\/source>/i)?.[1]?.trim() || '';
-    // Strip HTML tags from description
     const description = tagContent(block, 'description')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
+      .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
     if (!title || !link) continue;
 
-    // Age filter
     const published = pubDate ? new Date(pubDate) : null;
     if (published && !isNaN(published)) {
       const ageMs = Date.now() - published.getTime();
@@ -106,77 +200,86 @@ function parseItems(xml) {
 // ── Deduplication ─────────────────────────────────────────────────────────────
 
 function getExistingSourceUrls() {
-  const urls  = new Set();
-  const slugs = new Set();
-  if (!fs.existsSync(POSTS_DIR)) return { urls, slugs };
-
+  const urls = new Set();
+  if (!fs.existsSync(POSTS_DIR)) return urls;
   for (const file of fs.readdirSync(POSTS_DIR)) {
     if (!file.endsWith('.md')) continue;
     const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-    const urlMatch = content.match(/^source_url:\s*["']?([^"'\n]+)/m);
-    if (urlMatch) urls.add(urlMatch[1].trim());
-    // Also track the slug portion of the filename (YYYY-MM-DD-slug)
-    slugs.add(file.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, ''));
+    const m = content.match(/^source_url:\s*["']?([^"'\n]+)/m);
+    if (m) urls.add(m[1].trim());
   }
-  return { urls, slugs };
+  return urls;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function slugify(str) {
-  return str
-    .toLowerCase()
-    .replace(/['']/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 60);
+  return str.toLowerCase()
+    .replace(/['']/g, '').replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '').slice(0, 60);
 }
 
 function formatDate(dateStr) {
   const d = dateStr ? new Date(dateStr) : new Date();
-  if (isNaN(d)) return new Date().toISOString().slice(0, 10);
-  return d.toISOString().slice(0, 10);
+  return (isNaN(d) ? new Date() : d).toISOString().slice(0, 10);
 }
 
 function inferCategory(title, desc) {
-  const text = (title + ' ' + desc).toLowerCase();
-  if (/\btrailer\b|\bgameplay\b/.test(text))                   return 'Trailer';
-  if (/\bannounce|\breveal\b|\bteaser\b/.test(text))           return 'Announcement';
-  if (/\brelease\b|\blaunch\b|\bout now\b|\bships\b/.test(text)) return 'Release';
-  if (/\bdlc\b|\bupdate\b|\bpatch\b|\bdev\b/.test(text))      return 'Development Update';
-  if (/\bmerch\b|\bfigurine\b|\bcollectible\b/.test(text))    return 'Merchandise';
-  if (/\bevent\b|\bexpo\b|\bgamescom\b|\bsgf\b/.test(text))   return 'Event';
-  if (/\brumou?r\b|\bleak\b/.test(text))                      return 'Rumour';
+  const t = (title + ' ' + desc).toLowerCase();
+  if (/\btrailer\b|\bgameplay\b/.test(t))                      return 'Trailer';
+  if (/\bannounce|\breveal\b|\bteaser\b/.test(t))              return 'Announcement';
+  if (/\brelease\b|\blaunch\b|\bout now\b|\bships\b/.test(t)) return 'Release';
+  if (/\bdlc\b|\bupdate\b|\bpatch\b/.test(t))                 return 'Development Update';
+  if (/\bmerch\b|\bfigurine\b|\bcollectible\b/.test(t))       return 'Merchandise';
+  if (/\bevent\b|\bexpo\b|\bgamescom\b|\bsgf\b/.test(t))      return 'Event';
+  if (/\brumou?r\b|\bleak\b/.test(t))                         return 'Rumour';
   return 'News';
 }
 
-// ── AI summarisation (optional) ───────────────────────────────────────────────
+// ── Claude summarisation ──────────────────────────────────────────────────────
 
-async function summariseWithClaude(title, excerpt, url) {
+async function summariseWithClaude(title, articleText, rssExcerpt, sourceUrl) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
 
-  const body = JSON.stringify({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 200,
-    messages: [{
-      role: 'user',
-      content: `You are writing a short news blurb for the Tomb Raider Archives website.
-Summarise this article in 2–3 plain sentences. Be factual and concise. No editorialising, no intro phrase like "In a recent article...".
+  // Use actual article text if we got it, fall back to RSS excerpt
+  const sourceContent = articleText && articleText.length > 100
+    ? articleText
+    : rssExcerpt;
+
+  if (!sourceContent) return null;
+
+  const prompt = articleText && articleText.length > 100
+    ? `You are writing a news post for the Tomb Raider Archives fan website.
+Based on the article text below, write 2–4 clear paragraphs summarising the news in your own words.
+Be factual, informative, and engaging. Do not copy sentences verbatim. Do not use an intro phrase like "In a recent article".
+Do not mention that you're summarising — write as if you're reporting the news directly.
 
 Title: ${title}
-Excerpt: ${excerpt}
-URL: ${url}
+Article text:
+${sourceContent}
 
-Write only the summary.`
-    }]
+Write only the summary paragraphs.`
+    : `You are writing a short news blurb for the Tomb Raider Archives fan website.
+Summarise this in 2–3 sentences. Be factual and concise. No editorialising.
+
+Title: ${title}
+Excerpt: ${sourceContent}
+URL: ${sourceUrl}
+
+Write only the summary.`;
+
+  const body = JSON.stringify({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 500,
+    messages: [{ role: 'user', content: prompt }]
   });
 
   return new Promise((resolve) => {
     const req = https.request({
       hostname: 'api.anthropic.com',
-      path: '/v1/messages',
-      method: 'POST',
+      path:     '/v1/messages',
+      method:   'POST',
       headers: {
         'content-type':      'application/json',
         'x-api-key':         apiKey,
@@ -187,12 +290,8 @@ Write only the summary.`
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
-        try {
-          const parsed = JSON.parse(data);
-          resolve(parsed.content?.[0]?.text?.trim() || null);
-        } catch {
-          resolve(null);
-        }
+        try { resolve(JSON.parse(data).content?.[0]?.text?.trim() || null); }
+        catch { resolve(null); }
       });
     });
     req.on('error', () => resolve(null));
@@ -208,22 +307,27 @@ async function writePost(item) {
   const slug     = slugify(item.title);
   const filename = `${date}-${slug}.md`;
   const filepath = path.join(POSTS_DIR, filename);
-
   if (fs.existsSync(filepath)) return null;
 
-  const category = inferCategory(item.title, item.description);
-  const excerpt  = item.description.slice(0, 300).replace(/\n/g, ' ').trim();
+  console.log(`  → fetching article: ${item.link.slice(0, 80)}…`);
+  const { imageUrl, articleText, finalUrl } = await fetchArticle(item.link);
 
-  // Try Claude for a better summary, fall back to RSS excerpt
-  const summary = await summariseWithClaude(item.title, excerpt, item.link) || excerpt;
-
+  const realUrl    = finalUrl || item.link;
   const sourceName = item.sourceName
-    || (() => { try { return new URL(item.link).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
+    || (() => { try { return new URL(realUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
-  // Safely quote the YAML string values
+  const rssExcerpt = item.description.slice(0, 400).trim();
+  const category   = inferCategory(item.title, item.description + ' ' + articleText);
+
+  // Summarise — tries Claude with article text first
+  const summary = await summariseWithClaude(item.title, articleText, rssExcerpt, realUrl)
+    || articleText.slice(0, 600).trim()
+    || rssExcerpt;
+
+  const excerpt = summary.split('\n')[0].slice(0, 280);
   const yamlStr = (s) => JSON.stringify(String(s));
 
-  const content = [
+  const lines = [
     '---',
     `layout: post`,
     `title: ${yamlStr(item.title)}`,
@@ -231,70 +335,75 @@ async function writePost(item) {
     `category: ${yamlStr(category)}`,
     `tags:`,
     `  - tag: tomb-raider`,
-    `excerpt_text: ${yamlStr(summary.slice(0, 280))}`,
-    `source_url: ${yamlStr(item.link)}`,
+  ];
+
+  if (imageUrl) lines.push(`header_image: ${yamlStr(imageUrl)}`);
+
+  lines.push(
+    `excerpt_text: ${yamlStr(excerpt)}`,
+    `source_url: ${yamlStr(realUrl)}`,
     `source_name: ${yamlStr(sourceName)}`,
     '---',
     '',
     summary,
     '',
-    `[Read the full article at ${sourceName} →](${item.link})`,
-    ''
-  ].join('\n');
+    `---`,
+    ``,
+    `*Source: [${sourceName}](${realUrl})*`
+  );
 
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
-  fs.writeFileSync(filepath, content, 'utf8');
-  console.log(`  ✓  ${filename}`);
+  fs.writeFileSync(filepath, lines.join('\n') + '\n', 'utf8');
+
+  const imgStatus = imageUrl ? '🖼' : '  ';
+  const txtStatus = articleText.length > 100 ? '📄' : '  ';
+  console.log(`  ✓  ${filename} ${imgStatus}${txtStatus}`);
   return filename;
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('Tomb Raider News Bot — starting\n');
-  console.log(`Fetching: ${RSS_URL}`);
+  console.log('Tomb Raider Archives — News Bot\n');
 
   let xml;
   try {
-    xml = await get(RSS_URL);
+    console.log(`Fetching RSS…`);
+    ({ body: xml } = await fetch(RSS_URL));
   } catch (err) {
-    console.error('Failed to fetch RSS feed:', err.message);
+    console.error('Failed to fetch RSS:', err.message);
     process.exit(1);
   }
 
   const items = parseItems(xml);
-  console.log(`Found ${items.length} item(s) in feed (within ${MAX_AGE_DAYS} days)\n`);
+  console.log(`${items.length} item(s) in feed (within ${MAX_AGE_DAYS} days)\n`);
+  if (!items.length) return;
 
-  if (items.length === 0) {
-    console.log('Nothing to do.');
-    return;
-  }
-
-  const { urls: existingUrls } = getExistingSourceUrls();
-  const newItems = items.filter(i => !existingUrls.has(i.link));
+  const existingUrls = getExistingSourceUrls();
+  const newItems     = items.filter(i => !existingUrls.has(i.link));
   console.log(`${newItems.length} new item(s) after deduplication\n`);
-
-  if (newItems.length === 0) {
-    console.log('All articles already posted. Done.');
-    return;
-  }
+  if (!newItems.length) { console.log('All caught up.'); return; }
 
   const batch   = newItems.slice(0, MAX_PER_RUN);
   let   created = 0;
 
   for (const item of batch) {
-    const result = await writePost(item);
-    if (result) created++;
+    try {
+      const result = await writePost(item);
+      if (result) created++;
+    } catch (err) {
+      console.error(`  ✗  Failed: ${item.title}: ${err.message}`);
+    }
+    // Brief pause between article fetches — be a polite bot
+    await new Promise(r => setTimeout(r, 1500));
   }
 
-  console.log(`\nCreated ${created} post(s).`);
-
-  if (created === 0) {
-    console.log('No files written.');
+  console.log(`\nDone — created ${created} post(s).`);
+  if (process.env.ANTHROPIC_API_KEY) {
+    console.log('(Claude summaries enabled)');
+  } else {
+    console.log('(No ANTHROPIC_API_KEY — used extracted article text / RSS excerpts)');
   }
 }
 
-main().catch((err) => {
-  console.error('Fatal error:', err);
-  process.exit(1);
-});
+main().catch((err) => { console.error('Fatal:', err); process.exit(1); });
