@@ -79,7 +79,7 @@ function decodeEntities(str) {
 }
 
 /** Extract og:image or twitter:image URL from HTML. */
-function extractOgImage(html) {
+function extractOgImage(html, baseUrl) {
   const patterns = [
     // og:image — both attribute orders
     /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
@@ -92,48 +92,75 @@ function extractOgImage(html) {
   ];
   for (const re of patterns) {
     const m = html.match(re);
-    if (m && m[1] && m[1].startsWith('http')) return decodeEntities(m[1]);
+    if (!m || !m[1]) continue;
+    let imgUrl = decodeEntities(m[1]);
+    // Resolve protocol-relative URLs
+    if (imgUrl.startsWith('//')) imgUrl = 'https:' + imgUrl;
+    // Resolve root-relative URLs against the page's base URL
+    else if (imgUrl.startsWith('/') && baseUrl) {
+      try { imgUrl = new URL(imgUrl, baseUrl).href; } catch { continue; }
+    }
+    if (imgUrl.startsWith('http')) return imgUrl;
   }
   return null;
 }
 
 /** Extract readable article text from HTML. Returns plain paragraphs. */
 function extractArticleText(html) {
-  // Remove noise: scripts, styles, invisible blocks, nav, footer etc.
+  // Remove noise elements entirely
   let cleaned = html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/<noscript[\s\S]*?<\/noscript>/gi, '')
+    .replace(/<svg[\s\S]*?<\/svg>/gi, '')
     .replace(/<nav[\s\S]*?<\/nav>/gi, '')
     .replace(/<header[\s\S]*?<\/header>/gi, '')
     .replace(/<footer[\s\S]*?<\/footer>/gi, '')
     .replace(/<aside[\s\S]*?<\/aside>/gi, '')
+    .replace(/<form[\s\S]*?<\/form>/gi, '')
+    .replace(/<figure[\s\S]*?<\/figure>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '');
 
+  // Strip ad/cookie/social/modal blocks by class name
+  const noiseClass = /\b(?:ad|advert|banner|cookie|gdpr|modal|popup|overlay|social|share|sharing|subscribe|newsletter|sidebar|related|recommend|comment|promo|sticky|sticky-bar|notification)\b/i;
+  cleaned = cleaned.replace(/<(?:div|section)[^>]+class=["'][^"']*["'][^>]*>[\s\S]*?<\/(?:div|section)>/gi, (block) => {
+    const classMatch = block.match(/class=["']([^"']+)["']/);
+    if (classMatch && noiseClass.test(classMatch[1])) return '';
+    return block;
+  });
+
   // Try to narrow to the article body first
-  for (const re of [
-    /<article[^>]*>([\s\S]*?)<\/article>/i,
-    /<main[^>]*>([\s\S]*?)<\/main>/i,
-    /<div[^>]+class=["'][^"']*(?:article|post|content|story|body)[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
-  ]) {
-    const m = cleaned.match(re);
+  const articleRe  = /<article[^>]*>([\s\S]*?)<\/article>/i;
+  const mainRe     = /<main[^>]*>([\s\S]*?)<\/main>/i;
+  const contentRe  = /<div[^>]+class=["'][^"']*(?:article[-_]body|post[-_]body|post[-_]content|entry[-_]content|story[-_]body|article[-_]content|article[-_]text)[^"']*["'][^>]*>([\s\S]*?)<\/div>/i;
+
+  for (const re of [articleRe, mainRe, contentRe]) {
+    const m = re.exec(cleaned);
     if (m) { cleaned = m[1]; break; }
   }
 
   // Collect non-trivial paragraphs
   const paragraphs = [];
+  const seen = new Set();
   let total = 0;
 
-  for (const re of [/<p[^>]*>([\s\S]*?)<\/p>/gi, /<li[^>]*>([\s\S]*?)<\/li>/gi]) {
+  // Use separate regex objects to avoid stale lastIndex state
+  const pRe  = /<p[^>]*>([\s\S]*?)<\/p>/gi;
+  const liRe = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+
+  for (const re of [pRe, liRe]) {
+    re.lastIndex = 0;
     let m;
-    // eslint-disable-next-line no-cond-assign
     while ((m = re.exec(cleaned)) !== null) {
       const text = decodeEntities(m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
-      if (text.length >= 60 && !paragraphs.includes(text)) {
-        paragraphs.push(text);
-        total += text.length;
-        if (total >= MAX_ARTICLE_CHARS) break;
-      }
+      // Skip short text, duplicates, and common noise strings
+      if (text.length < 60) continue;
+      if (seen.has(text)) continue;
+      if (/\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored)\b/i.test(text)) continue;
+      seen.add(text);
+      paragraphs.push(text);
+      total += text.length;
+      if (total >= MAX_ARTICLE_CHARS) break;
     }
     if (total >= MAX_ARTICLE_CHARS) break;
   }
@@ -150,7 +177,7 @@ async function fetchArticle(url) {
   try {
     const { body, finalUrl } = await fetch(url, 0, ARTICLE_TIMEOUT);
     return {
-      imageUrl:    extractOgImage(body),
+      imageUrl:    extractOgImage(body, finalUrl),
       articleText: extractArticleText(body),
       finalUrl
     };
@@ -205,8 +232,11 @@ function getExistingSourceUrls() {
   for (const file of fs.readdirSync(POSTS_DIR)) {
     if (!file.endsWith('.md')) continue;
     const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-    const m = content.match(/^source_url:\s*["']?([^"'\n]+)/m);
-    if (m) urls.add(m[1].trim());
+    // Collect both source_url (real article URL) and source_rss_url (Google tracking URL)
+    for (const field of ['source_url', 'source_rss_url']) {
+      const m = content.match(new RegExp(`^${field}:\\s*["']?([^"'\\n]+)`, 'm'));
+      if (m) urls.add(m[1].trim());
+    }
   }
   return urls;
 }
@@ -302,7 +332,7 @@ Write only the summary.`;
 
 // ── Post writer ───────────────────────────────────────────────────────────────
 
-async function writePost(item) {
+async function writePost(item, existingUrls) {
   const date     = formatDate(item.pubDate);
   const slug     = slugify(item.title);
   const filename = `${date}-${slug}.md`;
@@ -312,7 +342,14 @@ async function writePost(item) {
   console.log(`  → fetching article: ${item.link.slice(0, 80)}…`);
   const { imageUrl, articleText, finalUrl } = await fetchArticle(item.link);
 
-  const realUrl    = finalUrl || item.link;
+  const realUrl = finalUrl || item.link;
+
+  // Dedup against the REAL URL (after redirect) — Google News tracking links
+  // never match stored source_url values, so this check must happen here.
+  if (existingUrls.has(realUrl)) {
+    console.log('  ↩  Skipping (real URL already posted)');
+    return null;
+  }
   const sourceName = item.sourceName
     || (() => { try { return new URL(realUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
@@ -342,6 +379,7 @@ async function writePost(item) {
   lines.push(
     `excerpt_text: ${yamlStr(excerpt)}`,
     `source_url: ${yamlStr(realUrl)}`,
+    `source_rss_url: ${yamlStr(item.link)}`,
     `source_name: ${yamlStr(sourceName)}`,
     '---',
     '',
@@ -354,6 +392,10 @@ async function writePost(item) {
 
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
   fs.writeFileSync(filepath, lines.join('\n') + '\n', 'utf8');
+
+  // Register both URLs so within-run duplicates are also caught
+  existingUrls.add(realUrl);
+  existingUrls.add(item.link);
 
   const imgStatus = imageUrl ? '🖼' : '  ';
   const txtStatus = articleText.length > 100 ? '📄' : '  ';
@@ -380,16 +422,15 @@ async function main() {
   if (!items.length) return;
 
   const existingUrls = getExistingSourceUrls();
-  const newItems     = items.filter(i => !existingUrls.has(i.link));
-  console.log(`${newItems.length} new item(s) after deduplication\n`);
-  if (!newItems.length) { console.log('All caught up.'); return; }
-
-  const batch   = newItems.slice(0, MAX_PER_RUN);
+  // NOTE: don't pre-filter by item.link — Google News tracking URLs never
+  // match stored source_url values. Dedup happens inside writePost() after
+  // following the redirect to get the real article URL.
+  const batch   = items.slice(0, MAX_PER_RUN);
   let   created = 0;
 
   for (const item of batch) {
     try {
-      const result = await writePost(item);
+      const result = await writePost(item, existingUrls);
       if (result) created++;
     } catch (err) {
       console.error(`  ✗  Failed: ${item.title}: ${err.message}`);
