@@ -201,6 +201,9 @@
     if (lastFocused) lastFocused.focus();
   }
 
+  // Expose so the random-image widget on the homepage can reuse this lightbox
+  window._lbOpen = open;
+
   lbClose.addEventListener('click', close);
   lbPrev.addEventListener('click',  function () { if (current > 0) show(current - 1); });
   lbNext.addEventListener('click',  function () { if (current < gallery.length - 1) show(current + 1); });
@@ -310,8 +313,8 @@
 
 /* ── Random image (homepage) ────────────────────────────────────────────── */
 /* Reads window._archiveShots built by Jekyll/Liquid in index.md, picks a
-   random entry, renders a thumbnail card, and wires up a mini lightbox.
-   Clicking the image opens it full-size; the game page link stays separate. */
+   random entry, renders a thumbnail card. Clicking the image opens the shared
+   site lightbox (window._lbOpen, exposed by the Lightbox IIFE above). */
 (function () {
   var container = document.getElementById('randomShot');
   var shots     = window._archiveShots;
@@ -325,7 +328,6 @@
       .replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // ── Render card ───────────────────────────────────────────────────────────
   container.innerHTML =
     '<button class="random-shot-img-wrap" aria-label="Open image from ' + esc(entry.title) + ' in lightbox">' +
       '<img class="random-shot-img" src="' + esc(entry.thumb) + '" alt="Image from ' + esc(entry.title) + '" loading="lazy" decoding="async">' +
@@ -344,54 +346,8 @@
       '<a class="random-shot-view" href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer">View full <span aria-hidden="true">&#8599;</span></a>' +
     '</div>';
 
-  // ── Mini lightbox (built dynamically, not tied to gallery-grid) ───────────
-  var lb = document.createElement('div');
-  lb.className = 'rand-lb';
-  lb.setAttribute('role', 'dialog');
-  lb.setAttribute('aria-modal', 'true');
-  lb.setAttribute('aria-label', 'Image viewer');
-  lb.innerHTML =
-    '<div class="rand-lb-inner">' +
-      '<button class="rand-lb-close" aria-label="Close image viewer">' +
-        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none">' +
-          '<line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>' +
-          '<line x1="15" y1="1" x2="1" y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>' +
-        '</svg>' +
-      '</button>' +
-      '<img class="rand-lb-img" src="" alt="' + esc(entry.title) + '" decoding="async">' +
-      '<div class="rand-lb-caption">' +
-        '<a href="' + esc(entry.url) + '" class="rand-lb-game">' +
-          '<i class="ph ph-game-controller" aria-hidden="true"></i> ' + esc(entry.title) +
-        '</a>' +
-        '<a href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer" class="rand-lb-view">' +
-          'View full <span aria-hidden="true">&#8599;</span>' +
-        '</a>' +
-      '</div>' +
-    '</div>';
-  document.body.appendChild(lb);
-
-  var lbImg   = lb.querySelector('.rand-lb-img');
-  var trigger = container.querySelector('.random-shot-img-wrap');
-
-  function openLb() {
-    lbImg.src = entry.full;
-    lb.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    lb.querySelector('.rand-lb-close').focus();
-  }
-
-  function closeLb() {
-    lb.classList.remove('is-open');
-    document.body.style.overflow = '';
-    lbImg.src = '';
-    trigger.focus();
-  }
-
-  trigger.addEventListener('click', openLb);
-  lb.querySelector('.rand-lb-close').addEventListener('click', closeLb);
-  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && lb.classList.contains('is-open')) { e.preventDefault(); closeLb(); }
+  container.querySelector('.random-shot-img-wrap').addEventListener('click', function () {
+    if (window._lbOpen) window._lbOpen([entry.full], 0);
   });
 }());
 

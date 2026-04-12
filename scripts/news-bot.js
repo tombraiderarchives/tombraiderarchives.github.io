@@ -500,9 +500,17 @@ async function main() {
 
   const items = parseRSS(xml);
   console.log(`${items.length} item(s) in feed (within ${MAX_AGE_DAYS} days)\n`);
-  if (!items.length) { console.log('Nothing to do.'); return; }
 
-  // ── 2. Deduplicate + batch ────────────────────────────────────────────────
+  // ── 2. Fetch YouTube videos (always — independent of news items) ──────────
+  const dataDir = path.join(__dirname, '..', '_data');
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+  const videos = await fetchYouTubeVideos();
+  fs.writeFileSync(YT_DATA_FILE, JSON.stringify(videos, null, 2) + '\n', 'utf8');
+  console.log('');
+
+  if (!items.length) { console.log('No new news items — done.'); return; }
+
+  // ── 3. Deduplicate + batch ────────────────────────────────────────────────
   const existingUrls = getExistingSourceUrls();
   const batch = items.slice(0, MAX_PER_RUN);
   console.log(`Processing up to ${batch.length} article(s)…\n`);
@@ -537,13 +545,6 @@ async function main() {
   console.log(process.env.ANTHROPIC_API_KEY
     ? '(Claude summaries enabled)'
     : '(No ANTHROPIC_API_KEY — used extracted article text / RSS excerpts)');
-
-  // ── 5. Fetch YouTube latest videos and write _data/youtube_videos.json ────
-  console.log('');
-  const videos = await fetchYouTubeVideos();
-  const dataDir = path.join(__dirname, '..', '_data');
-  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(YT_DATA_FILE, JSON.stringify(videos, null, 2) + '\n', 'utf8');
 }
 
 main().catch((err) => { console.error('Fatal:', err); process.exit(1); });
