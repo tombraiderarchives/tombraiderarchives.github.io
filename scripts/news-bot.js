@@ -1,29 +1,35 @@
 #!/usr/bin/env node
 /**
- * Tomb Raider Archives — News Bot (Puppeteer edition)
+ * Tomb Raider Archives — News Bot (hybrid RSS + Puppeteer)
  *
- * 1. Launches a headless Chrome browser via Puppeteer
- * 2. Navigates to the Google News search page for "tomb raider"
- * 3. Extracts article cards: title, source, publish time, thumbnail image, link
- * 4. Visits each article link → follows redirects to get the real article URL,
- *    scrapes the og:image (full quality) and readable article text from the DOM
- * 5. If ANTHROPIC_API_KEY is set, Claude Haiku writes a proper summary
- * 6. Writes Jekyll post files to news/_posts/
+ * 1. Fetches article list via Google News RSS — plain HTTPS, always reliable,
+ *    no browser-detection issues
+ * 2. For each article, launches a Puppeteer page to follow the Google News
+ *    redirect URL to the real article, then scrapes:
+ *      - og:image / twitter:image (full quality)
+ *      - Readable article text via live DOM manipulation
+ * 3. Optionally summarises with Claude Haiku if ANTHROPIC_API_KEY is set
+ * 4. Writes Jekyll post files to news/_posts/
  *
- * Run manually:  node scripts/news-bot.js
- * Scheduled:     via .github/workflows/news-bot.yml
+ * Why hybrid?
+ *   Scraping the Google News *search page* from GitHub Actions IPs triggers
+ *   Google's consent/captcha wall, so the listing page returns zero articles.
+ *   The RSS feed is a simple XML endpoint with no such restriction.
+ *   Puppeteer is reserved for individual article pages where it shines:
+ *   proper redirect following, og:image extraction, and clean DOM-based text.
  */
 
 'use strict';
 
 const puppeteer = require('puppeteer');
 const https     = require('https');
+const http      = require('http');
 const fs        = require('fs');
 const path      = require('path');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const GOOGLE_NEWS_URL  = 'https://news.google.com/search?q=tomb+raider&hl=en-CA&gl=CA&ceid=CA:en';
+const RSS_URL          = 'https://news.google.com/rss/search?q=tomb+raider&hl=en-US&gl=US&ceid=US:en';
 const POSTS_DIR        = path.join(__dirname, '..', 'news', '_posts');
 const MAX_PER_RUN      = 5;      // posts per run — don't flood
 const MAX_AGE_DAYS     = 7;      // ignore articles older than this
@@ -32,6 +38,72 @@ const MAX_ARTICLE_CHARS = 5000;  // max chars of article text sent to Claude
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
   '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+
+// ── Plain HTTPS fetch (for RSS only) ─────────────────────────────────────────
+
+function fetchUrl(url, redirects = 0) {
+  return new Promise((resolve, reject) => {
+    if (redirects > 8) return reject(new Error('Too many redirects'));
+    const client = url.startsWith('https') ? https : http;
+    const req = client.get(url, {
+      headers: { 'User-Agent': USER_AGENT, 'Accept': 'application/rss+xml,text/xml,*/*' }
+    }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        let next = res.headers.location;
+        if (next.startsWith('/')) { try { next = new URL(next, url).href; } catch {} }
+        res.resume();
+        return resolve(fetchUrl(next, redirects + 1));
+      }
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve(body));
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Timeout')); });
+  });
+}
+
+// ── RSS parsing ───────────────────────────────────────────────────────────────
+
+function decodeEntities(str) {
+  return str
+    .replace(/&amp;/g,  '&').replace(/&lt;/g,   '<').replace(/&gt;/g,   '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g,  "'").replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)));
+}
+
+function extractCDATA(str) {
+  const m = str.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/);
+  return m ? m[1] : str;
+}
+
+function tagContent(xml, tag) {
+  const m = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
+  return m ? decodeEntities(extractCDATA(m[1].trim())) : '';
+}
+
+function parseRSS(xml) {
+  const items   = [];
+  const cutoff  = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+  const matches = xml.match(/<item>([\s\S]*?)<\/item>/gi) || [];
+
+  for (const block of matches) {
+    const title      = tagContent(block, 'title');
+    const link       = tagContent(block, 'link').replace(/\s/g, '');
+    const pubDate    = tagContent(block, 'pubDate');
+    const sourceName = block.match(/<source[^>]*>([^<]*)<\/source>/i)?.[1]?.trim() || '';
+    const description = tagContent(block, 'description')
+      .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+    if (!title || !link) continue;
+
+    const published = pubDate ? new Date(pubDate) : null;
+    if (published && !isNaN(published) && published.getTime() < cutoff) continue;
+
+    items.push({ title, link, description, pubDate, sourceName });
+  }
+  return items;
+}
 
 // ── Deduplication ─────────────────────────────────────────────────────────────
 
@@ -76,19 +148,23 @@ function inferCategory(title, text) {
 
 // ── Claude summarisation ──────────────────────────────────────────────────────
 
-async function summariseWithClaude(title, articleText, sourceUrl) {
+async function summariseWithClaude(title, articleText, rssExcerpt, sourceUrl) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey || !articleText || articleText.length < 100) return null;
+  if (!apiKey) return null;
 
-  const prompt =
-    `You are writing a news post for the Tomb Raider Archives fan website.\n` +
-    `Based on the article text below, write 2–4 clear paragraphs summarising the news in your own words.\n` +
-    `Be factual, informative, and engaging. Do not copy sentences verbatim.\n` +
-    `Do not use an intro phrase like "In a recent article".\n` +
-    `Write as if you are reporting the news directly.\n\n` +
-    `Title: ${title}\n` +
-    `Article text:\n${articleText}\n\n` +
-    `Write only the summary paragraphs.`;
+  const sourceContent = articleText && articleText.length > 100 ? articleText : rssExcerpt;
+  if (!sourceContent) return null;
+
+  const prompt = articleText && articleText.length > 100
+    ? `You are writing a news post for the Tomb Raider Archives fan website.\n` +
+      `Based on the article text below, write 2–4 clear paragraphs summarising the news in your own words.\n` +
+      `Be factual, informative, and engaging. Do not copy sentences verbatim.\n` +
+      `Do not use an intro phrase like "In a recent article".\n` +
+      `Write as if you are reporting the news directly.\n\n` +
+      `Title: ${title}\nArticle text:\n${sourceContent}\n\nWrite only the summary paragraphs.`
+    : `You are writing a short news blurb for the Tomb Raider Archives fan website.\n` +
+      `Summarise this in 2–3 sentences. Be factual and concise.\n\n` +
+      `Title: ${title}\nExcerpt: ${sourceContent}\nURL: ${sourceUrl}\n\nWrite only the summary.`;
 
   const body = JSON.stringify({
     model:      'claude-haiku-4-5-20251001',
@@ -121,101 +197,17 @@ async function summariseWithClaude(title, articleText, sourceUrl) {
   });
 }
 
-// ── Step 1: scrape Google News search page ────────────────────────────────────
-
-async function scrapeGoogleNews(browser) {
-  console.log('  Opening Google News search page…');
-  const page = await browser.newPage();
-  await page.setUserAgent(USER_AGENT);
-  // Block images/fonts on the listing page — we only need the DOM
-  await page.setRequestInterception(true);
-  page.on('request', (req) => {
-    if (['image', 'font', 'media'].includes(req.resourceType())) req.abort();
-    else req.continue();
-  });
-
-  await page.goto(GOOGLE_NEWS_URL, { waitUntil: 'networkidle2', timeout: 30000 });
-
-  // Wait for article cards
-  await page.waitForSelector('article', { timeout: 15000 }).catch(() =>
-    console.warn('  ⚠  No <article> elements found within timeout — continuing anyway')
-  );
-
-  const cutoffMs = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
-
-  const items = await page.evaluate((cutoffMs) => {
-    const results = [];
-
-    document.querySelectorAll('article').forEach((article) => {
-      // ── Title + link ──────────────────────────────────────────────────────
-      // Google News uses hashed class names, so target by element role/tag
-      const titleLink =
-        article.querySelector('h3 a, h4 a') ||
-        article.querySelector('a[href*="/articles/"]') ||
-        article.querySelector('a[href*="news.google.com"]');
-      if (!titleLink) return;
-
-      const title = titleLink.textContent.trim();
-      if (!title || title.length < 10) return;
-
-      const link = titleLink.href;
-      if (!link || !link.startsWith('http')) return;
-
-      // ── Source name ───────────────────────────────────────────────────────
-      // Appears in a <cite>, an <a> near a time element, or an element with
-      // aria-label. Fall back to empty string.
-      const sourceEl =
-        article.querySelector('cite') ||
-        article.querySelector('time')?.closest('div')?.querySelector('a') ||
-        article.querySelector('[class*="source"], [class*="publisher"]');
-      const sourceName = sourceEl?.textContent.trim() || '';
-
-      // ── Publish time ──────────────────────────────────────────────────────
-      const timeEl  = article.querySelector('time');
-      const timeStr = timeEl?.getAttribute('datetime') || timeEl?.textContent.trim() || '';
-
-      // Age filter
-      if (timeStr) {
-        const pub = new Date(timeStr);
-        if (!isNaN(pub) && pub.getTime() < cutoffMs) return;
-      }
-
-      // ── Thumbnail image ───────────────────────────────────────────────────
-      // Google News card images are loaded lazily; src is usually populated.
-      // We blocked image requests in setRequestInterception so src won't be
-      // a blob/data URI here — it'll be the real CDN URL or empty.
-      let cardImage = '';
-      for (const img of article.querySelectorAll('img')) {
-        const src = img.getAttribute('src') || img.getAttribute('data-src') || '';
-        if (src && src.startsWith('http') && !src.startsWith('data:')) {
-          cardImage = src;
-          break;
-        }
-      }
-
-      results.push({ title, link, sourceName, timeStr, cardImage });
-    });
-
-    return results;
-  }, cutoffMs);
-
-  await page.close();
-  console.log(`  Found ${items.length} article card(s)\n`);
-  return items;
-}
-
-// ── Step 2: visit article page ────────────────────────────────────────────────
+// ── Puppeteer: fetch individual article page ──────────────────────────────────
 
 async function fetchArticlePage(browser, googleNewsLink) {
   const page = await browser.newPage();
   await page.setUserAgent(USER_AGENT);
 
   try {
-    // Google News links redirect to the real article.
-    // waitUntil: 'domcontentloaded' is enough — we just need the HTML.
+    // Navigate — Google News link redirects to the real article URL
     await page.goto(googleNewsLink, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
-    // Some sites do a second JS redirect; wait briefly for it to settle.
+    // Allow a brief JS redirect to settle
     await new Promise(r => setTimeout(r, 1500));
 
     const finalUrl = page.url();
@@ -233,18 +225,18 @@ async function fetchArticlePage(browser, googleNewsLink) {
       return null;
     });
 
-    // ── Article text ──────────────────────────────────────────────────────────
-    // Manipulate the live DOM for cleaner extraction than regex on raw HTML.
+    // ── Article text via live DOM ─────────────────────────────────────────────
     const articleText = await page.evaluate((maxChars) => {
-      // Remove noise elements
+      // Strip noise nodes in-place
       [
         'script', 'style', 'noscript', 'svg', 'nav', 'header', 'footer',
         'aside', 'form', 'figure', 'iframe',
         '[class*="cookie"]', '[class*="gdpr"]', '[class*="subscribe"]',
         '[class*="newsletter"]', '[class*="social"]', '[class*="share"]',
         '[class*="related"]', '[class*="recommend"]', '[class*="sidebar"]',
-        '[class*="comment"]', '[class*="ad"]', '[class*="promo"]',
-        '[class*="popup"]', '[class*="modal"]', '[class*="sticky"]',
+        '[class*="comment"]', '[class*="ad-"]', '[id*="ad-"]',
+        '[class*="promo"]', '[class*="popup"]', '[class*="modal"]',
+        '[class*="sticky"]', '[aria-label*="advertisement" i]',
       ].forEach(sel => {
         try { document.querySelectorAll(sel).forEach(el => el.remove()); }
         catch (_) {}
@@ -253,7 +245,6 @@ async function fetchArticlePage(browser, googleNewsLink) {
       // Find the main content container
       const container =
         document.querySelector('article') ||
-        document.querySelector('main') ||
         document.querySelector('[class*="article-body"]') ||
         document.querySelector('[class*="article-content"]') ||
         document.querySelector('[class*="article-text"]') ||
@@ -261,19 +252,17 @@ async function fetchArticlePage(browser, googleNewsLink) {
         document.querySelector('[class*="post-content"]') ||
         document.querySelector('[class*="entry-content"]') ||
         document.querySelector('[class*="story-body"]') ||
+        document.querySelector('main') ||
         document.body;
 
-      // Collect non-trivial paragraphs and list items
-      const seen = new Set();
-      const paras = [];
-      let total = 0;
+      const seen    = new Set();
+      const paras   = [];
       const noiseRe = /\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored)\b/i;
+      let total = 0;
 
       for (const el of container.querySelectorAll('p, li')) {
-        const text = el.innerText?.replace(/\s+/g, ' ').trim() || '';
-        if (text.length < 60) continue;
-        if (seen.has(text)) continue;
-        if (noiseRe.test(text)) continue;
+        const text = (el.innerText || '').replace(/\s+/g, ' ').trim();
+        if (text.length < 60 || seen.has(text) || noiseRe.test(text)) continue;
         seen.add(text);
         paras.push(text);
         total += text.length;
@@ -288,48 +277,45 @@ async function fetchArticlePage(browser, googleNewsLink) {
 
   } catch (err) {
     await page.close().catch(() => {});
-    console.warn(`    ⚠  Could not fetch article page: ${err.message}`);
+    console.warn(`    ⚠  Article fetch failed: ${err.message}`);
     return { finalUrl: googleNewsLink, imageUrl: null, articleText: '' };
   }
 }
 
-// ── Step 3: write Jekyll post ─────────────────────────────────────────────────
+// ── Post writer ───────────────────────────────────────────────────────────────
 
 async function writePost(item, existingUrls, browser) {
-  const date     = formatDate(item.timeStr);
+  const date     = formatDate(item.pubDate);
   const slug     = slugify(item.title);
   const filename = `${date}-${slug}.md`;
   const filepath = path.join(POSTS_DIR, filename);
 
   if (fs.existsSync(filepath)) {
-    console.log(`  ↩  ${filename} already exists — skipping`);
+    console.log(`  ↩  ${filename} already exists`);
     return null;
   }
 
-  console.log(`  → fetching: ${item.link.slice(0, 80)}…`);
-  const { finalUrl, imageUrl: ogImage, articleText } = await fetchArticlePage(browser, item.link);
+  console.log(`  → ${item.title.slice(0, 70)}…`);
+  const { finalUrl, imageUrl, articleText } = await fetchArticlePage(browser, item.link);
 
-  // Dedup against stored real URLs (check AFTER redirect resolution)
+  // Dedup against real URL — must happen after redirect resolution
   if (existingUrls.has(finalUrl)) {
-    console.log('  ↩  Skipping (real URL already posted)');
+    console.log('     ↩  Real URL already posted — skipping');
     return null;
   }
-
-  // Best available image: og:image from article > thumbnail from news card
-  const imageUrl = ogImage || (item.cardImage.startsWith('http') ? item.cardImage : null);
 
   const sourceName = item.sourceName ||
     (() => { try { return new URL(finalUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
-  const category = inferCategory(item.title, articleText);
+  const category = inferCategory(item.title, item.description + ' ' + articleText);
 
   const summary =
-    await summariseWithClaude(item.title, articleText, finalUrl) ||
+    await summariseWithClaude(item.title, articleText, item.description, finalUrl) ||
     articleText.slice(0, 600).trim() ||
-    item.title;
+    item.description.slice(0, 400).trim();
 
-  const excerpt  = summary.split('\n')[0].slice(0, 280);
-  const yamlStr  = (s) => JSON.stringify(String(s));
+  const excerpt = summary.split('\n')[0].slice(0, 280);
+  const yamlStr = (s) => JSON.stringify(String(s));
 
   const lines = [
     '---',
@@ -360,13 +346,12 @@ async function writePost(item, existingUrls, browser) {
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
   fs.writeFileSync(filepath, lines.join('\n') + '\n', 'utf8');
 
-  // Register both URLs so within-run duplicates are also caught
   existingUrls.add(finalUrl);
   existingUrls.add(item.link);
 
-  const imgMark = imageUrl ? '🖼 ' : '   ';
+  const imgMark = imageUrl         ? '🖼 ' : '   ';
   const txtMark = articleText.length > 100 ? '📄' : '  ';
-  console.log(`  ✓  ${filename} ${imgMark}${txtMark}`);
+  console.log(`     ✓  ${filename} ${imgMark}${txtMark}`);
   return filename;
 }
 
@@ -375,6 +360,26 @@ async function writePost(item, existingUrls, browser) {
 async function main() {
   console.log('Tomb Raider Archives — News Bot\n');
 
+  // ── 1. Fetch article list from RSS ────────────────────────────────────────
+  console.log('Fetching RSS feed…');
+  let xml;
+  try {
+    xml = await fetchUrl(RSS_URL);
+  } catch (err) {
+    console.error('Failed to fetch RSS:', err.message);
+    process.exit(1);
+  }
+
+  const items = parseRSS(xml);
+  console.log(`${items.length} item(s) in feed (within ${MAX_AGE_DAYS} days)\n`);
+  if (!items.length) { console.log('Nothing to do.'); return; }
+
+  // ── 2. Deduplicate + batch ────────────────────────────────────────────────
+  const existingUrls = getExistingSourceUrls();
+  const batch = items.slice(0, MAX_PER_RUN);
+  console.log(`Processing up to ${batch.length} article(s)…\n`);
+
+  // ── 3. Launch browser once for all article fetches ────────────────────────
   const browser = await puppeteer.launch({
     headless: true,
     args: [
@@ -382,24 +387,11 @@ async function main() {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu',
-      '--window-size=1280,800',
     ],
   });
 
+  let created = 0;
   try {
-    // ── 1. Scrape Google News listing ────────────────────────────────────────
-    const items = await scrapeGoogleNews(browser);
-    if (!items.length) {
-      console.log('No articles found on the page. Exiting.');
-      return;
-    }
-
-    // ── 2. Dedup + batch ─────────────────────────────────────────────────────
-    const existingUrls = getExistingSourceUrls();
-    const batch = items.slice(0, MAX_PER_RUN);
-    console.log(`Processing up to ${batch.length} article(s)…\n`);
-
-    let created = 0;
     for (const item of batch) {
       try {
         const result = await writePost(item, existingUrls, browser);
@@ -407,18 +399,16 @@ async function main() {
       } catch (err) {
         console.error(`  ✗  Failed (${item.title}): ${err.message}`);
       }
-      // Brief pause — be a polite bot
       await new Promise(r => setTimeout(r, 2000));
     }
-
-    console.log(`\nDone — created ${created} post(s).`);
-    console.log(process.env.ANTHROPIC_API_KEY
-      ? '(Claude summaries enabled)'
-      : '(No ANTHROPIC_API_KEY — used extracted article text)');
-
   } finally {
     await browser.close();
   }
+
+  console.log(`\nDone — created ${created} post(s).`);
+  console.log(process.env.ANTHROPIC_API_KEY
+    ? '(Claude summaries enabled)'
+    : '(No ANTHROPIC_API_KEY — used extracted article text / RSS excerpts)');
 }
 
 main().catch((err) => { console.error('Fatal:', err); process.exit(1); });
