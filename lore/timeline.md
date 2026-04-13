@@ -38,7 +38,7 @@ title: Timeline
 </div>
 
 <h2 class="timeline-era-title">Classic Era</h2>
-<p class="timeline-era-sub">Core Design &nbsp;·&nbsp; 1996–2003</p>
+<p class="timeline-era-sub">Core Design &nbsp;·&nbsp; 1996–2003 &nbsp;·&nbsp; An independent continuity</p>
 
 <div class="timeline">
 
@@ -86,8 +86,16 @@ title: Timeline
 
 </div>
 
-<h2 class="timeline-era-title">Legend / Anniversary Era</h2>
-<p class="timeline-era-sub">Crystal Dynamics &nbsp;·&nbsp; 2006–2008 &nbsp;·&nbsp; Entries ordered by Lara's in-universe experience, not release date</p>
+<div class="timeline-split" role="separator">
+  <i class="ph ph-git-fork timeline-split-icon" aria-hidden="true"></i>
+  <div class="timeline-split-body">
+    <strong class="timeline-split-label">New Continuity — Timeline splits here</strong>
+    <p class="timeline-split-note">Crystal Dynamics rebooted the franchise in 2006 with a new creative direction and a reimagined origin story. The Legend / Anniversary / Underworld games take place in an entirely separate universe — the events above did not happen in this continuity.</p>
+  </div>
+</div>
+
+<h2 class="timeline-era-title">Legend Era</h2>
+<p class="timeline-era-sub">Crystal Dynamics &nbsp;·&nbsp; 2006–2008 &nbsp;·&nbsp; A separate continuity &nbsp;·&nbsp; Listed in in-universe order, not release date</p>
 
 <div class="timeline">
 
@@ -114,8 +122,16 @@ title: Timeline
 
 </div>
 
-<h2 class="timeline-era-title">Survivor Trilogy</h2>
-<p class="timeline-era-sub">Crystal Dynamics &nbsp;·&nbsp; 2013–2024</p>
+<div class="timeline-split" role="separator">
+  <i class="ph ph-git-fork timeline-split-icon" aria-hidden="true"></i>
+  <div class="timeline-split-body">
+    <strong class="timeline-split-label">New Continuity — Timeline splits again</strong>
+    <p class="timeline-split-note">Crystal Dynamics rebooted the series a second time in 2013, starting fresh with a completely new origin story. The Survivor games share no narrative connection with the Classic or Legend continuities above.</p>
+  </div>
+</div>
+
+<h2 class="timeline-era-title">Survivor Era</h2>
+<p class="timeline-era-sub">Crystal Dynamics &nbsp;·&nbsp; 2013–2024 &nbsp;·&nbsp; A separate continuity</p>
 
 <div class="timeline">
 
@@ -147,6 +163,14 @@ title: Timeline
     <p class="timeline-desc">This Netflix animated series picks up after the events of Shadow of the Tomb Raider. Lara investigates the theft of a powerful ancient artefact from a secret vault, a trail that takes her across Europe as she races against those who would use it to destabilise governments. Produced by Powerhouse Animation, it maintains full continuity with the Survivor trilogy games, with Hayley Atwell voicing Lara.</p>
   </div>
 
+</div>
+
+<div class="timeline-split timeline-split--film" role="separator">
+  <i class="ph ph-film-slate timeline-split-icon" aria-hidden="true"></i>
+  <div class="timeline-split-body">
+    <strong class="timeline-split-label">Film Continuities — Separate universes</strong>
+    <p class="timeline-split-note">Both film series are standalone productions set in their own universes, independent of all three game continuities. The Jolie films (2001–2003) form one connected story; the 2018 film is a separate reboot unrelated to either Jolie film or any game.</p>
+  </div>
 </div>
 
 <h2 class="timeline-era-title">Film Continuities</h2>

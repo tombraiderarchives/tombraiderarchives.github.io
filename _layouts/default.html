@@ -76,7 +76,7 @@
             <div class="nav-sub" id="nav-section-games">
               <ul role="list">
 
-                <!-- Remastered Collection -->
+                <!-- Remastered -->
                 <li>
                   <button class="nav-group-toggle nav-group-toggle--sub"
                           aria-expanded="{% if page.url contains 'remastered' %}true{% else %}false{% endif %}"
@@ -98,17 +98,12 @@
                   </div>
                 </li>
 
-                <!-- ── Timeline 1: Classic ──────────────────────────────── -->
-                <!-- Core Design originals, in story chronological order     -->
-                <li class="nav-timeline-fork" aria-hidden="true">
-                  <span class="nav-timeline-fork-label">Classic Timeline</span>
-                </li>
-
+                <!-- Classic Era -->
                 <li>
                   <button class="nav-group-toggle nav-group-toggle--sub"
                           aria-expanded="{% if page.url contains '/games/tr1/' or page.url contains '/games/tr2/' or page.url contains '/games/tr3/' or page.url contains '/games/tr4/' or page.url contains '/games/tr5/' or page.url contains '/games/tr6/' %}true{% else %}false{% endif %}"
                           aria-controls="nav-classic">
-                    <span>Games</span>
+                    <span>Classic Era</span>
                     <svg class="chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                       <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -125,62 +120,63 @@
                   </div>
                 </li>
 
-                <!-- ── Timeline 2: Legend (reboot) ─────────────────────── -->
-                <!-- Crystal Dynamics reboot. In-universe order:             -->
-                <!-- Anniversary retells TR1 origins → Legend → Underworld   -->
-                <li class="nav-timeline-fork" aria-hidden="true">
-                  <span class="nav-timeline-fork-label">Legend Timeline</span>
-                </li>
-
+                <!-- Legend Era -->
                 <li>
                   <button class="nav-group-toggle nav-group-toggle--sub"
                           aria-expanded="{% if page.url contains 'trlegend' or page.url contains 'tranniversary' or page.url contains 'trunderworld' %}true{% else %}false{% endif %}"
                           aria-controls="nav-legend">
-                    <span>Games</span>
+                    <span>Legend Era</span>
                     <svg class="chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                       <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </button>
                   <div class="nav-sub" id="nav-legend">
                     <ul role="list" class="nav-leaf-list">
-                      <!-- Anniversary retells the origin story in this timeline, so it comes first in-universe -->
-                      <li><a href="{{ site.baseurl }}/games/tranniversary/" class="nav-link nav-link--leaf{% if page.url contains 'tranniversary' %} active{% endif %}"{% if page.url contains 'tranniversary' %} aria-current="page"{% endif %}>Anniversary <span class="nav-year">origin</span></a></li>
                       <li><a href="{{ site.baseurl }}/games/trlegend/"      class="nav-link nav-link--leaf{% if page.url contains 'trlegend'      %} active{% endif %}"{% if page.url contains 'trlegend'      %} aria-current="page"{% endif %}>Legend <span class="nav-year">2006</span></a></li>
+                      <li><a href="{{ site.baseurl }}/games/tranniversary/" class="nav-link nav-link--leaf{% if page.url contains 'tranniversary' %} active{% endif %}"{% if page.url contains 'tranniversary' %} aria-current="page"{% endif %}>Anniversary <span class="nav-year">2007</span></a></li>
                       <li><a href="{{ site.baseurl }}/games/trunderworld/"  class="nav-link nav-link--leaf{% if page.url contains 'trunderworld'  %} active{% endif %}"{% if page.url contains 'trunderworld'  %} aria-current="page"{% endif %}>Underworld <span class="nav-year">2008</span></a></li>
                     </ul>
                   </div>
                 </li>
 
-                <!-- ── Timeline 3: Survivor (reboot) ──────────────────── -->
-                <!-- Crystal Dynamics second reboot. New origin story.      -->
-                <li class="nav-timeline-fork" aria-hidden="true">
-                  <span class="nav-timeline-fork-label">Survivor Timeline</span>
-                </li>
-
+                <!-- Survivor Era -->
                 <li>
                   <button class="nav-group-toggle nav-group-toggle--sub"
                           aria-expanded="{% if page.url contains 'tr2013' or page.url contains 'rottr' or page.url contains 'sottr' %}true{% else %}false{% endif %}"
                           aria-controls="nav-survivor">
-                    <span>Games</span>
+                    <span>Survivor Era</span>
                     <svg class="chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                       <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </button>
                   <div class="nav-sub" id="nav-survivor">
                     <ul role="list" class="nav-leaf-list">
-                      <li><a href="{{ site.baseurl }}/games/tr2013/" class="nav-link nav-link--leaf{% if page.url contains 'tr2013' %} active{% endif %}"{% if page.url contains 'tr2013' %} aria-current="page"{% endif %}>Tomb Raider <span class="nav-year">origin</span></a></li>
+                      <li><a href="{{ site.baseurl }}/games/tr2013/" class="nav-link nav-link--leaf{% if page.url contains 'tr2013' %} active{% endif %}"{% if page.url contains 'tr2013' %} aria-current="page"{% endif %}>Tomb Raider <span class="nav-year">2013</span></a></li>
                       <li><a href="{{ site.baseurl }}/games/rottr/"  class="nav-link nav-link--leaf{% if page.url contains 'rottr'  %} active{% endif %}"{% if page.url contains 'rottr'  %} aria-current="page"{% endif %}>Rise of the Tomb Raider <span class="nav-year">2015</span></a></li>
                       <li><a href="{{ site.baseurl }}/games/sottr/"  class="nav-link nav-link--leaf{% if page.url contains 'sottr'  %} active{% endif %}"{% if page.url contains 'sottr'  %} aria-current="page"{% endif %}>Shadow of the Tomb Raider <span class="nav-year">2018</span></a></li>
                     </ul>
                   </div>
                 </li>
 
-                <!-- ── Spin-offs & Upcoming ───────────────────────────── -->
-                <li class="nav-timeline-fork nav-timeline-fork--dim" aria-hidden="true">
-                  <span class="nav-timeline-fork-label">Spin-offs &amp; Upcoming</span>
+                <!-- Unified Era -->
+                <li>
+                  <button class="nav-group-toggle nav-group-toggle--sub"
+                          aria-expanded="{% if page.url contains 'tr-legacy-of-atlantis' or page.url contains 'tr-catalyst' %}true{% else %}false{% endif %}"
+                          aria-controls="nav-unified">
+                    <span>Unified Era</span>
+                    <svg class="chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <div class="nav-sub" id="nav-unified">
+                    <ul role="list" class="nav-leaf-list">
+                      <li><a href="{{ site.baseurl }}/games/tr-legacy-of-atlantis/" class="nav-link nav-link--leaf{% if page.url contains 'tr-legacy-of-atlantis' %} active{% endif %}"{% if page.url contains 'tr-legacy-of-atlantis' %} aria-current="page"{% endif %}>Legacy of Atlantis <span class="nav-year">TBA</span></a></li>
+                      <li><a href="{{ site.baseurl }}/games/tr-catalyst/" class="nav-link nav-link--leaf{% if page.url contains 'tr-catalyst' %} active{% endif %}"{% if page.url contains 'tr-catalyst' %} aria-current="page"{% endif %}>Catalyst <span class="nav-year">TBA</span></a></li>
+                    </ul>
+                  </div>
                 </li>
 
-                <!-- Lara Croft Series (Legend timeline spin-offs) -->
+                <!-- Lara Croft Series -->
                 <li>
                   <button class="nav-group-toggle nav-group-toggle--sub"
                           aria-expanded="{% if page.url contains 'lc-guardian-of-light' or page.url contains 'lc-temple-of-osiris' %}true{% else %}false{% endif %}"
@@ -194,24 +190,6 @@
                     <ul role="list" class="nav-leaf-list">
                       <li><a href="{{ site.baseurl }}/games/lc-guardian-of-light/" class="nav-link nav-link--leaf{% if page.url contains 'lc-guardian-of-light' %} active{% endif %}"{% if page.url contains 'lc-guardian-of-light' %} aria-current="page"{% endif %}>Guardian of Light <span class="nav-year">2010</span></a></li>
                       <li><a href="{{ site.baseurl }}/games/lc-temple-of-osiris/"  class="nav-link nav-link--leaf{% if page.url contains 'lc-temple-of-osiris'  %} active{% endif %}"{% if page.url contains 'lc-temple-of-osiris'  %} aria-current="page"{% endif %}>Temple of Osiris <span class="nav-year">2014</span></a></li>
-                    </ul>
-                  </div>
-                </li>
-
-                <!-- Upcoming (timeline TBD) -->
-                <li>
-                  <button class="nav-group-toggle nav-group-toggle--sub"
-                          aria-expanded="{% if page.url contains 'tr-legacy-of-atlantis' or page.url contains 'tr-catalyst' %}true{% else %}false{% endif %}"
-                          aria-controls="nav-upcoming">
-                    <span>Upcoming</span>
-                    <svg class="chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                      <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                  <div class="nav-sub" id="nav-upcoming">
-                    <ul role="list" class="nav-leaf-list">
-                      <li><a href="{{ site.baseurl }}/games/tr-legacy-of-atlantis/" class="nav-link nav-link--leaf{% if page.url contains 'tr-legacy-of-atlantis' %} active{% endif %}"{% if page.url contains 'tr-legacy-of-atlantis' %} aria-current="page"{% endif %}>Legacy of Atlantis <span class="nav-year">TBA</span></a></li>
-                      <li><a href="{{ site.baseurl }}/games/tr-catalyst/" class="nav-link nav-link--leaf{% if page.url contains 'tr-catalyst' %} active{% endif %}"{% if page.url contains 'tr-catalyst' %} aria-current="page"{% endif %}>Catalyst <span class="nav-year">TBA</span></a></li>
                     </ul>
                   </div>
                 </li>
@@ -320,9 +298,9 @@
               <h3>Games</h3>
               <ul>
                 <li><a href="{{ site.baseurl }}/games/tomb-raider-remastered-01/">Remastered</a></li>
-                <li><a href="{{ site.baseurl }}/games/tr1/">Classic Timeline</a></li>
-                <li><a href="{{ site.baseurl }}/games/tranniversary/">Legend Timeline</a></li>
-                <li><a href="{{ site.baseurl }}/games/tr2013/">Survivor Timeline</a></li>
+                <li><a href="{{ site.baseurl }}/games/tr1/">Classic Era</a></li>
+                <li><a href="{{ site.baseurl }}/games/trlegend/">Legend Era</a></li>
+                <li><a href="{{ site.baseurl }}/games/tr2013/">Survivor Era</a></li>
                 <li><a href="{{ site.baseurl }}/games/lc-guardian-of-light/">Lara Croft Series</a></li>
               </ul>
             </div>
