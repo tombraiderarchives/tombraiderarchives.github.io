@@ -343,7 +343,6 @@
         '<i class="ph ph-game-controller" aria-hidden="true"></i>' +
         esc(entry.title) +
       '</a>' +
-      '<a class="random-shot-view" href="' + esc(entry.full) + '" target="_blank" rel="noopener noreferrer">View full <span aria-hidden="true">&#8599;</span></a>' +
     '</div>';
 
   container.querySelector('.random-shot-img-wrap').addEventListener('click', function () {
