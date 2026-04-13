@@ -69,13 +69,7 @@ window._archiveShots = [
     <h2 class="section-title">Latest Official Video</h2>
     <div class="random-shot">
       <div class="yt-embed-wrap">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed?listType=playlist&list=UUaAUQeeSpnQmeEhPl1Rru0A&rel=0"
-          title="Tomb Raider — Latest Official Video"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+        <div id="yt-player"></div>
       </div>
       <div class="random-shot-meta">
         <a class="random-shot-game" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
@@ -90,6 +84,41 @@ window._archiveShots = [
   </section>
 
 </div>
+
+<script>
+/* ── YouTube IFrame Player — stop after each video (no playlist auto-advance) */
+(function () {
+  // 1. Define the callback BEFORE injecting the API script
+  var ytPlayer;
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player('yt-player', {
+      host: 'https://www.youtube-nocookie.com',
+      playerVars: {
+        listType:       'playlist',
+        list:           'UUaAUQeeSpnQmeEhPl1Rru0A',
+        rel:            0,
+        autoplay:       0,
+        modestbranding: 1,
+        fs:             1
+      },
+      events: {
+        onStateChange: function (event) {
+          // When a video finishes, stop instead of advancing to next video
+          if (event.data === YT.PlayerState.ENDED) {
+            event.target.stopVideo();
+          }
+        }
+      }
+    });
+  };
+
+  // 2. Inject the API script — triggers the callback above once loaded
+  var tag   = document.createElement('script');
+  tag.src   = 'https://www.youtube.com/iframe_api';
+  var first = document.getElementsByTagName('script')[0];
+  first.parentNode.insertBefore(tag, first);
+}());
+</script>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
   <button class="lb-btn lb-close" id="lbClose" aria-label="Close image viewer">

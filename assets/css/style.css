@@ -2105,6 +2105,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 }
 @media (max-width: 720px) {
   .home-media-row { grid-template-columns: 1fr; }
+  .yt-section { order: -1; }   /* YouTube above Random Image on mobile */
 }
 
 /* ── YouTube iframe embed ────────────────────────────────────────────────── */

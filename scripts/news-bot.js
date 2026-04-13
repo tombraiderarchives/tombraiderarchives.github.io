@@ -292,7 +292,8 @@ async function fetchArticlePage(browser, googleNewsLink) {
       () => !location.href.includes('news.google.com'),
       { timeout: 6000 }
     ).catch(() => {});
-    await new Promise(r => setTimeout(r, 800));
+    // Extra settle time so JS-rendered pages finish loading their content
+    await new Promise(r => setTimeout(r, 2500));
 
     const finalUrl = page.url();
 
@@ -405,7 +406,10 @@ async function writePost(item, existingUrls, browser) {
     item.description;
 
   const excerpt = makeExcerpt(summary);
-  const body    = cleanBody(summary);
+  // Only render body text when we had real article content to summarise.
+  // If Puppeteer got nothing (< 200 chars), the "Original article" callout
+  // on the post page is sufficient — avoids repeating a thin RSS blurb.
+  const body    = articleText.length >= 200 ? cleanBody(summary) : '';
   const yamlStr = (s) => JSON.stringify(String(s));
 
   const lines = [
