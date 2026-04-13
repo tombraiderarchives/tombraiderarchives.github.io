@@ -66,21 +66,27 @@ window._archiveShots = [
   </section>
 
   <section class="yt-section">
-    <h2 class="section-title">Latest Videos</h2>
-    <div class="yt-embed-wrap">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed?listType=playlist&list=UUaAUQeeSpnQmeEhPl1Rru0A"
-        title="Tomb Raider — Latest Videos"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+    <h2 class="section-title">Latest Official Video</h2>
+    <div class="random-shot">
+      <div class="yt-embed-wrap">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed?listType=playlist&list=UUaAUQeeSpnQmeEhPl1Rru0A"
+          title="Tomb Raider — Latest Official Video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <div class="random-shot-meta">
+        <a class="random-shot-game" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
+          <i class="ph ph-youtube-logo" aria-hidden="true"></i>
+          Tomb Raider on YouTube
+        </a>
+        <a class="random-shot-view" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
+          View channel <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
     </div>
-    <p class="yt-channel-link">
-      <a href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
-        View channel on YouTube <span aria-hidden="true">&rarr;</span>
-      </a>
-    </p>
   </section>
 
 </div>
