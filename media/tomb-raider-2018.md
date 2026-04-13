@@ -1,5 +1,6 @@
 ---
 layout: game
+media_type: movie
 title: Tomb Raider (2018)
 cover_image: /images/tr2018_movie/cover.jpg
 

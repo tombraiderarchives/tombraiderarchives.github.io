@@ -1,5 +1,6 @@
 ---
 layout: game
+media_type: movie
 title: Lara Croft - Tomb Raider (2001)
 cover_image: /images/lctr_movie/cover.jpg
 

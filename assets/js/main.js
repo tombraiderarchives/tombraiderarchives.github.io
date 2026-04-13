@@ -1,9 +1,9 @@
 'use strict';
 
-/* ── Theme toggle + iris wipe ───────────────────────────────────────────── */
+/* ── Theme toggle ───────────────────────────────────────────────────────── */
 /* Handles multiple .theme-toggle buttons (sidebar + mobile sticky header).
-   Plays a circle iris expanding from the button centre, switches theme at
-   the midpoint (50 %), then fades the iris out. */
+   Adds html.theme-switching briefly so CSS can smoothly transition all
+   themed colours at once, then removes it to restore normal behaviour. */
 (function () {
   var html    = document.documentElement;
   var toggles = document.querySelectorAll('.theme-toggle');
@@ -26,20 +26,9 @@
   toggles.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      var wipe     = document.getElementById('themeWipe');
-
-      if (!wipe) { applyTheme(newTheme); return; }
-
-      // Pin iris origin to the centre of whichever button was clicked
-      var rect = btn.getBoundingClientRect();
-      wipe.style.setProperty('--cx', Math.round(rect.left + rect.width  / 2) + 'px');
-      wipe.style.setProperty('--cy', Math.round(rect.top  + rect.height / 2) + 'px');
-
-      wipe.classList.remove('is-wiping');           // reset if mid-animation
-      void wipe.offsetWidth;                        // force reflow
-      wipe.classList.add('is-wiping');
-      setTimeout(function () { applyTheme(newTheme); }, 260); // 50% of 520ms
-      setTimeout(function () { wipe.classList.remove('is-wiping'); }, 540);
+      html.classList.add('theme-switching');
+      applyTheme(newTheme);
+      setTimeout(function () { html.classList.remove('theme-switching'); }, 400);
     });
   });
 }());

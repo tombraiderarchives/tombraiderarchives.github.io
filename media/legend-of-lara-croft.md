@@ -1,5 +1,6 @@
 ---
 layout: game
+media_type: series
 title: Tomb Raider - The Legend of Lara Croft (2024)
 cover_image: /images/trlolc_tv/cover.jpg
 image_folder: trlolc_tv

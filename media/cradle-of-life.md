@@ -1,5 +1,6 @@
 ---
 layout: game
+media_type: movie
 title: Lara Croft - Cradle of Life (2003)
 cover_image: /images/lctrcol_movie/cover.jpg
 

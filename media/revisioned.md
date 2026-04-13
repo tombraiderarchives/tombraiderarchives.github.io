@@ -1,5 +1,6 @@
 ---
 layout: game
+media_type: series
 title: Tomb Raider - ReVisioned (2007)
 cover_image: /images/revisioned_tv/cover.jpg
 image_folder: revisioned_tv

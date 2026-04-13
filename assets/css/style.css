@@ -379,24 +379,21 @@ body {
 }
 .main-navigation .sub-links-inner a:hover { color: var(--text); background: var(--bg-3); }
 
-/* ── Theme iris wipe — circle expands from the toggle button ─────────────── */
-#themeWipe {
-  position: fixed;
-  inset: 0;
-  z-index: 9997;
-  pointer-events: none;
-  background: var(--accent);
-  clip-path: circle(0px at var(--cx, 50%) var(--cy, 50%));
-  will-change: clip-path;
-}
-#themeWipe.is-wiping {
-  animation: iris-wipe .52s ease-in-out forwards;
-}
-@keyframes iris-wipe {
-  0%   { clip-path: circle(0px    at var(--cx, 50%) var(--cy, 50%)); opacity: 0;   }
-  15%  { opacity: .18; }
-  50%  { clip-path: circle(150vmax at var(--cx, 50%) var(--cy, 50%)); opacity: .18; }
-  100% { clip-path: circle(150vmax at var(--cx, 50%) var(--cy, 50%)); opacity: 0;   }
+/* ── Smooth theme switching ──────────────────────────────────────────────── */
+/* The .theme-switching class is added briefly by JS on toggle, so the broad
+   * transition only fires during an intentional theme change — not on every
+   hover, focus, or layout shift. Covers bg, text, borders, SVG fills. */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 0.35s ease,
+    color            0.35s ease,
+    border-color     0.35s ease,
+    box-shadow       0.35s ease,
+    fill             0.35s ease,
+    stroke           0.35s ease !important;
+  transition-delay: 0s !important;
 }
 
 /* ── Overlay ────────────────────────────────────────────────────────────── */
@@ -805,6 +802,9 @@ a:hover { text-decoration: underline; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+}
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 .stat { background: var(--bg-2); padding: .8rem 1rem; }
 .stat dt {

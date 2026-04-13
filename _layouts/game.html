@@ -55,15 +55,41 @@ layout: default
 
   <!-- Stats -->
   {% if page.stats %}
+  {% comment %}Derive label/icon variants based on media_type front-matter field.{% endcomment %}
+  {% if page.media_type == 'movie' %}
+    {% assign _info_label = "Movie Info" %}
+    {% assign _dev_icon   = "ph ph-buildings" %}
+    {% assign _dev_label  = "Studio" %}
+    {% assign _pub_label  = "Distributor" %}
+    {% assign _plat_icon  = "ph ph-ticket" %}
+    {% assign _plat_label = "Distribution" %}
+    {% assign _len_label  = "Runtime" %}
+  {% elsif page.media_type == 'series' %}
+    {% assign _info_label = "Series Info" %}
+    {% assign _dev_icon   = "ph ph-television" %}
+    {% assign _dev_label  = "Production" %}
+    {% assign _pub_label  = "Distributor" %}
+    {% assign _plat_icon  = "ph ph-television" %}
+    {% assign _plat_label = "Network" %}
+    {% assign _len_label  = "Episodes" %}
+  {% else %}
+    {% assign _info_label = "Game Info" %}
+    {% assign _dev_icon   = "ph ph-code" %}
+    {% assign _dev_label  = "Developer" %}
+    {% assign _pub_label  = "Publisher" %}
+    {% assign _plat_icon  = "ph ph-devices" %}
+    {% assign _plat_label = "Platforms" %}
+    {% assign _len_label  = "Length" %}
+  {% endif %}
   <section id="stats" class="game-section">
-    <h2 class="section-title">Game Info</h2>
+    <h2 class="section-title">{{ _info_label }}</h2>
     <dl class="stats-grid">
       {% if page.stats.release_date %}<div class="stat"><dt><i class="ph ph-calendar-blank" aria-hidden="true"></i>Released</dt><dd>{{ page.stats.release_date }}</dd></div>{% endif %}
-      {% if page.stats.developer   %}<div class="stat"><dt><i class="ph ph-code" aria-hidden="true"></i>Developer</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
-      {% if page.stats.publisher   %}<div class="stat"><dt><i class="ph ph-buildings" aria-hidden="true"></i>Publisher</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
+      {% if page.stats.developer   %}<div class="stat"><dt><i class="{{ _dev_icon }}" aria-hidden="true"></i>{{ _dev_label }}</dt><dd>{{ page.stats.developer }}</dd></div>{% endif %}
+      {% if page.stats.publisher   %}<div class="stat"><dt><i class="ph ph-buildings" aria-hidden="true"></i>{{ _pub_label }}</dt><dd>{{ page.stats.publisher }}</dd></div>{% endif %}
       {% if page.stats.genre       %}<div class="stat"><dt><i class="ph ph-tag" aria-hidden="true"></i>Genre</dt><dd>{{ page.stats.genre }}</dd></div>{% endif %}
-      {% if page.stats.platforms   %}<div class="stat"><dt><i class="ph ph-devices" aria-hidden="true"></i>Platforms</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
-      {% if page.stats.length      %}<div class="stat"><dt><i class="ph ph-clock" aria-hidden="true"></i>Length</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
+      {% if page.stats.platforms   %}<div class="stat"><dt><i class="{{ _plat_icon }}" aria-hidden="true"></i>{{ _plat_label }}</dt><dd>{{ page.stats.platforms }}</dd></div>{% endif %}
+      {% if page.stats.length      %}<div class="stat"><dt><i class="ph ph-clock" aria-hidden="true"></i>{{ _len_label }}</dt><dd>{{ page.stats.length }}</dd></div>{% endif %}
       {% if page.stats.rating      %}<div class="stat"><dt><i class="ph ph-shield" aria-hidden="true"></i>Rating</dt><dd>{{ page.stats.rating }}</dd></div>{% endif %}
       {% if page.stats.setting     %}<div class="stat"><dt><i class="ph ph-map-pin" aria-hidden="true"></i>Setting</dt><dd>{{ page.stats.setting }}</dd></div>{% endif %}
       {% if page.stats.writer      %}<div class="stat"><dt><i class="ph ph-pencil-line" aria-hidden="true"></i>Writer</dt><dd>{{ page.stats.writer }}</dd></div>{% endif %}
