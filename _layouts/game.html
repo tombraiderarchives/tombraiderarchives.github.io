@@ -45,6 +45,7 @@ layout: default
   {% if page.stats or page.cheats or page.achievements or page.trophies or _has_gallery or page.videos or page.cast %}
   <nav class="jump-nav" aria-label="Jump to section">
     {% if page.stats %}<a href="#stats"><i class="ph ph-info" aria-hidden="true"></i>Info</a>{% endif %}
+    {% if content != "" %}<a href="#story"><i class="ph ph-book-open-text" aria-hidden="true"></i>{% if page.media_type == 'movie' %}Plot{% elsif page.media_type == 'series' %}Synopsis{% else %}Story{% endif %}</a>{% endif %}
     {% if page.cheats %}<a href="#cheats"><i class="ph ph-game-controller" aria-hidden="true"></i>Cheats</a>{% endif %}
     {% if page.achievements or page.trophies %}<a href="#achievements"><i class="ph ph-trophy" aria-hidden="true"></i>Achievements</a>{% endif %}
     {% if _has_gallery %}<a href="#gallery"><i class="ph ph-images" aria-hidden="true"></i>Gallery</a>{% endif %}
@@ -103,7 +104,15 @@ layout: default
 
   <!-- Body content -->
   {% if content != "" %}
-  <section class="game-section game-body">
+  {% if page.media_type == 'movie' %}
+    {% assign _body_label = "Plot" %}
+  {% elsif page.media_type == 'series' %}
+    {% assign _body_label = "Synopsis" %}
+  {% else %}
+    {% assign _body_label = "Story" %}
+  {% endif %}
+  <section id="story" class="game-section game-body">
+    <h2 class="section-title">{{ _body_label }}</h2>
     {{ content }}
   </section>
   {% endif %}

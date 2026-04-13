@@ -245,6 +245,39 @@ body {
   padding-left: .75rem;
 }
 
+/* ── Timeline fork labels (Games sidebar nav) ───────────────────────────── */
+/* Dividers that label each separate timeline — Classic / Legend / Survivor. */
+.nav-timeline-fork {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .55rem .5rem .2rem;
+  list-style: none;
+}
+.nav-timeline-fork::before,
+.nav-timeline-fork::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: .2;
+}
+.nav-timeline-fork-label {
+  font-size: .59rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.nav-timeline-fork--dim .nav-timeline-fork-label {
+  color: var(--text-dim);
+}
+.nav-timeline-fork--dim::before,
+.nav-timeline-fork--dim::after {
+  opacity: .12;
+}
+
 /* Chevron */
 .chevron {
   flex-shrink: 0;
