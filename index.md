@@ -70,7 +70,7 @@ window._archiveShots = [
     <div class="random-shot">
       <div class="yt-embed-wrap">
         <iframe
-          src="https://www.youtube-nocookie.com/embed?listType=playlist&list=UUaAUQeeSpnQmeEhPl1Rru0A"
+          src="https://www.youtube-nocookie.com/embed?listType=playlist&list=UUaAUQeeSpnQmeEhPl1Rru0A&rel=0"
           title="Tomb Raider — Latest Official Video"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
