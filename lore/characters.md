@@ -4,7 +4,7 @@ title: Lara Croft
 ---
   <h1>Lara Croft</h1>
   <p>The iconic protagonist of the Tomb Raider franchise, created by Toby Gard in 1993. Across three distinct continuities, Lara has been reimagined twice — each version defined by the era and studio that brought her to life.</p>
-</div>
+
 
 <!-- ── Core Design ───────────────────────────────────────────────────────── -->
 
