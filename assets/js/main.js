@@ -339,6 +339,16 @@
   });
 }());
 
+/* ── Cover art lightbox ─────────────────────────────────────────────────── */
+/* Wires up the cover art button on game/media pages to the shared lightbox. */
+(function () {
+  document.querySelectorAll('.game-cover-btn[data-cover]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (window._lbOpen) window._lbOpen([btn.dataset.cover], 0);
+    });
+  });
+}());
+
 /* ── Lazy loading — apply to any image not already marked ───────────────── */
 (function () {
   document.querySelectorAll('img:not([loading])').forEach(function (img) {
