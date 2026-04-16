@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Tomb Raider: Legacy of Atlantis reportedly pushed back to early 2027"
+title: "Tomb Raider: Legacy of Atlantis Reportedly Pushed Back to Early 2027"
 date: 2026-04-13
 category: "Announcement"
 tags:

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The First Tomb Raider Reboot Released 20 Years Ago Today (And Saved Lara Croft)"
+title: "The First Tomb Raider Reboot Released 20 Years Ago Today (and Saved Lara Croft)"
 date: 2026-04-11
 category: "Trailer"
 tags:

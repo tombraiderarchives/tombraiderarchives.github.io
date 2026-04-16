@@ -3,16 +3,6 @@ layout: default
 title: Home
 ---
 
-{% comment %}Build JS data array of game screenshots for the random-image widget.{% endcomment %}
-<script>
-window._archiveShots = [
-  {% assign _first = true %}
-  {% for _p in site.pages %}{% if _p.image_folder and _p.layout == "game" %}{% assign _pfx = "/images/" | append: _p.image_folder | append: "/screenshots/thumbs/" %}{% for _sf in site.static_files %}{% if _sf.path contains _pfx %}{% unless _first %},{% endunless %}{% assign _first = false %}
-  {"thumb":{{ _sf.path | jsonify }},"full":{{ _sf.path | replace: "/thumbs/", "/" | jsonify }},"title":{{ _p.title | jsonify }},"url":{{ _p.url | jsonify }}}{% endif %}{% endfor %}{% endif %}{% endfor %}
-
-];
-</script>
-
 <div class="home-hero">
   <h1>Tomb Raider Archives</h1>
   <p>A comprehensive archive of the Tomb Raider franchise &mdash; games, movies, and series.</p>
@@ -20,7 +10,7 @@ window._archiveShots = [
 
 <section class="news-section">
   <h2 class="section-title">Latest News</h2>
-  <div class="news-list news-list--full">
+  <div class="news-list news-list--featured">
     {% for post in site.posts limit:5 %}
     <article class="news-item{% unless post.header_image %} news-item--no-img{% endunless %}" data-href="{{ post.url }}">
       {% if post.header_image %}
@@ -53,37 +43,23 @@ window._archiveShots = [
   <p class="news-view-all"><a href="/news/" class="news-read-more">View all news <span aria-hidden="true">&rarr;</span></a></p>
 </section>
 
-<div class="home-media-row">
-
-  <section class="random-image-section">
-    <h2 class="section-title">Random Image</h2>
-    <div id="randomShot" class="random-shot" aria-live="polite">
-      <div class="random-shot-placeholder">
-        <i class="ph ph-image" aria-hidden="true"></i>
-        <span>Loading&hellip;</span>
-      </div>
+<section class="yt-section" style="margin-top:2.5rem">
+  <h2 class="section-title">Latest Official Video</h2>
+  <div class="random-shot">
+    <div class="yt-embed-wrap">
+      <div id="yt-player"></div>
     </div>
-  </section>
-
-  <section class="yt-section">
-    <h2 class="section-title">Latest Official Video</h2>
-    <div class="random-shot">
-      <div class="yt-embed-wrap">
-        <div id="yt-player"></div>
-      </div>
-      <div class="random-shot-meta">
-        <a class="random-shot-game" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
-          <i class="ph ph-youtube-logo" aria-hidden="true"></i>
-          Tomb Raider on YouTube
-        </a>
-        <a class="random-shot-view" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
-          View channel <span aria-hidden="true">&rarr;</span>
-        </a>
-      </div>
+    <div class="random-shot-meta">
+      <a class="random-shot-game" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
+        <i class="ph ph-youtube-logo" aria-hidden="true"></i>
+        Tomb Raider on YouTube
+      </a>
+      <a class="random-shot-view" href="https://www.youtube.com/@tombraider" target="_blank" rel="noopener noreferrer">
+        View channel <span aria-hidden="true">&rarr;</span>
+      </a>
     </div>
-  </section>
-
-</div>
+  </div>
+</section>
 
 <script>
 /* ── YouTube IFrame Player — stop after each video (no playlist auto-advance) */
@@ -120,25 +96,3 @@ window._archiveShots = [
 }());
 </script>
 
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
-  <button class="lb-btn lb-close" id="lbClose" aria-label="Close image viewer">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-      <line x1="15" y1="1" x2="1"  y2="15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-    </svg>
-  </button>
-  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous image">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
-  <div class="lb-img-wrap">
-    <img id="lbImg" src="" alt="" decoding="async">
-  </div>
-  <button class="lb-btn lb-next" id="lbNext" aria-label="Next image">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
-  <p class="lb-counter" id="lbCounter" aria-live="polite"></p>
-</div>

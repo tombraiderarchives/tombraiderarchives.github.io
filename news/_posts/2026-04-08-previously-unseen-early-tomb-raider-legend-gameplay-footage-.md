@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Previously unseen early Tomb Raider: Legend gameplay footage shows unseen areas and different visuals as the game turns 20 years old"
+title: "Previously Unseen Early Tomb Raider: Legend Gameplay Footage Shows Unseen Areas and Different Visuals as the Game Turns 20 Years Old"
 date: 2026-04-08
 category: "Trailer"
 tags:
