@@ -4,3 +4,6 @@ _site/
 .bundle/
 vendor/
 Gemfile.lock
+node_modules/
+package-lock.json
+scripts/package-lock.json
