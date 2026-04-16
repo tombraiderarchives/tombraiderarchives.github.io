@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "PowerWash Simulator Tomb Raider and FFVII DLCs Will Be Delisted Soon | TechRaptor"
+title: "PowerWash Simulator Tomb Raider and FFVII DLCs Will Be Delisted Soon"
 date: 2026-04-13
 category: "Announcement"
 tags:

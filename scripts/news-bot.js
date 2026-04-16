@@ -146,6 +146,30 @@ function inferCategory(title, text) {
   return 'News';
 }
 
+const TITLE_CASE_SMALL = new Set([
+  'a','an','the','and','but','or','for','nor','on','at','to','from',
+  'by','in','of','with','as','vs','x','per','via'
+]);
+
+function toTitleCase(title) {
+  const alpha = title.replace(/[^a-zA-Z]/g, '');
+  const wasAllCaps = alpha.length > 4 && alpha === alpha.toUpperCase();
+  const src = wasAllCaps ? title.toLowerCase() : title;
+  const words = (src.match(/\S+/g) || []);
+  const total = words.length;
+  let wi = 0;
+  return src.replace(/\S+/g, word => {
+    const isFirst = wi === 0;
+    const isLast  = wi === total - 1;
+    wi++;
+    const core = word.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
+    // Preserve existing all-caps acronyms (DLC, FFVII, etc.)
+    if (!wasAllCaps && core.length >= 2 && core === core.toUpperCase() && /[A-Z]/.test(core)) return word;
+    if (!isFirst && !isLast && TITLE_CASE_SMALL.has(core.toLowerCase())) return word.toLowerCase();
+    return word.replace(/^([^a-zA-Z]*)([a-zA-Z])/, (_, pre, c) => pre + c.toUpperCase());
+  });
+}
+
 /** Strip " - Source Name" suffix that Google News appends to RSS titles. */
 function cleanTitle(rawTitle, sourceName) {
   let title = rawTitle;
@@ -154,12 +178,33 @@ function cleanTitle(rawTitle, sourceName) {
     const cleaned = title.replace(new RegExp(`\\s*[-–|]\\s*${esc}\\s*$`, 'i'), '').trim();
     if (cleaned && cleaned.length > 10) title = cleaned;
   }
-  // Fallback: strip generic " - Publication" trailing pattern
+  // Fallback: strip generic " - Publication" or "| Publication" trailing pattern
   if (title === rawTitle) {
-    const fallback = title.replace(/\s*[-–]\s*[A-Z][^-–]{2,50}$/, '').trim();
+    const fallback = title.replace(/\s*[-–|]\s*[A-Z][^-–|]{2,50}$/, '').trim();
     if (fallback && fallback.length > 10) title = fallback;
   }
-  return title || rawTitle;
+  return toTitleCase(title || rawTitle);
+}
+
+/**
+ * Return a clean RSS description, or '' if it's just "Title SourceName" noise.
+ * Google News RSS descriptions are often exactly the article title + source name.
+ */
+function cleanRssDescription(desc, title, sourceName) {
+  if (!desc) return '';
+  let text = desc;
+  // Strip trailing source name variants
+  if (sourceName) {
+    const esc = sourceName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    text = text.replace(new RegExp(`\\s*[-–|]?\\s*${esc}\\s*$`, 'i'), '').trim();
+  }
+  // Generic " - Publisher" stripping
+  text = text.replace(/\s*[-–]\s*[A-Z][^-–]{2,40}$/, '').trim();
+  if (!text || text.length < 40) return '';
+  // If description is essentially the title, discard
+  const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (norm(text) === norm(title) || norm(text).startsWith(norm(title))) return '';
+  return text;
 }
 
 /** Truncate to first complete sentence within maxLen, or word boundary + ellipsis. */
@@ -343,11 +388,12 @@ async function fetchArticlePage(browser, googleNewsLink) {
       const seen    = new Set();
       const paras   = [];
       const noiseRe = /\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored)\b/i;
+      const bylineRe = /^[A-Z][a-z]+ [A-Z][a-z]+\s+\d+\s+(?:hour|day|week|minute|second)s? ago\b/;
       let total = 0;
 
       for (const el of container.querySelectorAll('p, li')) {
         const text = (el.innerText || '').replace(/\s+/g, ' ').trim();
-        if (text.length < 60 || seen.has(text) || noiseRe.test(text)) continue;
+        if (text.length < 60 || seen.has(text) || noiseRe.test(text) || bylineRe.test(text)) continue;
         seen.add(text);
         paras.push(text);
         total += text.length;
@@ -400,10 +446,11 @@ async function writePost(item, existingUrls, browser) {
 
   const category = inferCategory(title, item.description + ' ' + articleText);
 
+  const rssDesc = cleanRssDescription(item.description, title, resolvedSource);
   const summary =
-    await summariseWithClaude(title, articleText, item.description, finalUrl) ||
+    await summariseWithClaude(title, articleText, rssDesc, finalUrl) ||
     articleText ||
-    item.description;
+    rssDesc;
 
   const excerpt = makeExcerpt(summary);
   // Only render body text when we had real article content to summarise.
