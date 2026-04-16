@@ -223,23 +223,33 @@ body {
   font-size: .795rem;
   font-weight: 500;
   color: var(--text-dim);
-  margin-top: .35rem;
 }
 .nav-group-toggle--sub:hover { color: var(--text); }
 .nav-group-toggle--sub[aria-expanded="true"] { color: var(--text-muted); }
 
 /* Leaf link list — styled panel with left accent line */
 .nav-leaf-list { list-style: none; }
+
+/* Level-1: subtle line for section content (eras/categories under a section) */
+.nav-section-item > .nav-sub {
+  border-left: 2px solid transparent;
+  margin-left: .5rem;
+  transition: border-color .25s var(--ease), grid-template-rows .3s var(--ease);
+}
+.nav-section-item > .nav-sub.is-open {
+  border-left-color: rgba(126,165,131,.2);
+}
+
+/* Level-2: stronger line for item groups (individual entries under a category) */
 .nav-sub .nav-sub {
   border-left: 2px solid transparent;
-  margin-left: 2rem;
-  /* Preserve both the height and the border-colour animations on nested panels */
+  margin-left: 1.5rem;
   transition: border-color .25s var(--ease), grid-template-rows .3s var(--ease);
 }
 /* padding inside the grid item so it's hidden when collapsed */
 .nav-sub .nav-sub > ul { padding-bottom: .25rem; }
 .nav-sub .nav-sub.is-open {
-  border-left-color: var(--accent-border);
+  border-left-color: rgba(126,165,131,.55);
 }
 .nav-sub .nav-sub .nav-link--leaf {
   padding-left: .75rem;
@@ -1877,6 +1887,14 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   border-right-color: var(--border-2);
 }
 
+/* Nav vertical lines in light mode */
+[data-theme="light"] .nav-section-item > .nav-sub.is-open {
+  border-left-color: rgba(62,105,68,.15);
+}
+[data-theme="light"] .nav-sub .nav-sub.is-open {
+  border-left-color: rgba(62,105,68,.45);
+}
+
 /* Ensure news item left accent border survives in light mode */
 [data-theme="light"] .news-item {
   border-left-color: var(--accent-border);
@@ -1987,6 +2005,10 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
     flex-shrink: 0;
   }
   /* Sub panels: reduce indent on mobile */
+  .nav-section-item > .nav-sub {
+    margin-left: .25rem;
+    border-left: none;
+  }
   .nav-sub .nav-sub {
     margin-left: .75rem;
     border-left: none;
