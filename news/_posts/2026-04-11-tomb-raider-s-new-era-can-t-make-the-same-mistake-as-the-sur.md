@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Tomb Raider’s New Era Can’t Make The Same Mistake As The Survivor Prequel Trilogy"
+title: "Tomb Raider’s New Era Can’t Make the Same Mistake as the Survivor Prequel Trilogy"
 date: 2026-04-11
 category: "News"
 tags:
