@@ -170,7 +170,10 @@ layout: default
         <ul class="ach-list">
           {% for ach in platform.items %}
           <li class="ach-item">
-            {% if ach.gamerscore %}<span class="ach-score"><img src="{{ site.baseurl }}/images/ui/achievements/score.png" alt="" class="ach-score-icon" aria-hidden="true"> {{ ach.gamerscore }}</span>{% endif %}
+            <span class="ach-icon">
+              {% if ach.gamerscore %}<span class="ach-score"><img src="{{ site.baseurl }}/images/ui/achievements/score.png" alt="" class="ach-score-icon" aria-hidden="true"> {{ ach.gamerscore }}</span>{% endif %}
+              {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
+            </span>
             <div>
               <div class="ach-name">{{ ach.name }}</div>
               {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
@@ -202,8 +205,9 @@ layout: default
         <ul class="ach-list">
           {% for ach in platform.items %}
           <li class="ach-item">
-            {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
-            <div>
+            <span class="ach-icon">
+              {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
+            </span>
               <div class="ach-name">{{ ach.name }}</div>
               {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
             </div>
