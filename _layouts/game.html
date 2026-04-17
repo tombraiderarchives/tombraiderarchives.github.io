@@ -64,9 +64,8 @@ layout: default
   </nav>
   {% endif %}
 
-  <!-- Stats -->
+  <!-- Stats — always visible, no dropdown -->
   {% if page.stats %}
-  {% comment %}Derive label/icon variants based on media_type front-matter field.{% endcomment %}
   {% if page.media_type == 'movie' %}
     {% assign _info_label = "Movie Info" %}
     {% assign _dev_icon   = "ph ph-buildings" %}
@@ -112,7 +111,7 @@ layout: default
   </section>
   {% endif %}
 
-  <!-- Body content -->
+  <!-- Body content — always visible, no dropdown -->
   {% if content != "" %}
   {% if page.media_type == 'movie' %}
     {% assign _body_label = "Plot" %}
@@ -127,192 +126,248 @@ layout: default
   </section>
   {% endif %}
 
-  <!-- Cheats -->
+  <!-- Cheats — collapsible -->
   {% if page.cheats %}
-  <section id="cheats" class="game-section">
-    <h2 class="section-title">Cheats &amp; Codes</h2>
-    {% for group in page.cheats %}
-    <h3 class="subsection-title">{{ group.platform_name }}</h3>
-    <ul class="cheat-list">
-      {% for item in group.items %}
-      <li class="cheat-item">
-        <span class="cheat-name">{{ item.name }}</span>
-        {% if item.description %}<span class="cheat-desc">{{ item.description }}</span>{% endif %}
-        {% if item.code %}<code class="cheat-code">{{ item.code }}</code>{% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% endfor %}
+  <section id="cheats" class="game-section game-section--collapsible">
+    <button class="section-toggle" aria-expanded="false" aria-controls="panel-cheats">
+      <h2 class="section-title">Cheats &amp; Codes</h2>
+      <svg class="section-chevron" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="section-panel" id="panel-cheats">
+      <div class="section-panel-inner">
+        {% for group in page.cheats %}
+        <h3 class="subsection-title">{{ group.platform_name }}</h3>
+        <ul class="cheat-list">
+          {% for item in group.items %}
+          <li class="cheat-item">
+            <span class="cheat-name">{{ item.name }}</span>
+            {% if item.description %}<span class="cheat-desc">{{ item.description }}</span>{% endif %}
+            {% if item.code %}<code class="cheat-code">{{ item.code }}</code>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endfor %}
+      </div>
+    </div>
   </section>
   {% endif %}
 
-  <!-- Achievements & Trophies -->
+  <!-- Achievements — one collapsible per platform -->
   {% if page.achievements %}
-  <section id="achievements" class="game-section">
-    <h2 class="section-title">Achievements{% if page.trophies %} &amp; Trophies{% endif %}</h2>
-    {% for platform in page.achievements %}
-    <h3 class="subsection-title">{{ platform.platform_name }}</h3>
-    <ul class="ach-list">
-      {% for ach in platform.items %}
-      <li class="ach-item">
-        {% if ach.gamerscore %}<span class="ach-score"><img src="{{ site.baseurl }}/images/ui/achievements/score.png" alt="" class="ach-score-icon" aria-hidden="true"> {{ ach.gamerscore }}</span>{% endif %}
-        {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
-        <div>
-          <div class="ach-name">{{ ach.name }}</div>
-          {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endfor %}
+  {% for platform in page.achievements %}
+  {% if forloop.first %}<div id="achievements">{% endif %}
+  <section class="game-section game-section--collapsible">
+    <button class="section-toggle" aria-expanded="false" aria-controls="panel-ach-{{ forloop.index }}">
+      <h2 class="section-title">{{ platform.platform_name }}</h2>
+      <svg class="section-chevron" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="section-panel" id="panel-ach-{{ forloop.index }}">
+      <div class="section-panel-inner">
+        <ul class="ach-list">
+          {% for ach in platform.items %}
+          <li class="ach-item">
+            {% if ach.gamerscore %}<span class="ach-score"><img src="{{ site.baseurl }}/images/ui/achievements/score.png" alt="" class="ach-score-icon" aria-hidden="true"> {{ ach.gamerscore }}</span>{% endif %}
+            <div>
+              <div class="ach-name">{{ ach.name }}</div>
+              {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </section>
+  {% if forloop.last %}</div>{% endif %}
+  {% endfor %}
   {% endif %}
 
-  {% if page.trophies and page.achievements == nil %}
-  <section id="achievements" class="game-section">
-    <h2 class="section-title">Trophies</h2>
-    {% for platform in page.trophies %}
-    <h3 class="subsection-title">{{ platform.platform_name }}</h3>
-    <ul class="ach-list">
-      {% for ach in platform.items %}
-      <li class="ach-item">
-        {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
-        <div>
-          <div class="ach-name">{{ ach.name }}</div>
-          {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endfor %}
+  <!-- Trophies — one collapsible per platform -->
+  {% if page.trophies %}
+  {% assign _trophies_anchor = page.achievements == nil %}
+  {% for platform in page.trophies %}
+  {% if forloop.first and _trophies_anchor %}<div id="achievements">{% endif %}
+  <section class="game-section game-section--collapsible">
+    <button class="section-toggle" aria-expanded="false" aria-controls="panel-tro-{{ forloop.index }}">
+      <h2 class="section-title">{{ platform.platform_name }}</h2>
+      <svg class="section-chevron" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="section-panel" id="panel-tro-{{ forloop.index }}">
+      <div class="section-panel-inner">
+        <ul class="ach-list">
+          {% for ach in platform.items %}
+          <li class="ach-item">
+            {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
+            <div>
+              <div class="ach-name">{{ ach.name }}</div>
+              {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </section>
+  {% if forloop.last and _trophies_anchor %}</div>{% endif %}
+  {% endfor %}
   {% endif %}
 
-  <!-- Gallery -->
+  <!-- Gallery — collapsible -->
   {% if _has_gallery %}
-  <section id="gallery" class="game-section">
-    <h2 class="section-title">Gallery</h2>
+  <section id="gallery" class="game-section game-section--collapsible">
+    <button class="section-toggle" aria-expanded="false" aria-controls="panel-gallery">
+      <h2 class="section-title">Gallery</h2>
+      <svg class="section-chevron" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="section-panel" id="panel-gallery">
+      <div class="section-panel-inner">
 
-    {% if _ss.size > 0 %}
-    <h3 class="subsection-title">Screenshots</h3>
-    <div class="gallery-grid" data-gallery="screenshots">
-      {% assign _ss_sorted = _ss | sort: "name" %}
-      {% for thumb in _ss_sorted %}
-        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
-        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Screenshot {{ forloop.index }}">
-          <img src="{{ thumb.path }}" alt="Screenshot {{ forloop.index }}" loading="lazy" decoding="async">
-        </a>
-      {% endfor %}
+        {% if _ss.size > 0 %}
+        <h3 class="subsection-title">Screenshots</h3>
+        <div class="gallery-grid" data-gallery="screenshots">
+          {% assign _ss_sorted = _ss | sort: "name" %}
+          {% for thumb in _ss_sorted %}
+            {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+            <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Screenshot {{ forloop.index }}">
+              <img src="{{ thumb.path }}" alt="Screenshot {{ forloop.index }}" loading="lazy" decoding="async">
+            </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if _art.size > 0 %}
+        <h3 class="subsection-title">Artwork</h3>
+        <div class="gallery-grid" data-gallery="artwork">
+          {% assign _art_sorted = _art | sort: "name" %}
+          {% for thumb in _art_sorted %}
+            {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+            <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Artwork {{ forloop.index }}">
+              <img src="{{ thumb.path }}" alt="Artwork {{ forloop.index }}" loading="lazy" decoding="async">
+            </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if _hq.size > 0 %}
+        <h3 class="subsection-title">High Quality</h3>
+        <div class="gallery-grid" data-gallery="hq">
+          {% assign _hq_sorted = _hq | sort: "name" %}
+          {% for thumb in _hq_sorted %}
+            {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+            <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="HQ image {{ forloop.index }}">
+              <img src="{{ thumb.path }}" alt="HQ image {{ forloop.index }}" loading="lazy" decoding="async">
+            </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if _rnd.size > 0 %}
+        <h3 class="subsection-title">Renders</h3>
+        <div class="gallery-grid" data-gallery="renders">
+          {% assign _rnd_sorted = _rnd | sort: "name" %}
+          {% for thumb in _rnd_sorted %}
+            {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+            <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Render {{ forloop.index }}">
+              <img src="{{ thumb.path }}" alt="Render {{ forloop.index }}" loading="lazy" decoding="async">
+            </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if _ld.size > 0 %}
+        <h3 class="subsection-title">Load Screens</h3>
+        <div class="gallery-grid" data-gallery="loadscreens">
+          {% assign _ld_sorted = _ld | sort: "name" %}
+          {% for thumb in _ld_sorted %}
+            {% assign full = thumb.path | replace: "/thumbs/", "/" %}
+            <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Load screen {{ forloop.index }}">
+              <img src="{{ thumb.path }}" alt="Load screen {{ forloop.index }}" loading="lazy" decoding="async">
+            </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+      </div>
     </div>
-    {% endif %}
-
-    {% if _art.size > 0 %}
-    <h3 class="subsection-title">Artwork</h3>
-    <div class="gallery-grid" data-gallery="artwork">
-      {% assign _art_sorted = _art | sort: "name" %}
-      {% for thumb in _art_sorted %}
-        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
-        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Artwork {{ forloop.index }}">
-          <img src="{{ thumb.path }}" alt="Artwork {{ forloop.index }}" loading="lazy" decoding="async">
-        </a>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if _hq.size > 0 %}
-    <h3 class="subsection-title">High Quality</h3>
-    <div class="gallery-grid" data-gallery="hq">
-      {% assign _hq_sorted = _hq | sort: "name" %}
-      {% for thumb in _hq_sorted %}
-        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
-        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="HQ image {{ forloop.index }}">
-          <img src="{{ thumb.path }}" alt="HQ image {{ forloop.index }}" loading="lazy" decoding="async">
-        </a>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if _rnd.size > 0 %}
-    <h3 class="subsection-title">Renders</h3>
-    <div class="gallery-grid" data-gallery="renders">
-      {% assign _rnd_sorted = _rnd | sort: "name" %}
-      {% for thumb in _rnd_sorted %}
-        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
-        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Render {{ forloop.index }}">
-          <img src="{{ thumb.path }}" alt="Render {{ forloop.index }}" loading="lazy" decoding="async">
-        </a>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if _ld.size > 0 %}
-    <h3 class="subsection-title">Load Screens</h3>
-    <div class="gallery-grid" data-gallery="loadscreens">
-      {% assign _ld_sorted = _ld | sort: "name" %}
-      {% for thumb in _ld_sorted %}
-        {% assign full = thumb.path | replace: "/thumbs/", "/" %}
-        <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}" aria-label="Load screen {{ forloop.index }}">
-          <img src="{{ thumb.path }}" alt="Load screen {{ forloop.index }}" loading="lazy" decoding="async">
-        </a>
-      {% endfor %}
-    </div>
-    {% endif %}
-
   </section>
   {% endif %}
 
-  <!-- Videos -->
+  <!-- Videos — collapsible -->
   {% if page.videos %}
-  <section id="videos" class="game-section">
-    <h2 class="section-title">Videos</h2>
-    <div class="video-grid">
-      {% for video in page.videos %}
-      <div class="video-item">
-        <div class="video-embed">
-          <iframe
-            src="{{ video.url }}"
-            title="{{ video.title }}"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
+  <section id="videos" class="game-section game-section--collapsible">
+    <button class="section-toggle" aria-expanded="false" aria-controls="panel-videos">
+      <h2 class="section-title">Videos</h2>
+      <svg class="section-chevron" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="section-panel" id="panel-videos">
+      <div class="section-panel-inner">
+        <div class="video-grid">
+          {% for video in page.videos %}
+          <div class="video-item">
+            <div class="video-embed">
+              <iframe
+                src="{{ video.url }}"
+                title="{{ video.title }}"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
+            {% if video.title %}<p class="video-title">{{ video.title }}</p>{% endif %}
+            {% if video.description %}<p class="video-desc">{{ video.description }}</p>{% endif %}
+          </div>
+          {% endfor %}
         </div>
-        {% if video.title %}<p class="video-title">{{ video.title }}</p>{% endif %}
-        {% if video.description %}<p class="video-desc">{{ video.description }}</p>{% endif %}
       </div>
-      {% endfor %}
     </div>
   </section>
   {% endif %}
 
-  <!-- Cast -->
+  <!-- Cast — collapsible -->
   {% if page.cast %}
-  <section id="cast" class="game-section">
-    <h2 class="section-title">Cast</h2>
-    <div class="cast-grid">
-      {% for member in page.cast %}
-      <div class="cast-card">
-        <div class="cast-img-wrap">
-          {% if member.image %}
-          <img src="{{ member.image }}" alt="{{ member.name }}" loading="lazy" decoding="async">
-          {% else %}
-          <div class="img-ph img-ph--portrait" aria-hidden="true">
-            <svg class="img-ph-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M20 21a8 8 0 1 0-16 0"/>
-            </svg>
+  <section id="cast" class="game-section game-section--collapsible">
+    <button class="section-toggle" aria-expanded="false" aria-controls="panel-cast">
+      <h2 class="section-title">Cast</h2>
+      <svg class="section-chevron" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="section-panel" id="panel-cast">
+      <div class="section-panel-inner">
+        <div class="cast-grid">
+          {% for member in page.cast %}
+          <div class="cast-card">
+            <div class="cast-img-wrap">
+              {% if member.image %}
+              <img src="{{ member.image }}" alt="{{ member.name }}" loading="lazy" decoding="async">
+              {% else %}
+              <div class="img-ph img-ph--portrait" aria-hidden="true">
+                <svg class="img-ph-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M20 21a8 8 0 1 0-16 0"/>
+                </svg>
+              </div>
+              {% endif %}
+            </div>
+            <div class="cast-info">
+              <div class="cast-name">{{ member.name }}</div>
+              {% if member.role %}<div class="cast-role">{{ member.role }}</div>{% endif %}
+            </div>
           </div>
-          {% endif %}
-        </div>
-        <div class="cast-info">
-          <div class="cast-name">{{ member.name }}</div>
-          {% if member.role %}<div class="cast-role">{{ member.role }}</div>{% endif %}
+          {% endfor %}
         </div>
       </div>
-      {% endfor %}
     </div>
   </section>
   {% endif %}
 
 </article>
-
