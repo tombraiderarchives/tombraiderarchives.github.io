@@ -844,6 +844,62 @@ a:hover { text-decoration: underline; }
 .game-body { font-size: .9rem; }
 .game-body p + p { margin-top: .6rem; }
 
+/* Collapsible section toggle button */
+.game-section--collapsible { margin-bottom: 0; border-bottom: 1px solid var(--border); }
+.game-section--collapsible:first-of-type,
+.game-section--collapsible + .game-section--collapsible { }
+#achievements + .game-section--collapsible,
+#achievements { }
+.section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 1rem;
+  color: inherit;
+}
+.section-toggle:hover .section-title { color: var(--text); }
+.section-toggle .section-title {
+  margin-bottom: 0;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  transition: color .15s var(--ease);
+}
+.section-toggle[aria-expanded="true"] .section-title { color: var(--text); }
+.section-chevron {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  transition: transform .25s var(--ease);
+}
+.section-toggle[aria-expanded="true"] .section-chevron { transform: rotate(180deg); }
+
+/* Panel animation */
+.section-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows .3s var(--ease);
+}
+.section-panel.is-open { grid-template-rows: 1fr; }
+.section-panel-inner {
+  min-height: 0;
+  padding-bottom: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+.section-panel.is-open .section-panel-inner {
+  opacity: 1;
+  transform: none;
+  transition-delay: .05s;
+  padding-bottom: 2rem;
+}
+
 /* ── Stats ──────────────────────────────────────────────────────────────── */
 .stats-grid {
   display: grid;
