@@ -1990,7 +1990,6 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   gap: .5rem;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 0;
 }
 .wallpaper-tab {
   display: flex;
@@ -2009,11 +2008,23 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 }
 .wallpaper-tab:hover { color: var(--text); }
 .wallpaper-tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+.wallpaper-count {
+  font-size: .7rem;
+  font-weight: 600;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .05rem .45rem;
+  color: var(--text-dim);
+}
 
 .wallpaper-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.25rem;
+}
+.wallpaper-grid--mobile {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 .wallpaper-card {
   background: var(--bg-2);
@@ -2025,13 +2036,16 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .wallpaper-card:hover { border-color: var(--border-2); box-shadow: 0 4px 20px rgba(0,0,0,.3); }
 .wallpaper-thumb-wrap {
   position: relative;
+  display: block;
   width: 100%;
   aspect-ratio: 16/9;
   overflow: hidden;
   background: var(--bg-3);
   cursor: zoom-in;
+  border: none;
+  padding: 0;
 }
-.wallpaper-thumb-wrap--mobile { aspect-ratio: 9/16; max-height: 340px; }
+.wallpaper-thumb-wrap--mobile { aspect-ratio: 9/19.5; }
 .wallpaper-thumb {
   width: 100%;
   height: 100%;
@@ -2040,21 +2054,41 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   transition: transform .3s var(--ease);
 }
 .wallpaper-card:hover .wallpaper-thumb { transform: scale(1.04); }
+.wallpaper-zoom {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity .2s var(--ease);
+}
+.wallpaper-thumb-wrap:hover .wallpaper-zoom,
+.wallpaper-thumb-wrap:focus-visible .wallpaper-zoom { opacity: 1; }
 .wallpaper-info {
-  padding: .75rem 1rem;
+  padding: .6rem .9rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: .5rem;
 }
-.wallpaper-name { font-size: .82rem; font-weight: 500; }
-.wallpaper-res  { font-size: .72rem; color: var(--text-dim); }
+.wallpaper-name {
+  font-size: .78rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .wallpaper-dl {
   display: inline-flex;
   align-items: center;
   gap: .3rem;
-  padding: .35rem .8rem;
-  font-size: .78rem;
+  padding: .3rem .7rem;
+  font-size: .75rem;
   font-weight: 600;
   color: var(--accent);
   background: rgba(126,165,131,.1);

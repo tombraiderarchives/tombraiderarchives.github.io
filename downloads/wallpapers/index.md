@@ -4,62 +4,121 @@ title: Wallpapers
 permalink: /downloads/wallpapers/
 ---
 
+{% assign desktop_walls = site.static_files | where_exp: "f", "f.path contains '/assets/wallpapers/desktop/'" %}
+{% assign mobile_walls  = site.static_files | where_exp: "f", "f.path contains '/assets/wallpapers/mobile/'"  %}
+
 <div class="page-section">
   <div class="page-section-header">
     <h1 class="page-section-title">
       <i class="ph ph-image" aria-hidden="true"></i>
       Wallpapers
     </h1>
-    <p class="page-section-desc">Free Tomb Raider wallpapers for desktop and mobile. Click any wallpaper to preview it, then use the download button to save it.</p>
+    <p class="page-section-desc">Free Tomb Raider wallpapers — click any image to preview it full size, then hit the save button to download.</p>
   </div>
 
   <div class="wallpaper-tabs" role="tablist" aria-label="Wallpaper categories">
-    <button class="wallpaper-tab is-active" role="tab" aria-selected="true" aria-controls="tab-desktop" id="btn-desktop" data-tab="desktop">
+    <button class="wallpaper-tab is-active" role="tab" aria-selected="true"
+            aria-controls="tab-desktop" id="btn-desktop" data-tab="desktop">
       <i class="ph ph-monitor" aria-hidden="true"></i> Desktop
+      {% if desktop_walls.size > 0 %}<span class="wallpaper-count">{{ desktop_walls.size }}</span>{% endif %}
     </button>
-    <button class="wallpaper-tab" role="tab" aria-selected="false" aria-controls="tab-mobile" id="btn-mobile" data-tab="mobile">
+    <button class="wallpaper-tab" role="tab" aria-selected="false"
+            aria-controls="tab-mobile" id="btn-mobile" data-tab="mobile">
       <i class="ph ph-device-mobile" aria-hidden="true"></i> Mobile
+      {% if mobile_walls.size > 0 %}<span class="wallpaper-count">{{ mobile_walls.size }}</span>{% endif %}
     </button>
   </div>
 
+  <!-- Desktop tab -->
   <div id="tab-desktop" role="tabpanel" aria-labelledby="btn-desktop" class="wallpaper-panel is-active">
-    <div class="wallpaper-grid" id="wallpaper-grid-desktop">
-      <div class="wallpaper-empty">
-        <i class="ph ph-image-broken" aria-hidden="true"></i>
-        <p>Desktop wallpapers coming soon.</p>
+    {% if desktop_walls.size > 0 %}
+    <div class="wallpaper-grid">
+      {% for wall in desktop_walls %}
+      {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      <div class="wallpaper-card">
+        <button class="wallpaper-thumb-wrap" data-full="{{ site.baseurl }}{{ wall.path }}"
+                aria-label="Preview {{ wall_name }}">
+          <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
+               alt="{{ wall_name }}" loading="lazy" decoding="async">
+          <span class="wallpaper-zoom" aria-hidden="true">
+            <i class="ph ph-arrows-out"></i>
+          </span>
+        </button>
+        <div class="wallpaper-info">
+          <span class="wallpaper-name">{{ wall_name }}</span>
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+            <i class="ph ph-download-simple" aria-hidden="true"></i> Save
+          </a>
+        </div>
       </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <div class="wallpaper-empty">
+      <i class="ph ph-image-broken" aria-hidden="true"></i>
+      <p>No desktop wallpapers yet — check back soon.</p>
+    </div>
+    {% endif %}
   </div>
 
+  <!-- Mobile tab -->
   <div id="tab-mobile" role="tabpanel" aria-labelledby="btn-mobile" class="wallpaper-panel" hidden>
-    <div class="wallpaper-grid" id="wallpaper-grid-mobile">
-      <div class="wallpaper-empty">
-        <i class="ph ph-image-broken" aria-hidden="true"></i>
-        <p>Mobile wallpapers coming soon.</p>
+    {% if mobile_walls.size > 0 %}
+    <div class="wallpaper-grid wallpaper-grid--mobile">
+      {% for wall in mobile_walls %}
+      {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      <div class="wallpaper-card">
+        <button class="wallpaper-thumb-wrap wallpaper-thumb-wrap--mobile"
+                data-full="{{ site.baseurl }}{{ wall.path }}"
+                aria-label="Preview {{ wall_name }}">
+          <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
+               alt="{{ wall_name }}" loading="lazy" decoding="async">
+          <span class="wallpaper-zoom" aria-hidden="true">
+            <i class="ph ph-arrows-out"></i>
+          </span>
+        </button>
+        <div class="wallpaper-info">
+          <span class="wallpaper-name">{{ wall_name }}</span>
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+            <i class="ph ph-download-simple" aria-hidden="true"></i> Save
+          </a>
+        </div>
       </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <div class="wallpaper-empty">
+      <i class="ph ph-image-broken" aria-hidden="true"></i>
+      <p>No mobile wallpapers yet — check back soon.</p>
+    </div>
+    {% endif %}
   </div>
+
 </div>
 
 <script>
 (function () {
-  var tabs  = document.querySelectorAll('.wallpaper-tab');
-  var panels = document.querySelectorAll('.wallpaper-panel');
-
-  tabs.forEach(function (tab) {
+  // Tab switching
+  document.querySelectorAll('.wallpaper-tab').forEach(function (tab) {
     tab.addEventListener('click', function () {
       var target = tab.dataset.tab;
-      tabs.forEach(function (t) {
-        var active = t.dataset.tab === target;
-        t.classList.toggle('is-active', active);
-        t.setAttribute('aria-selected', String(active));
+      document.querySelectorAll('.wallpaper-tab').forEach(function (t) {
+        var on = t.dataset.tab === target;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', String(on));
       });
-      panels.forEach(function (p) {
+      document.querySelectorAll('.wallpaper-panel').forEach(function (p) {
         var show = p.id === 'tab-' + target;
         p.classList.toggle('is-active', show);
-        if (show) p.removeAttribute('hidden');
-        else p.setAttribute('hidden', '');
+        if (show) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
       });
+    });
+  });
+
+  // Preview buttons → shared lightbox
+  document.querySelectorAll('.wallpaper-thumb-wrap[data-full]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (window._lbOpen) window._lbOpen([btn.dataset.full], 0);
     });
   });
 }());
