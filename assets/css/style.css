@@ -970,13 +970,20 @@ a:hover { text-decoration: underline; }
 .ach-list { list-style: none; display: flex; flex-direction: column; gap: .35rem; }
 .ach-item {
   display: grid;
-  grid-template-columns: 64px 1fr;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: .2rem .75rem;
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: .7rem 1rem;
+}
+.ach-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  padding-top: .1rem;
 }
 .ach-name { font-size: .85rem; font-weight: 500; }
 .ach-desc { font-size: .78rem; color: var(--text-muted); }
