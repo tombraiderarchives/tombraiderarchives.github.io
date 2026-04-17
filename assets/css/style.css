@@ -2196,11 +2196,9 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   /* Sub panels: reduce indent on mobile */
   .nav-section-item > .nav-sub {
     margin-left: .25rem;
-    border-left: none;
   }
   .nav-sub .nav-sub {
     margin-left: .75rem;
-    border-left: none;
     padding-left: 0;
     transition: grid-template-rows .3s var(--ease);
   }
