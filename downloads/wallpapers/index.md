@@ -4,8 +4,8 @@ title: Wallpapers
 permalink: /downloads/wallpapers/
 ---
 
-{% assign desktop_walls = site.static_files | where_exp: "f", "f.path contains '/assets/wallpapers/desktop/'" %}
-{% assign mobile_walls  = site.static_files | where_exp: "f", "f.path contains '/assets/wallpapers/mobile/'"  %}
+{% assign desktop_walls = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/desktop/'" %}
+{% assign mobile_walls  = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/mobile/'"  %}
 
 <div class="page-section">
   <div class="page-section-header">
