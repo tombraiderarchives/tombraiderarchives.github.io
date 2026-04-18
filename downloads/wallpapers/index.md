@@ -4,8 +4,8 @@ title: Wallpapers
 permalink: /downloads/wallpapers/
 ---
 
-{% assign desktop_walls = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/desktop/'" %}
-{% assign mobile_walls  = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/mobile/'"  %}
+{% assign desktop_walls = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/desktop/thumbs/'" %}
+{% assign mobile_walls  = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/mobile/thumbs/'"  %}
 
 <div class="page-section">
   <div class="page-section-header">
@@ -35,8 +35,9 @@ permalink: /downloads/wallpapers/
     <div class="wallpaper-grid">
       {% for wall in desktop_walls %}
       {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      {% assign full_path = wall.path | replace: '/thumbs/', '/' %}
       <div class="wallpaper-card">
-        <button class="wallpaper-thumb-wrap" data-full="{{ site.baseurl }}{{ wall.path }}"
+        <button class="wallpaper-thumb-wrap" data-full="{{ site.baseurl }}{{ full_path }}"
                 aria-label="Preview {{ wall_name }}">
           <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
                alt="{{ wall_name }}" loading="lazy" decoding="async">
@@ -46,7 +47,7 @@ permalink: /downloads/wallpapers/
         </button>
         <div class="wallpaper-info">
           <span class="wallpaper-name">{{ wall_name }}</span>
-          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ full_path }}" download="{{ wall.name }}">
             <i class="ph ph-download-simple" aria-hidden="true"></i> Save
           </a>
         </div>
@@ -67,9 +68,10 @@ permalink: /downloads/wallpapers/
     <div class="wallpaper-grid wallpaper-grid--mobile">
       {% for wall in mobile_walls %}
       {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      {% assign full_path = wall.path | replace: '/thumbs/', '/' %}
       <div class="wallpaper-card">
         <button class="wallpaper-thumb-wrap wallpaper-thumb-wrap--mobile"
-                data-full="{{ site.baseurl }}{{ wall.path }}"
+                data-full="{{ site.baseurl }}{{ full_path }}"
                 aria-label="Preview {{ wall_name }}">
           <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
                alt="{{ wall_name }}" loading="lazy" decoding="async">
@@ -79,7 +81,7 @@ permalink: /downloads/wallpapers/
         </button>
         <div class="wallpaper-info">
           <span class="wallpaper-name">{{ wall_name }}</span>
-          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ full_path }}" download="{{ wall.name }}">
             <i class="ph ph-download-simple" aria-hidden="true"></i> Save
           </a>
         </div>

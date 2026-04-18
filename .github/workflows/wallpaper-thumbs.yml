@@ -1,0 +1,64 @@
+name: Generate wallpaper thumbnails
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'downloads/wallpapers/desktop/**'
+      - 'downloads/wallpapers/mobile/**'
+
+# Don't re-run when this workflow's own commit triggers the push
+jobs:
+  thumbs:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: sudo apt-get install -y imagemagick
+
+      - name: Generate thumbnails
+        id: gen
+        run: |
+          changed=0
+
+          generate() {
+            local dir="$1"
+            local max_w="$2"
+            local max_h="$3"
+            [ -d "$dir" ] || return
+            mkdir -p "$dir/thumbs"
+
+            while IFS= read -r img; do
+              name=$(basename "${img%.*}")
+              thumb="$dir/thumbs/${name}.jpg"
+              [ -f "$thumb" ] && continue
+              echo "  → $thumb"
+              convert "$img" \
+                -resize "${max_w}x${max_h}>" \
+                -quality 82 \
+                -strip \
+                "$thumb"
+              changed=1
+            done < <(find "$dir" -maxdepth 1 -type f \
+              \( -iname "*.jpg" -o -iname "*.jpeg" \
+                 -o -iname "*.png" -o -iname "*.webp" \))
+          }
+
+          generate downloads/wallpapers/desktop 800 500
+          generate downloads/wallpapers/mobile  400 800
+
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Commit thumbnails
+        if: steps.gen.outputs.changed == '1'
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add downloads/wallpapers/desktop/thumbs/ downloads/wallpapers/mobile/thumbs/
+          git commit -m "chore: auto-generate wallpaper thumbnails"
+          git push
