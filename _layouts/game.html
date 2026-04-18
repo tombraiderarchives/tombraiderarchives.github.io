@@ -208,6 +208,7 @@ layout: default
             <span class="ach-icon">
               {% if ach.trophy %}<span class="ach-trophy ach-trophy--{{ ach.trophy }}"><img src="{{ site.baseurl }}/images/ui/trophies/{{ ach.trophy }}.png" alt="{{ ach.trophy | capitalize }} trophy" class="trophy-icon"></span>{% endif %}
             </span>
+            <div>
               <div class="ach-name">{{ ach.name }}</div>
               {% if ach.description %}<div class="ach-desc">{{ ach.description }}</div>{% endif %}
             </div>
