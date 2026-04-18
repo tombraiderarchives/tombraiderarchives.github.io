@@ -791,6 +791,13 @@ a:hover { text-decoration: underline; }
   border-bottom: 1px solid var(--border);
 }
 
+/* Cover placeholder — shown when no cover_image is set */
+.game-cover-ph {
+  width: 120px;
+  flex-shrink: 0;
+  aspect-ratio: 2/3;
+}
+
 /* Clickable cover button */
 .game-cover-btn {
   position: relative;

@@ -131,8 +131,9 @@ title: Comics
     {% assign padded = i | prepend: '00' | slice: -2, 2 %}
     <a href="{{ site.baseurl }}/images/comics/tomb-raider-crossovers/issues/{{ padded }}.jpg"
        class="comic-issue" target="_blank">
-      <img src="{{ site.baseurl }}/images/comics/tomb-raider-crossovers/issues/{{ padded }}.jpg"
-           alt="Crossover #{{ i }}" loading="lazy">
+      <img src="{{ site.baseurl }}/images/comics/tomb-raider-crossovers/issues/thumbs/{{ padded }}.jpg"
+           alt="Crossover #{{ i }}" loading="lazy"
+           onerror="this.onerror=null;this.src='{{ site.baseurl }}/images/comics/tomb-raider-crossovers/issues/{{ padded }}.jpg'">
       <span class="comic-issue-num">#{{ i }}</span>
     </a>
     {% endfor %}

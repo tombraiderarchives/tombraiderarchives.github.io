@@ -44,6 +44,10 @@ layout: default
         </svg>
       </span>
     </button>
+    {% else %}
+    <div class="game-cover-ph img-ph" aria-hidden="true">
+      <i class="ph ph-image img-ph-icon"></i>
+    </div>
     {% endif %}
     <div class="game-page-title">
       {% if page.stats.developer %}<p class="game-meta">{{ page.stats.developer }}{% if page.stats.release_date %} &middot; {{ page.stats.release_date }}{% endif %}</p>{% endif %}

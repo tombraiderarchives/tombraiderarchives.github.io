@@ -26,6 +26,10 @@ layout: default
   <header class="game-page-header comic-page-header">
     {% if page.cover_image %}
     <img src="{{ page.cover_image }}" alt="{{ page.title }} cover" class="game-cover-img" loading="eager">
+    {% else %}
+    <div class="game-cover-ph img-ph" aria-hidden="true">
+      <i class="ph ph-image img-ph-icon"></i>
+    </div>
     {% endif %}
     <div class="game-page-title">
       {% if page.stats.publisher %}
