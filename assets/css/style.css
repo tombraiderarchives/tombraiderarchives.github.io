@@ -1443,6 +1443,12 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .news-list--featured > .news-item:first-child {
   grid-column: 1 / -1;
 }
+.news-list--featured > .news-item:first-child .news-item-img-wrap {
+  height: 340px;
+}
+.news-list--featured > .news-item:first-child .news-item-placeholder {
+  height: 340px;
+}
 
 /* ── Sidebar random shot ─────────────────────────────────────────────────── */
 .sidebar-random-shot {
