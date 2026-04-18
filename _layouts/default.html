@@ -299,15 +299,6 @@
         </ul>
       </nav>
 
-      <div class="sidebar-random-shot">
-        <p class="sidebar-random-shot-label">Random Screenshot</p>
-        <div id="randomShot" class="random-shot" aria-live="polite">
-          <div class="random-shot-placeholder">
-            <i class="ph ph-image" aria-hidden="true"></i>
-          </div>
-        </div>
-      </div>
-
     </aside>
 
     <div class="page-wrapper">
@@ -397,16 +388,6 @@
     </button>
     <p class="lb-counter" id="lbCounter" aria-live="polite"></p>
   </div>
-
-  {% comment %}Build JS data array of game screenshots for the random-image widget.{% endcomment %}
-  <script>
-  window._archiveShots = [
-    {% assign _first = true %}
-    {% for _p in site.pages %}{% if _p.image_folder and _p.layout == "game" %}{% assign _pfx = "/images/" | append: _p.image_folder | append: "/screenshots/thumbs/" %}{% for _sf in site.static_files %}{% if _sf.path contains _pfx %}{% unless _first %},{% endunless %}{% assign _first = false %}
-    {"thumb":{{ _sf.path | jsonify }},"full":{{ _sf.path | replace: "/thumbs/", "/" | jsonify }},"title":{{ _p.title | jsonify }},"url":{{ _p.url | jsonify }}}{% endif %}{% endfor %}{% endif %}{% endfor %}
-
-  ];
-  </script>
 
   <script src="{{ site.baseurl }}/assets/js/main.js"></script>
 </body>
