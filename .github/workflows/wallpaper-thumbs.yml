@@ -49,8 +49,8 @@ jobs:
                  -o -iname "*.png" -o -iname "*.webp" \))
           }
 
-          generate downloads/wallpapers/desktop 800 500
-          generate downloads/wallpapers/mobile  400 800
+          generate downloads/wallpapers/desktop 400 250
+          generate downloads/wallpapers/mobile  200 400
 
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
