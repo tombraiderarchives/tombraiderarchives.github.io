@@ -31,11 +31,14 @@ jobs:
             local max_w="$2"
             local max_h="$3"
             [ -d "$dir" ] || return
-            mkdir -p "$dir/thumbs"
 
+            # Recurse into all files, skipping anything already inside a thumbs/ folder
             while IFS= read -r img; do
+              local img_dir
+              img_dir=$(dirname "$img")
+              mkdir -p "$img_dir/thumbs"
               name=$(basename "${img%.*}")
-              thumb="$dir/thumbs/${name}.jpg"
+              thumb="$img_dir/thumbs/${name}.jpg"
               [ -f "$thumb" ] && continue
               echo "  → $thumb"
               convert "$img" \
@@ -44,7 +47,7 @@ jobs:
                 -strip \
                 "$thumb"
               changed=1
-            done < <(find "$dir" -maxdepth 1 -type f \
+            done < <(find "$dir" -type f ! -path "*/thumbs/*" \
               \( -iname "*.jpg" -o -iname "*.jpeg" \
                  -o -iname "*.png" -o -iname "*.webp" \))
           }
@@ -59,6 +62,6 @@ jobs:
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add downloads/wallpapers/desktop/thumbs/ downloads/wallpapers/mobile/thumbs/
+          git add downloads/wallpapers/
           git commit -m "chore: auto-generate wallpaper thumbnails"
           git push

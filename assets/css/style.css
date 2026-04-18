@@ -2061,6 +2061,16 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .page-section-title i { color: var(--accent); }
 .page-section-desc { color: var(--text-dim); font-size: .9rem; }
 
+.wallpaper-group-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 2rem 0 .75rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--border);
+}
+.wallpaper-group-title:first-child { margin-top: 0; }
+
 .wallpaper-tabs {
   display: flex;
   gap: .5rem;
