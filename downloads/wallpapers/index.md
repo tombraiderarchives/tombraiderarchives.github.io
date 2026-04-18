@@ -4,8 +4,17 @@ title: Wallpapers
 permalink: /downloads/wallpapers/
 ---
 
-{% assign desktop_walls = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/desktop/thumbs/'" %}
-{% assign mobile_walls  = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/mobile/thumbs/'"  %}
+{% comment %}
+  Find all non-.gitkeep files in each wallpaper folder.
+  Prefer thumbnails (thumbs/ subfolder) for fast loading.
+  Fall back to originals if thumbnails haven't been generated yet.
+{% endcomment %}
+
+{% assign _all_desktop = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/desktop/'" | where_exp: "f", "f.name != '.gitkeep'" %}
+{% assign _all_mobile  = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/mobile/'"  | where_exp: "f", "f.name != '.gitkeep'" %}
+
+{% assign _desktop_thumbs = _all_desktop | where_exp: "f", "f.path contains '/thumbs/'" %}
+{% assign _mobile_thumbs  = _all_mobile  | where_exp: "f", "f.path contains '/thumbs/'" %}
 
 <div class="page-section">
   <div class="page-section-header">
@@ -20,20 +29,28 @@ permalink: /downloads/wallpapers/
     <button class="wallpaper-tab is-active" role="tab" aria-selected="true"
             aria-controls="tab-desktop" id="btn-desktop" data-tab="desktop">
       <i class="ph ph-monitor" aria-hidden="true"></i> Desktop
-      {% if desktop_walls.size > 0 %}<span class="wallpaper-count">{{ desktop_walls.size }}</span>{% endif %}
+      {% if _desktop_thumbs.size > 0 %}
+        <span class="wallpaper-count">{{ _desktop_thumbs.size }}</span>
+      {% elsif _all_desktop.size > 0 %}
+        <span class="wallpaper-count">{{ _all_desktop.size }}</span>
+      {% endif %}
     </button>
     <button class="wallpaper-tab" role="tab" aria-selected="false"
             aria-controls="tab-mobile" id="btn-mobile" data-tab="mobile">
       <i class="ph ph-device-mobile" aria-hidden="true"></i> Mobile
-      {% if mobile_walls.size > 0 %}<span class="wallpaper-count">{{ mobile_walls.size }}</span>{% endif %}
+      {% if _mobile_thumbs.size > 0 %}
+        <span class="wallpaper-count">{{ _mobile_thumbs.size }}</span>
+      {% elsif _all_mobile.size > 0 %}
+        <span class="wallpaper-count">{{ _all_mobile.size }}</span>
+      {% endif %}
     </button>
   </div>
 
   <!-- Desktop tab -->
   <div id="tab-desktop" role="tabpanel" aria-labelledby="btn-desktop" class="wallpaper-panel is-active">
-    {% if desktop_walls.size > 0 %}
+    {% if _desktop_thumbs.size > 0 %}
     <div class="wallpaper-grid">
-      {% for wall in desktop_walls %}
+      {% for wall in _desktop_thumbs %}
       {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
       {% assign full_path = wall.path | replace: '/thumbs/', '/' %}
       <div class="wallpaper-card">
@@ -41,9 +58,7 @@ permalink: /downloads/wallpapers/
                 aria-label="Preview {{ wall_name }}">
           <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
                alt="{{ wall_name }}" loading="lazy" decoding="async">
-          <span class="wallpaper-zoom" aria-hidden="true">
-            <i class="ph ph-arrows-out"></i>
-          </span>
+          <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
         </button>
         <div class="wallpaper-info">
           <span class="wallpaper-name">{{ wall_name }}</span>
@@ -52,6 +67,28 @@ permalink: /downloads/wallpapers/
           </a>
         </div>
       </div>
+      {% endfor %}
+    </div>
+    {% elsif _all_desktop.size > 0 %}
+    <div class="wallpaper-grid">
+      {% for wall in _all_desktop %}
+      {% unless wall.path contains '/thumbs/' %}
+      {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      <div class="wallpaper-card">
+        <button class="wallpaper-thumb-wrap" data-full="{{ site.baseurl }}{{ wall.path }}"
+                aria-label="Preview {{ wall_name }}">
+          <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
+               alt="{{ wall_name }}" loading="lazy" decoding="async">
+          <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
+        </button>
+        <div class="wallpaper-info">
+          <span class="wallpaper-name">{{ wall_name }}</span>
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+            <i class="ph ph-download-simple" aria-hidden="true"></i> Save
+          </a>
+        </div>
+      </div>
+      {% endunless %}
       {% endfor %}
     </div>
     {% else %}
@@ -64,9 +101,9 @@ permalink: /downloads/wallpapers/
 
   <!-- Mobile tab -->
   <div id="tab-mobile" role="tabpanel" aria-labelledby="btn-mobile" class="wallpaper-panel" hidden>
-    {% if mobile_walls.size > 0 %}
+    {% if _mobile_thumbs.size > 0 %}
     <div class="wallpaper-grid wallpaper-grid--mobile">
-      {% for wall in mobile_walls %}
+      {% for wall in _mobile_thumbs %}
       {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
       {% assign full_path = wall.path | replace: '/thumbs/', '/' %}
       <div class="wallpaper-card">
@@ -75,9 +112,7 @@ permalink: /downloads/wallpapers/
                 aria-label="Preview {{ wall_name }}">
           <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
                alt="{{ wall_name }}" loading="lazy" decoding="async">
-          <span class="wallpaper-zoom" aria-hidden="true">
-            <i class="ph ph-arrows-out"></i>
-          </span>
+          <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
         </button>
         <div class="wallpaper-info">
           <span class="wallpaper-name">{{ wall_name }}</span>
@@ -86,6 +121,29 @@ permalink: /downloads/wallpapers/
           </a>
         </div>
       </div>
+      {% endfor %}
+    </div>
+    {% elsif _all_mobile.size > 0 %}
+    <div class="wallpaper-grid wallpaper-grid--mobile">
+      {% for wall in _all_mobile %}
+      {% unless wall.path contains '/thumbs/' %}
+      {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      <div class="wallpaper-card">
+        <button class="wallpaper-thumb-wrap wallpaper-thumb-wrap--mobile"
+                data-full="{{ site.baseurl }}{{ wall.path }}"
+                aria-label="Preview {{ wall_name }}">
+          <img class="wallpaper-thumb" src="{{ site.baseurl }}{{ wall.path }}"
+               alt="{{ wall_name }}" loading="lazy" decoding="async">
+          <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
+        </button>
+        <div class="wallpaper-info">
+          <span class="wallpaper-name">{{ wall_name }}</span>
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+            <i class="ph ph-download-simple" aria-hidden="true"></i> Save
+          </a>
+        </div>
+      </div>
+      {% endunless %}
       {% endfor %}
     </div>
     {% else %}
@@ -100,7 +158,6 @@ permalink: /downloads/wallpapers/
 
 <script>
 (function () {
-  // Tab switching
   document.querySelectorAll('.wallpaper-tab').forEach(function (tab) {
     tab.addEventListener('click', function () {
       var target = tab.dataset.tab;
@@ -117,7 +174,6 @@ permalink: /downloads/wallpapers/
     });
   });
 
-  // Preview buttons → shared lightbox
   document.querySelectorAll('.wallpaper-thumb-wrap[data-full]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       if (window._lbOpen) window._lbOpen([btn.dataset.full], 0);
