@@ -907,6 +907,79 @@ a:hover { text-decoration: underline; }
   padding-bottom: 2rem;
 }
 
+/* ── Gallery sub-sections ────────────────────────────────────────────────── */
+.gallery-sub {
+  border-top: 1px solid var(--border);
+}
+.gallery-sub:first-child { border-top: none; }
+.gallery-sub-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: .6rem;
+  padding: .7rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  text-align: left;
+}
+.gallery-sub-toggle:hover .gallery-sub-title { color: var(--accent); }
+.gallery-sub-title {
+  flex: 1;
+  font-size: .88rem;
+  font-weight: 600;
+  transition: color .15s;
+}
+.gallery-sub-count {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .15rem .5rem;
+  border-radius: 20px;
+  background: var(--bg-3);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.gallery-sub-chevron {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  transition: transform .2s var(--ease);
+}
+.gallery-sub-toggle[aria-expanded="true"] .gallery-sub-chevron { transform: rotate(180deg); }
+.gallery-sub-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows .3s var(--ease);
+}
+.gallery-sub-panel.is-open { grid-template-rows: 1fr; }
+.gallery-sub-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.gallery-sub-panel.is-open .gallery-sub-panel-inner { padding-bottom: 1rem; }
+
+/* Wallpaper grid — wider aspect ratio cards */
+.gallery-grid--wallpapers .gallery-thumb {
+  aspect-ratio: 16/9;
+}
+.gallery-thumb-dl {
+  position: absolute;
+  bottom: .4rem;
+  right: .4rem;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  border-radius: 4px;
+  padding: .2rem .4rem;
+  font-size: .75rem;
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+}
+.gallery-thumb:hover .gallery-thumb-dl,
+.gallery-thumb:focus-visible .gallery-thumb-dl { opacity: 1; }
+
 /* ── Stats ──────────────────────────────────────────────────────────────── */
 .stats-grid {
   display: grid;
@@ -1022,6 +1095,7 @@ a:hover { text-decoration: underline; }
   gap: 5px;
 }
 .gallery-thumb {
+  position: relative;
   display: block;
   aspect-ratio: 16/9;
   overflow: hidden;

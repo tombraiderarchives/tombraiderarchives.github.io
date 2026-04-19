@@ -352,6 +352,19 @@
   });
 }());
 
+/* ── Gallery sub-section toggles ────────────────────────────────────────── */
+(function () {
+  document.querySelectorAll('.gallery-sub-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel   = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!panel) return;
+      var opening = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(opening));
+      panel.classList.toggle('is-open', opening);
+    });
+  });
+}());
+
 /* ── Cover art lightbox ─────────────────────────────────────────────────── */
 /* Wires up the cover art button on game/media pages to the shared lightbox. */
 (function () {
