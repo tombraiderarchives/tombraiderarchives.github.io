@@ -2,6 +2,13 @@
 layout: default
 title: Wallpapers
 permalink: /downloads/wallpapers/
+desktop_order:
+  - Tomb Raider
+  - Tomb Raider 2
+  - Tomb Raider 3
+  - Tomb Raider The Last Revelation
+  - Tomb Raider Chronicles
+  - Tomb Raider Angel of Darkness
 ---
 
 {% assign _all_desktop = site.static_files | where_exp: "f", "f.path contains '/downloads/wallpapers/desktop/'" | where_exp: "f", "f.name != '.gitkeep'" %}
@@ -12,11 +19,6 @@ permalink: /downloads/wallpapers/
 {% assign _desktop_count  = _all_desktop.size | minus: _desktop_thumbs.size %}
 {% assign _mobile_count   = _all_mobile.size  | minus: _mobile_thumbs.size %}
 
-{% comment %}
-  Group wallpapers by the path segment at index 4, which is the game subfolder name
-  for files in subfolders (e.g. "Tomb Raider 2"), or the filename itself for files
-  sitting directly in desktop/ or mobile/. The "thumbs" group is skipped.
-{% endcomment %}
 {% assign _desktop_groups = _all_desktop | group_by_exp: "f", "f.path | split: '/' | slice: 4, 1 | first" %}
 {% assign _mobile_groups  = _all_mobile  | group_by_exp: "f", "f.path | split: '/' | slice: 4, 1 | first" %}
 
@@ -45,41 +47,65 @@ permalink: /downloads/wallpapers/
   <!-- Desktop tab -->
   <div id="tab-desktop" role="tabpanel" aria-labelledby="btn-desktop" class="wallpaper-panel is-active">
     {% if _desktop_count > 0 %}
-      {% for group in _desktop_groups %}
-      {% unless group.name == 'thumbs' %}
-      {% assign _has_orig = false %}
-      {% for _w in group.items %}{% unless _w.path contains '/thumbs/' %}{% assign _has_orig = true %}{% endunless %}{% endfor %}
-      {% if _has_orig %}
-        {% unless group.name contains '.' %}
-        <h3 class="wallpaper-group-title">{{ group.name | replace: '-', ' ' | replace: '_', ' ' }}</h3>
-        {% endunless %}
-        <div class="wallpaper-grid">
-          {% for wall in group.items %}
-          {% unless wall.path contains '/thumbs/' %}
-          {% assign _thumb_path = wall.path | replace: wall.name, 'thumbs/' | append: wall.basename | append: '.jpg' %}
-          {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
-          <div class="wallpaper-card">
-            <button class="wallpaper-thumb-wrap" data-full="{{ site.baseurl }}{{ wall.path }}"
-                    aria-label="Preview {{ wall_name }}">
-              <img class="wallpaper-thumb"
-                   src="{{ site.baseurl }}{{ _thumb_path }}"
-                   onerror="this.onerror=null;this.src='{{ site.baseurl }}{{ wall.path }}'"
-                   alt="{{ wall_name }}" loading="lazy" decoding="async">
-              <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
-            </button>
-            <div class="wallpaper-info">
-              <span class="wallpaper-name">{{ wall_name }}</span>
-              <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
-                <i class="ph ph-download-simple" aria-hidden="true"></i> Save
-              </a>
-            </div>
-          </div>
-          {% endunless %}
-          {% endfor %}
+
+    {% comment %}Build the ordered list, then append any unlisted groups at the end{% endcomment %}
+    {% assign _ordered_names = "" | split: "" %}
+    {% for game in page.desktop_order %}
+      {% assign _g = _desktop_groups | where: "name", game | first %}
+      {% if _g %}{% assign _ordered_names = _ordered_names | push: game %}{% endif %}
+    {% endfor %}
+    {% for g in _desktop_groups %}
+      {% unless g.name == 'thumbs' or page.desktop_order contains g.name or g.name contains '.' %}
+        {% assign _ordered_names = _ordered_names | push: g.name %}
+      {% endunless %}
+    {% endfor %}
+
+    {% comment %}Category jump nav{% endcomment %}
+    {% if _ordered_names.size > 1 %}
+    <nav class="wallpaper-game-nav" aria-label="Jump to game">
+      {% for game in _ordered_names %}
+      {% assign _sid = game | downcase | replace: ' ', '-' %}
+      <a href="#desk-{{ _sid }}" class="wallpaper-game-link">{{ game }}</a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+
+    {% for game in _ordered_names %}
+    {% assign group = _desktop_groups | where: "name", game | first %}
+    {% if group %}
+    {% assign _has_orig = false %}
+    {% for _w in group.items %}{% unless _w.path contains '/thumbs/' %}{% assign _has_orig = true %}{% endunless %}{% endfor %}
+    {% if _has_orig %}
+    {% assign _sid = game | downcase | replace: ' ', '-' %}
+    <h3 class="wallpaper-group-title" id="desk-{{ _sid }}">{{ game }}</h3>
+    <div class="wallpaper-grid">
+      {% for wall in group.items %}
+      {% unless wall.path contains '/thumbs/' %}
+      {% assign _thumb_path = wall.path | replace: wall.name, 'thumbs/' | append: wall.basename | append: '.jpg' %}
+      {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      <div class="wallpaper-card">
+        <button class="wallpaper-thumb-wrap" data-full="{{ site.baseurl }}{{ wall.path }}"
+                aria-label="Preview {{ wall_name }}">
+          <img class="wallpaper-thumb"
+               src="{{ site.baseurl }}{{ _thumb_path }}"
+               onerror="this.onerror=null;this.src='{{ site.baseurl }}{{ wall.path }}'"
+               alt="{{ wall_name }}" loading="lazy" decoding="async">
+          <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
+        </button>
+        <div class="wallpaper-info">
+          <span class="wallpaper-name">{{ wall_name }}</span>
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+            <i class="ph ph-download-simple" aria-hidden="true"></i> Save
+          </a>
         </div>
-      {% endif %}
+      </div>
       {% endunless %}
       {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+
     {% else %}
     <div class="wallpaper-empty">
       <i class="ph ph-image-broken" aria-hidden="true"></i>
@@ -91,42 +117,61 @@ permalink: /downloads/wallpapers/
   <!-- Mobile tab -->
   <div id="tab-mobile" role="tabpanel" aria-labelledby="btn-mobile" class="wallpaper-panel" hidden>
     {% if _mobile_count > 0 %}
-      {% for group in _mobile_groups %}
-      {% unless group.name == 'thumbs' %}
-      {% assign _has_orig = false %}
-      {% for _w in group.items %}{% unless _w.path contains '/thumbs/' %}{% assign _has_orig = true %}{% endunless %}{% endfor %}
-      {% if _has_orig %}
-        {% unless group.name contains '.' %}
-        <h3 class="wallpaper-group-title">{{ group.name | replace: '-', ' ' | replace: '_', ' ' }}</h3>
-        {% endunless %}
-        <div class="wallpaper-grid wallpaper-grid--mobile">
-          {% for wall in group.items %}
-          {% unless wall.path contains '/thumbs/' %}
-          {% assign _thumb_path = wall.path | replace: wall.name, 'thumbs/' | append: wall.basename | append: '.jpg' %}
-          {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
-          <div class="wallpaper-card">
-            <button class="wallpaper-thumb-wrap wallpaper-thumb-wrap--mobile"
-                    data-full="{{ site.baseurl }}{{ wall.path }}"
-                    aria-label="Preview {{ wall_name }}">
-              <img class="wallpaper-thumb"
-                   src="{{ site.baseurl }}{{ _thumb_path }}"
-                   onerror="this.onerror=null;this.src='{{ site.baseurl }}{{ wall.path }}'"
-                   alt="{{ wall_name }}" loading="lazy" decoding="async">
-              <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
-            </button>
-            <div class="wallpaper-info">
-              <span class="wallpaper-name">{{ wall_name }}</span>
-              <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
-                <i class="ph ph-download-simple" aria-hidden="true"></i> Save
-              </a>
-            </div>
-          </div>
-          {% endunless %}
-          {% endfor %}
+
+    {% assign _mobile_ordered = "" | split: "" %}
+    {% for g in _mobile_groups %}
+      {% unless g.name == 'thumbs' or g.name contains '.' %}
+        {% assign _mobile_ordered = _mobile_ordered | push: g.name %}
+      {% endunless %}
+    {% endfor %}
+
+    {% if _mobile_ordered.size > 1 %}
+    <nav class="wallpaper-game-nav" aria-label="Jump to game">
+      {% for game in _mobile_ordered %}
+      {% assign _sid = game | downcase | replace: ' ', '-' %}
+      <a href="#mob-{{ _sid }}" class="wallpaper-game-link">{{ game }}</a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+
+    {% for group in _mobile_groups %}
+    {% unless group.name == 'thumbs' %}
+    {% assign _has_orig = false %}
+    {% for _w in group.items %}{% unless _w.path contains '/thumbs/' %}{% assign _has_orig = true %}{% endunless %}{% endfor %}
+    {% if _has_orig %}
+    {% unless group.name contains '.' %}
+    {% assign _sid = group.name | downcase | replace: ' ', '-' %}
+    <h3 class="wallpaper-group-title" id="mob-{{ _sid }}">{{ group.name | replace: '-', ' ' | replace: '_', ' ' }}</h3>
+    {% endunless %}
+    <div class="wallpaper-grid wallpaper-grid--mobile">
+      {% for wall in group.items %}
+      {% unless wall.path contains '/thumbs/' %}
+      {% assign _thumb_path = wall.path | replace: wall.name, 'thumbs/' | append: wall.basename | append: '.jpg' %}
+      {% assign wall_name = wall.basename | replace: '-', ' ' | replace: '_', ' ' %}
+      <div class="wallpaper-card">
+        <button class="wallpaper-thumb-wrap wallpaper-thumb-wrap--mobile"
+                data-full="{{ site.baseurl }}{{ wall.path }}"
+                aria-label="Preview {{ wall_name }}">
+          <img class="wallpaper-thumb"
+               src="{{ site.baseurl }}{{ _thumb_path }}"
+               onerror="this.onerror=null;this.src='{{ site.baseurl }}{{ wall.path }}'"
+               alt="{{ wall_name }}" loading="lazy" decoding="async">
+          <span class="wallpaper-zoom" aria-hidden="true"><i class="ph ph-arrows-out"></i></span>
+        </button>
+        <div class="wallpaper-info">
+          <span class="wallpaper-name">{{ wall_name }}</span>
+          <a class="wallpaper-dl" href="{{ site.baseurl }}{{ wall.path }}" download="{{ wall.name }}">
+            <i class="ph ph-download-simple" aria-hidden="true"></i> Save
+          </a>
         </div>
-      {% endif %}
+      </div>
       {% endunless %}
       {% endfor %}
+    </div>
+    {% endif %}
+    {% endunless %}
+    {% endfor %}
+
     {% else %}
     <div class="wallpaper-empty">
       <i class="ph ph-image-broken" aria-hidden="true"></i>
