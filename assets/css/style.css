@@ -2104,13 +2104,38 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   color: var(--text-dim);
 }
 
+.wallpaper-game-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: 1.5rem;
+}
+.wallpaper-game-link {
+  padding: .3rem .75rem;
+  font-size: .75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: background .15s, border-color .15s, color .15s;
+  white-space: nowrap;
+}
+.wallpaper-game-link:hover {
+  background: rgba(126,165,131,.12);
+  border-color: rgba(126,165,131,.35);
+  color: var(--accent);
+}
+
 .wallpaper-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: .85rem;
+  margin-bottom: 1rem;
 }
 .wallpaper-grid--mobile {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
 }
 .wallpaper-card {
   background: var(--bg-2);
@@ -2155,14 +2180,14 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 .wallpaper-thumb-wrap:hover .wallpaper-zoom,
 .wallpaper-thumb-wrap:focus-visible .wallpaper-zoom { opacity: 1; }
 .wallpaper-info {
-  padding: .6rem .9rem;
+  padding: .4rem .65rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .5rem;
+  gap: .4rem;
 }
 .wallpaper-name {
-  font-size: .78rem;
+  font-size: .72rem;
   font-weight: 500;
   text-transform: capitalize;
   overflow: hidden;
