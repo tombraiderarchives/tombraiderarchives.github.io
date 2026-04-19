@@ -1,0 +1,14 @@
+---
+layout: post
+title: "Rise of the Tomb Raider Retrospective: a Perfect, and Cowardly, Sequel"
+date: 2026-04-17
+category: "News"
+tags:
+  - tag: tomb-raider
+excerpt_text: ""
+source_url: "https://news.google.com/rss/articles/CBMidEFVX3lxTE9aQWlOdDFfQnBkYU91VnhLbEVIbWxIejhIYkJsazVpbUhsQ1pTaFZsUmY5U2dTSE9ieDBOX3VXaGVwX3VRekRLUEVJYTYxYmZ5OTRnS2JMT1R4TUMtaDYxZ1liblAxNDJGVHpjNC1mLWl2Rlly0gF8QVVfeXFMTi1ZWWdyZ1RZbXFyTkdMX2w3dmpldFYtM2E0THNjaGNGME1vYWdsai1sN1EwTXFZclA3NU1MZUZpVk5WQXFPT0ptV2dieU53NlVzcWdIWnNmQWF6bGxGM0ZrY3p1a2Z2Tm9JQTBJV0twcFBiZUxuWHNaTG1BUA?oc=5"
+source_rss_url: "https://news.google.com/rss/articles/CBMidEFVX3lxTE9aQWlOdDFfQnBkYU91VnhLbEVIbWxIejhIYkJsazVpbUhsQ1pTaFZsUmY5U2dTSE9ieDBOX3VXaGVwX3VRekRLUEVJYTYxYmZ5OTRnS2JMT1R4TUMtaDYxZ1liblAxNDJGVHpjNC1mLWl2Rlly0gF8QVVfeXFMTi1ZWWdyZ1RZbXFyTkdMX2w3dmpldFYtM2E0THNjaGNGME1vYWdsai1sN1EwTXFZclA3NU1MZUZpVk5WQXFPT0ptV2dieU53NlVzcWdIWnNmQWF6bGxGM0ZrY3p1a2Z2Tm9JQTBJV0twcFBiZUxuWHNaTG1BUA?oc=5"
+source_name: "The Punished Backlog"
+---
+
+
