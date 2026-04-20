@@ -2592,3 +2592,148 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
 [data-theme="light"] .news-search-form { background: #f5f3f0; border-color: rgba(0,0,0,.14); }
 [data-theme="light"] .news-search-input { color: #1a1714; }
 [data-theme="light"] .active-filter-banner { background: rgba(90,140,95,.08); }
+
+/* ── Related articles (post page) ────────────────────────────────────────── */
+.related-articles {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-heading {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1.1rem;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: .85rem;
+}
+
+.related-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg-2);
+  transition: border-color .18s, transform .18s, background .18s;
+}
+.related-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.related-card-img-wrap {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--bg-3);
+  flex-shrink: 0;
+}
+.related-card-img-wrap--ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 1.4rem;
+}
+.related-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.related-card:hover .related-card-img { transform: scale(1.04); }
+
+.related-card-body {
+  padding: .7rem .85rem .85rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  flex: 1;
+}
+
+.related-card-meta {
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.related-card-title {
+  font-size: .82rem;
+  font-weight: 600;
+  line-height: 1.38;
+  margin: 0;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Story clustering (news index) ───────────────────────────────────────── */
+/* Secondary articles in a cluster are hidden; their sources appear as badges
+   on the primary card. The cluster bar sits just inside the card border so
+   it inherits the card's rounded corners. */
+
+.story-cluster-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem .4rem;
+  padding: .55rem 1.5rem .8rem;
+  border-top: 1px solid var(--border);
+  margin-top: .75rem;
+  font-size: .72rem;
+  position: relative;
+  z-index: 1; /* above the stretched link ::after overlay */
+}
+
+.story-cluster-label {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-right: .15rem;
+}
+
+.story-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .22rem .6rem;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: .7rem;
+  font-weight: 500;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.story-source-badge:hover {
+  background: var(--bg-4, var(--bg-3));
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+.story-source-badge svg { flex-shrink: 0; opacity: .7; }
+
+/* Light-mode cluster overrides */
+[data-theme="light"] .story-source-badge { background: #f0ede8; border-color: rgba(0,0,0,.1); }
+[data-theme="light"] .story-source-badge:hover { background: #e8e5e0; border-color: var(--accent); }
