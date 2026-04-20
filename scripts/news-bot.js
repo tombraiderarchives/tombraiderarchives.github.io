@@ -88,19 +88,36 @@ function parseRSS(xml) {
   const matches = xml.match(/<item>([\s\S]*?)<\/item>/gi) || [];
 
   for (const block of matches) {
-    const title      = tagContent(block, 'title');
-    const link       = tagContent(block, 'link').replace(/\s/g, '');
-    const pubDate    = tagContent(block, 'pubDate');
-    const sourceName = block.match(/<source[^>]*>([^<]*)<\/source>/i)?.[1]?.trim() || '';
-    const description = tagContent(block, 'description')
-      .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const title   = tagContent(block, 'title');
+    const link    = tagContent(block, 'link').replace(/\s/g, '');
+    const pubDate = tagContent(block, 'pubDate');
+
+    // <source url="https://source.com">Publisher Name</source>
+    const sourceMatch   = block.match(/<source\s+url=["']([^"']+)["'][^>]*>([^<]*)<\/source>/i);
+    const sourceName    = sourceMatch?.[2]?.trim() || block.match(/<source[^>]*>([^<]*)<\/source>/i)?.[1]?.trim() || '';
+    const sourceHomeUrl = sourceMatch?.[1]?.trim() || '';
+
+    const rawDesc = tagContent(block, 'description');
+
+    // Google News RSS descriptions contain <a href="REAL_ARTICLE_URL"> links —
+    // extract the first non-google link so we can navigate there directly,
+    // bypassing the unreliable Google News encrypted redirect.
+    let directUrl = null;
+    const linkRe  = /<a\s[^>]*href=["']([^"']+)["']/gi;
+    let m;
+    while ((m = linkRe.exec(rawDesc)) !== null) {
+      const u = m[1];
+      if (u && !u.includes('google.com') && u.startsWith('http')) { directUrl = u; break; }
+    }
+
+    const description = rawDesc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
     if (!title || !link) continue;
 
     const published = pubDate ? new Date(pubDate) : null;
     if (published && !isNaN(published) && published.getTime() < cutoff) continue;
 
-    items.push({ title, link, description, pubDate, sourceName });
+    items.push({ title, link, description, pubDate, sourceName, sourceHomeUrl, directUrl });
   }
   return items;
 }
@@ -324,23 +341,74 @@ async function summariseWithClaude(title, articleText, rssExcerpt, sourceUrl) {
 
 // ── Puppeteer: fetch individual article page ──────────────────────────────────
 
-async function fetchArticlePage(browser, googleNewsLink) {
+async function fetchArticlePage(browser, googleNewsLink, directUrl) {
   const page = await browser.newPage();
   await page.setUserAgent(USER_AGENT);
 
+  // Suppress webdriver flag so sites don't immediately block us
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+  });
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+
+  // Pre-set Google consent cookie so we bypass the GDPR interstitial
+  await page.setCookie({
+    name: 'SOCS', value: 'CAESEwgDEgk0NzM5MDM5NzAaAmVuIAEaBgiA5NWoBg',
+    domain: '.google.com', path: '/', secure: true, sameSite: 'None',
+  });
+
   try {
-    // Navigate — Google News link redirects to the real article URL
-    await page.goto(googleNewsLink, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    let finalUrl;
 
-    // Wait for any JS redirect to leave news.google.com, then let page settle
-    await page.waitForFunction(
-      () => !location.href.includes('news.google.com'),
-      { timeout: 6000 }
-    ).catch(() => {});
-    // Extra settle time so JS-rendered pages finish loading their content
-    await new Promise(r => setTimeout(r, 2500));
+    // ── Strategy A: navigate directly to the real article URL ─────────────────
+    // Google News RSS descriptions embed <a href="real-url"> links. Using that
+    // URL directly bypasses the Google News encrypted redirect entirely.
+    if (directUrl) {
+      await page.goto(directUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+      await new Promise(r => setTimeout(r, 1500));
+      finalUrl = page.url();
+    }
 
-    const finalUrl = page.url();
+    // ── Strategy B: follow the Google News redirect ────────────────────────────
+    // Fall back to the original link if we have no direct URL or if Strategy A
+    // ended up on an error page (very short URL = redirect loop or 404).
+    const needsGoogleNav = !directUrl || finalUrl === directUrl && directUrl.includes('google.com');
+    if (needsGoogleNav || !finalUrl || finalUrl.includes('news.google.com')) {
+      // Try the /articles/ path variant which sometimes redirects more reliably
+      const altLink = googleNewsLink.replace('/rss/articles/', '/articles/');
+      const navUrl  = altLink !== googleNewsLink ? altLink : googleNewsLink;
+      await page.goto(navUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+
+      // Wait for JS redirect to leave news.google.com (up to 12 s)
+      await page.waitForFunction(
+        () => !location.href.includes('news.google.com'),
+        { timeout: 12000 }
+      ).catch(() => {});
+      await new Promise(r => setTimeout(r, 2500));
+      finalUrl = page.url();
+    }
+
+    // If still on Google, try clicking through any consent/interstitial page
+    if (finalUrl.includes('google.com')) {
+      for (const sel of [
+        'button[jsname="b3VHJd"]', '#L2AGLb', 'button[aria-label*="ccept" i]',
+        'form[action*="consent"] button', '.tHlp8d',
+      ]) {
+        try {
+          const btn = await page.$(sel);
+          if (btn) {
+            await btn.click();
+            await page.waitForFunction(
+              () => !location.href.includes('google.com'),
+              { timeout: 8000 }
+            ).catch(() => {});
+            await new Promise(r => setTimeout(r, 1500));
+            break;
+          }
+        } catch (_) {}
+      }
+      finalUrl = page.url();
+    }
 
     // ── og:image ─────────────────────────────────────────────────────────────
     const imageUrl = await page.evaluate(() => {
@@ -432,7 +500,7 @@ async function writePost(item, existingUrls, browser) {
   }
 
   console.log(`  → ${title.slice(0, 70)}…`);
-  const { finalUrl, imageUrl, articleText } = await fetchArticlePage(browser, item.link);
+  const { finalUrl, imageUrl, articleText } = await fetchArticlePage(browser, item.link, item.directUrl);
 
   // Dedup against real URL — must happen after redirect resolution
   if (existingUrls.has(finalUrl)) {
@@ -444,19 +512,38 @@ async function writePost(item, existingUrls, browser) {
   const resolvedSource = sourceName ||
     (() => { try { return new URL(finalUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
 
+  // When Puppeteer couldn't leave Google, use the direct or homepage URL as
+  // source_url so the "Read full article" link goes somewhere useful.
+  const stuckOnGoogle = /news\.google\.com|consent\.google\.com/.test(finalUrl);
+  const bestSourceUrl = stuckOnGoogle
+    ? (item.directUrl || item.sourceHomeUrl || item.link)
+    : finalUrl;
+
   const category = inferCategory(title, item.description + ' ' + articleText);
 
   const rssDesc = cleanRssDescription(item.description, title, resolvedSource);
   const summary =
-    await summariseWithClaude(title, articleText, rssDesc, finalUrl) ||
+    await summariseWithClaude(title, articleText, rssDesc, bestSourceUrl) ||
     articleText ||
     rssDesc;
 
-  const excerpt = makeExcerpt(summary);
-  // Only render body text when we had real article content to summarise.
-  // If Puppeteer got nothing (< 200 chars), the "Original article" callout
-  // on the post page is sufficient — avoids repeating a thin RSS blurb.
-  const body    = articleText.length >= 200 ? cleanBody(summary) : '';
+  // excerpt_text: always produce something — fall back to a shortened title if
+  // neither article text nor RSS description yielded a usable excerpt.
+  const excerpt = makeExcerpt(summary) ||
+    makeExcerpt(item.description.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()) ||
+    title.slice(0, 220);
+
+  // Body: use scraped/summarised content when available; fall back to RSS desc
+  // if scraping failed but we have a non-trivial description.
+  let body;
+  if (articleText.length >= 200) {
+    body = cleanBody(summary);
+  } else if (rssDesc && rssDesc.length >= 60) {
+    body = rssDesc;
+  } else {
+    body = '';
+  }
+
   const yamlStr = (s) => JSON.stringify(String(s));
 
   const lines = [
@@ -473,7 +560,7 @@ async function writePost(item, existingUrls, browser) {
 
   lines.push(
     `excerpt_text: ${yamlStr(excerpt)}`,
-    `source_url: ${yamlStr(finalUrl)}`,
+    `source_url: ${yamlStr(bestSourceUrl)}`,
     `source_rss_url: ${yamlStr(item.link)}`,
     `source_name: ${yamlStr(resolvedSource)}`,
     '---',
@@ -485,6 +572,7 @@ async function writePost(item, existingUrls, browser) {
   fs.writeFileSync(filepath, lines.join('\n') + '\n', 'utf8');
 
   existingUrls.add(finalUrl);
+  existingUrls.add(bestSourceUrl);
   existingUrls.add(item.link);
 
   const imgMark = imageUrl         ? '🖼 ' : '   ';
@@ -526,6 +614,7 @@ async function main() {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu',
+      '--disable-blink-features=AutomationControlled',
     ],
   });
 
