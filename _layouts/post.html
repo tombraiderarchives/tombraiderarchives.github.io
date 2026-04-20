@@ -34,7 +34,9 @@ layout: default
       <ul class="tag-list" aria-label="Tags">
         {% for tag in page.tags %}
         {% assign tv = "" %}{% if tag.tag %}{% assign tv = tag.tag %}{% else %}{% assign tv = tag %}{% endif %}
-        <li><a href="/news/?tag={{ tv | url_encode }}" class="tag tag-link">{{ tv }}</a></li>
+        {% unless tv == 'tomb-raider' %}
+        <li><a href="/news/?tag={{ tv | url_encode }}" class="tag tag-link">{{ tv | replace: '-', ' ' }}</a></li>
+        {% endunless %}
         {% endfor %}
       </ul>
       {% endif %}
@@ -66,4 +68,71 @@ layout: default
     </div>
   </aside>
   {% endif %}
+
+  {%- comment -%}
+    Related stories: find posts that share at least one specific topic tag
+    (anything except the generic 'tomb-raider' base tag). Fall back to
+    showing the 3 most-recent other posts if no tag matches are found.
+  {%- endcomment -%}
+  {% assign _page_specific_tags = page.tags | map: "tag" | where_exp: "t", "t != 'tomb-raider'" %}
+  {% assign _related_urls = "" | split: "" %}
+  {% assign _related_posts = "" | split: "" %}
+
+  {% if _page_specific_tags.size > 0 %}
+    {% for _post in site.posts %}
+      {% unless _post.url == page.url or _related_urls contains _post.url %}
+        {% assign _post_tags = _post.tags | map: "tag" %}
+        {% for _ptag in _page_specific_tags %}
+          {% if _post_tags contains _ptag %}
+            {% assign _related_urls  = _related_urls  | push: _post.url %}
+            {% assign _related_posts = _related_posts | push: _post %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endunless %}
+      {% if _related_posts.size >= 4 %}{% break %}{% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% comment %} Fill remaining slots with recent posts if we got fewer than 3 {% endcomment %}
+  {% if _related_posts.size < 3 %}
+    {% for _post in site.posts %}
+      {% unless _post.url == page.url or _related_urls contains _post.url %}
+        {% assign _related_urls  = _related_urls  | push: _post.url %}
+        {% assign _related_posts = _related_posts | push: _post %}
+      {% endunless %}
+      {% if _related_posts.size >= 4 %}{% break %}{% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% if _related_posts.size > 0 %}
+  <section class="related-articles" aria-label="Related stories">
+    <h2 class="related-heading">
+      <i class="ph ph-newspaper" aria-hidden="true"></i>
+      Related Stories
+    </h2>
+    <div class="related-grid">
+      {% for _rel in _related_posts %}
+      <a class="related-card" href="{{ _rel.url }}">
+        <div class="related-card-img-wrap{% unless _rel.header_image %} related-card-img-wrap--ph{% endunless %}">
+          {% if _rel.header_image %}
+          <img src="{{ _rel.header_image }}" alt="" class="related-card-img" loading="lazy" decoding="async">
+          {% else %}
+          <i class="ph ph-newspaper" aria-hidden="true"></i>
+          {% endif %}
+        </div>
+        <div class="related-card-body">
+          <span class="related-card-meta">
+            {{ _rel.date | date: "%b %d, %Y" }}
+            {% if _rel.source_name %}&middot; {{ _rel.source_name }}{% endif %}
+          </span>
+          {% if _rel.category %}<span class="category-badge">{{ _rel.category }}</span>{% endif %}
+          <p class="related-card-title">{{ _rel.title }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
 </article>

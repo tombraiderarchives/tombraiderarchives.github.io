@@ -102,16 +102,39 @@ title: News
 
 <script>
 (function () {
-  var params   = new URLSearchParams(location.search);
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  var STOP = new Set([
+    'tomb','raider','the','and','for','with','that','this','from','have',
+    'will','its','has','was','are','new','more','also','after','into','about',
+    'over','just','been','they','when','your','out','what','how','why','who',
+    'game','games','lara','croft',
+  ]);
+
+  function normTitle(t) {
+    return t.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+      .filter(function(w){ return w.length > 3 && !STOP.has(w); });
+  }
+
+  function similarity(a, b) {
+    var wa = normTitle(a);
+    var wb = new Set(normTitle(b));
+    if (!wa.length || !wb.size) return 0;
+    var overlap = wa.filter(function(w){ return wb.has(w); }).length;
+    return overlap / Math.max(wa.length, wb.size);
+  }
+
+  /* ── collect items ────────────────────────────────────────────────────── */
+  var items = [].slice.call(document.querySelectorAll('[data-news-item]'));
+
+  /* ── URL params ───────────────────────────────────────────────────────── */
+  var params    = new URLSearchParams(location.search);
   var filterCat = (params.get('category') || '').trim().toLowerCase();
   var filterTag = (params.get('tag')      || '').trim().toLowerCase();
   var query     = (params.get('q')        || '').trim().toLowerCase();
 
-  /* Populate search box */
   var searchEl = document.getElementById('news-search');
   if (searchEl && params.get('q')) searchEl.value = params.get('q');
 
-  /* Active-filter banner */
   var banner = document.getElementById('active-filter');
   var label  = document.getElementById('active-filter-label');
   if (filterCat || filterTag || query) {
@@ -119,15 +142,101 @@ title: News
     banner.removeAttribute('hidden');
   }
 
-  /* Highlight active category button */
   document.querySelectorAll('[data-filter-cat]').forEach(function (btn) {
     if (btn.dataset.filterCat.toLowerCase() === filterCat) btn.classList.add('active');
   });
 
-  /* Filter items */
-  var items   = document.querySelectorAll('[data-news-item]');
+  var isFiltered = filterCat || filterTag || query;
+
+  /* ── story clustering (only when no filter active) ────────────────────── */
+  /* Groups articles about the same topic published within 7 days. The most
+     recent article in each group stays visible; the rest are tucked into an
+     "Also covered by" bar appended to the primary card. This keeps the feed
+     clean without hiding any content from readers — the linked articles are
+     all still one click away. */
+  var CLUSTER_MS   = 7 * 24 * 60 * 60 * 1000;
+  var CLUSTER_SIM  = 0.45;
+
+  function getItemDate(el) {
+    var meta = el.querySelector('.news-item-meta');
+    return meta ? new Date(meta.textContent.trim()) : new Date(0);
+  }
+
+  /* Remove any previously injected cluster bars (for re-runs) */
+  document.querySelectorAll('.story-cluster-bar').forEach(function(b){ b.remove(); });
+  items.forEach(function(el){ el.hidden = false; el.classList.remove('news-item--clustered'); });
+
+  if (!isFiltered) {
+    var assigned = new Array(items.length).fill(false);
+    var clusters = [];
+
+    for (var i = 0; i < items.length; i++) {
+      if (assigned[i]) continue;
+      var cluster = [i];
+      assigned[i] = true;
+      var dateI = getItemDate(items[i]);
+      var titleI = items[i].dataset.title || '';
+
+      for (var j = i + 1; j < items.length; j++) {
+        if (assigned[j]) continue;
+        var dateJ = getItemDate(items[j]);
+        if (Math.abs(dateI - dateJ) > CLUSTER_MS) continue;
+        if (similarity(titleI, items[j].dataset.title || '') >= CLUSTER_SIM) {
+          cluster.push(j);
+          assigned[j] = true;
+        }
+      }
+      clusters.push(cluster);
+    }
+
+    clusters.forEach(function(cluster) {
+      if (cluster.length < 2) return;
+
+      /* Primary = first item with an image, else first item overall */
+      var primaryIdx = cluster[0];
+      for (var k = 0; k < cluster.length; k++) {
+        if (items[cluster[k]].querySelector('.news-item-img-wrap:not(.news-item-placeholder)')) {
+          primaryIdx = cluster[k];
+          break;
+        }
+      }
+
+      /* Build "Also covered by" source badges for secondary articles */
+      var secondaries = cluster.filter(function(idx){ return idx !== primaryIdx; });
+      var badgeHtml = '';
+      secondaries.forEach(function(idx) {
+        var el = items[idx];
+        var href = el.dataset.href || '#';
+        var src  = (el.querySelector('.news-source') || {}).textContent || 'Source';
+        badgeHtml +=
+          '<a href="' + href + '" class="story-source-badge" tabindex="0">' +
+            '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+            '<span>' + src + '</span>' +
+          '</a>';
+        el.hidden = true;
+        el.classList.add('news-item--clustered');
+      });
+
+      /* Inject bar into primary card */
+      var bar = document.createElement('div');
+      bar.className = 'story-cluster-bar';
+      bar.innerHTML =
+        '<span class="story-cluster-label">Also covered by</span>' + badgeHtml;
+      items[primaryIdx].appendChild(bar);
+    });
+  }
+
+  /* ── filtering ────────────────────────────────────────────────────────── */
   var visible = 0;
   items.forEach(function (item) {
+    if (isFiltered) {
+      /* While a filter is active show every matching article individually */
+      item.hidden = false;
+      item.classList.remove('news-item--clustered');
+      var bar2 = item.querySelector('.story-cluster-bar');
+      if (bar2) bar2.remove();
+    }
+
     var cat   = item.dataset.category || '';
     var tags  = (item.dataset.tags || '').split(',').map(function(t){ return t.trim(); });
     var title = item.dataset.title   || '';
@@ -137,8 +246,8 @@ title: News
           && (!filterTag || tags.indexOf(filterTag) !== -1)
           && (!query     || title.indexOf(query) !== -1 || exc.indexOf(query) !== -1);
 
-    item.hidden = !ok;
-    if (ok) visible++;
+    if (!ok) item.hidden = true;
+    else if (!item.classList.contains('news-item--clustered')) visible++;
   });
 
   var noResults = document.getElementById('no-results');

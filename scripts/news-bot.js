@@ -163,6 +163,98 @@ function inferCategory(title, text) {
   return 'News';
 }
 
+/**
+ * Returns an array of topic-specific tag objects for a post.
+ * Always includes the base { tag: 'tomb-raider' }; adds extra tags based on
+ * keywords in the title and scraped article text.
+ */
+function inferTopicTags(title, text) {
+  const t = (title + ' ' + text).toLowerCase();
+  const tags = [{ tag: 'tomb-raider' }];
+  const add  = (slug) => { if (!tags.some(x => x.tag === slug)) tags.push({ tag: slug }); };
+
+  // Productions
+  if (/amazon|prime video|streaming series|tv show|sophie turner|filming|production|wrest park|location scout/.test(t))
+    add('amazon-series');
+  if (/legend of lara croft|netflix.*tomb|animated series/.test(t))
+    add('animated-series');
+  if (/lara croft tomb raider.*(?:film|movie)|cradle of life|2018.*film|alicia vikander|angelina jolie/.test(t))
+    add('movie');
+  if (/casting|cast member|actor|actress|starring/.test(t))
+    add('casting');
+
+  // Specific games
+  if (/legacy of atlantis/.test(t))            add('legacy-of-atlantis');
+  if (/\bcatalyst\b/.test(t))                  add('catalyst');
+  if (/remaster(?:ed)?|i\+ii\+iii|i, ii.{0,5}iii/.test(t)) add('remastered');
+  if (/\btr(?:1|2|3|4|5|6)\b|classic.*tomb raider|original.*(?:ps1|psx|1996|1997|1998)/.test(t))
+    add('classic');
+  if (/\blegend\b.*tomb raider|tomb raider.*\banniversary\b|tomb raider.*\bunderworld\b/.test(t))
+    add('legend-era');
+  if (/shadow.*tomb raider|rise.*tomb raider|tomb raider.*2013|survivor trilogy/.test(t))
+    add('survivor-era');
+  if (/guardian of light|temple of osiris/.test(t)) add('lara-croft-games');
+  if (/powerwash simulator|power wash.*tomb/.test(t)) add('powerwash-simulator');
+
+  // Content/event types
+  if (/\bdlc\b|downloadable content/.test(t))   add('dlc');
+  if (/fan.made|fan.project|fan game|fan art|\bmod\b/.test(t)) add('fan-content');
+  if (/free.to.play|free.*(?:game|download)|download.*free/.test(t)) add('free-to-play');
+  if (/\banniversary\b|\d0th anniversary/.test(t)) add('anniversary');
+  if (/speedrun|world record|glitch/.test(t))   add('speedrun');
+  if (/merch|merchandise|figurine|statue|collectible|replica/.test(t)) add('merchandise');
+  if (/sale\b|discount|bundle|humble|deal/.test(t)) add('sale');
+  if (/retrospective|editorial|opinion|essay/.test(t)) add('editorial');
+  if (/rumou?r|leak|insider|unconfirmed/.test(t)) add('rumour');
+  if (/delisted?|removed from|taking down/.test(t)) add('delisted');
+
+  return tags;
+}
+
+/**
+ * Returns true if a post with a very similar title was already published
+ * within the past `maxAgeDays` days. Prevents the feed from being flooded
+ * with multiple outlets covering the exact same story in one bot run.
+ */
+function isDuplicateStory(newTitle, postsDir, maxAgeDays = 2, threshold = 0.65) {
+  // Meaningful words only — strip stopwords and short tokens
+  const STOP = new Set([
+    'tomb','raider','the','and','for','with','that','this','from','have',
+    'will','its','has','was','are','new','more','also','after','into','about',
+    'over','just','been','they','when','your','out','what','how','why','who',
+  ]);
+  const norm = (s) => s.toLowerCase()
+    .replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+    .filter(w => w.length > 3 && !STOP.has(w));
+
+  const targetWords = new Set(norm(newTitle));
+  if (targetWords.size < 2) return false;
+
+  const cutoff = Date.now() - maxAgeDays * 24 * 60 * 60 * 1000;
+  if (!fs.existsSync(postsDir)) return false;
+
+  for (const file of fs.readdirSync(postsDir)) {
+    if (!file.endsWith('.md')) continue;
+    const dateStr = file.slice(0, 10);
+    if (new Date(dateStr).getTime() < cutoff) continue;
+
+    const raw = fs.readFileSync(path.join(postsDir, file), 'utf8');
+    const m   = raw.match(/^title:\s*"?(.*?)"?\s*$/m);
+    if (!m) continue;
+    const existTitle = m[1].replace(/\\"/g, '"');
+
+    const existWords = norm(existTitle);
+    const overlap    = existWords.filter(w => targetWords.has(w)).length;
+    const score      = overlap / Math.max(targetWords.size, existWords.length, 1);
+
+    if (score >= threshold) {
+      console.log(`     ⚠  Duplicate story — similar to: ${existTitle.slice(0, 60)}`);
+      return true;
+    }
+  }
+  return false;
+}
+
 const TITLE_CASE_SMALL = new Set([
   'a','an','the','and','but','or','for','nor','on','at','to','from',
   'by','in','of','with','as','vs','x','per','via'
@@ -499,6 +591,9 @@ async function writePost(item, existingUrls, browser) {
     return null;
   }
 
+  // Skip if a near-identical story was already published in the last 48 h
+  if (isDuplicateStory(title, POSTS_DIR)) return null;
+
   console.log(`  → ${title.slice(0, 70)}…`);
   const { finalUrl, imageUrl, articleText } = await fetchArticlePage(browser, item.link, item.directUrl);
 
@@ -519,7 +614,8 @@ async function writePost(item, existingUrls, browser) {
     ? (item.directUrl || item.sourceHomeUrl || item.link)
     : finalUrl;
 
-  const category = inferCategory(title, item.description + ' ' + articleText);
+  const category  = inferCategory(title, item.description + ' ' + articleText);
+  const topicTags = inferTopicTags(title, item.description + ' ' + articleText);
 
   const rssDesc = cleanRssDescription(item.description, title, resolvedSource);
   const summary =
@@ -553,7 +649,7 @@ async function writePost(item, existingUrls, browser) {
     `date: ${date}`,
     `category: ${yamlStr(category)}`,
     `tags:`,
-    `  - tag: tomb-raider`,
+    ...topicTags.map(t => `  - tag: ${t.tag}`),
   ];
 
   if (imageUrl) lines.push(`header_image: ${yamlStr(imageUrl)}`);
