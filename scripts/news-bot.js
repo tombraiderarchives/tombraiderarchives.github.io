@@ -2,14 +2,16 @@
 /**
  * Tomb Raider Archives — News Bot (hybrid RSS + Puppeteer)
  *
- * 1. Fetches article list via Google News RSS — plain HTTPS, always reliable,
- *    no browser-detection issues
- * 2. For each article, launches a Puppeteer page to follow the Google News
+ * 1. Fetches article lists from multiple Google News RSS feeds in parallel
+ *    so we catch "Lara Croft" articles, Crystal Dynamics news, Amazon show
+ *    coverage, and anything else that wouldn't say "Tomb Raider" in the title
+ * 2. Merges and deduplicates across feeds, then sorts newest-first
+ * 3. For each candidate, launches a Puppeteer page to follow the Google News
  *    redirect URL to the real article, then scrapes:
  *      - og:image / twitter:image (full quality)
  *      - Readable article text via live DOM manipulation
- * 3. Optionally summarises with Claude Haiku if ANTHROPIC_API_KEY is set
- * 4. Writes Jekyll post files to news/_posts/
+ * 4. Optionally summarises with Claude Haiku if ANTHROPIC_API_KEY is set
+ * 5. Writes Jekyll post files to news/_posts/
  *
  * Why hybrid?
  *   Scraping the Google News *search page* from GitHub Actions IPs triggers
@@ -29,11 +31,23 @@ const path      = require('path');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const RSS_URL          = 'https://news.google.com/rss/search?q=tomb+raider&hl=en-US&gl=US&ceid=US:en';
-const POSTS_DIR        = path.join(__dirname, '..', 'news', '_posts');
-const MAX_PER_RUN      = 5;      // posts per run — don't flood
-const MAX_AGE_DAYS     = 7;      // ignore articles older than this
-const MAX_ARTICLE_CHARS = 5000;  // max chars of article text sent to Claude
+// Multiple RSS feeds — fetched in parallel and merged.
+// Each entry is [label, url] for logging clarity.
+const RSS_FEEDS = [
+  ['tomb raider',
+   'https://news.google.com/rss/search?q=tomb+raider&hl=en-US&gl=US&ceid=US:en'],
+  ['lara croft',
+   'https://news.google.com/rss/search?q=%22lara+croft%22&hl=en-US&gl=US&ceid=US:en'],
+  ['crystal dynamics',
+   'https://news.google.com/rss/search?q=%22crystal+dynamics%22+%22tomb+raider%22&hl=en-US&gl=US&ceid=US:en'],
+  ['amazon tomb raider',
+   'https://news.google.com/rss/search?q=amazon+%22tomb+raider%22+series&hl=en-US&gl=US&ceid=US:en'],
+];
+
+const POSTS_DIR         = path.join(__dirname, '..', 'news', '_posts');
+const MAX_PER_RUN       = 6;      // posts per run — don't flood
+const MAX_AGE_DAYS      = 10;     // ignore articles older than this
+const MAX_ARTICLE_CHARS = 5000;   // max chars of article text sent to Claude
 
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
@@ -216,7 +230,7 @@ function inferTopicTags(title, text) {
  * within the past `maxAgeDays` days. Prevents the feed from being flooded
  * with multiple outlets covering the exact same story in one bot run.
  */
-function isDuplicateStory(newTitle, postsDir, maxAgeDays = 2, threshold = 0.65) {
+function isDuplicateStory(newTitle, postsDir, maxAgeDays = 5, threshold = 0.65) {
   // Meaningful words only — strip stopwords and short tokens
   const STOP = new Set([
     'tomb','raider','the','and','for','with','that','this','from','have',
@@ -682,27 +696,56 @@ async function writePost(item, existingUrls, browser) {
 async function main() {
   console.log('Tomb Raider Archives — News Bot\n');
 
-  // ── 1. Fetch article list from RSS ────────────────────────────────────────
-  console.log('Fetching RSS feed…');
-  let xml;
-  try {
-    xml = await fetchUrl(RSS_URL);
-  } catch (err) {
-    console.error('Failed to fetch RSS:', err.message);
-    process.exit(1);
+  // ── 1. Fetch all RSS feeds in parallel ───────────────────────────────────
+  console.log(`Fetching ${RSS_FEEDS.length} RSS feeds in parallel…`);
+  const feedResults = await Promise.allSettled(
+    RSS_FEEDS.map(([label, url]) =>
+      fetchUrl(url)
+        .then(xml => ({ label, items: parseRSS(xml) }))
+        .catch(err => { console.warn(`  ⚠  [${label}] fetch failed: ${err.message}`); return { label, items: [] }; })
+    )
+  );
+
+  // ── 2. Merge + deduplicate across feeds ───────────────────────────────────
+  // Deduplicate by: (a) exact Google News link, (b) exact directUrl.
+  // Different sources covering the same story are NOT merged here — they'll be
+  // handled later by isDuplicateStory(), so each source still gets a chance.
+  const seenLinks    = new Set();
+  const seenDirect   = new Set();
+  let merged = [];
+
+  for (const result of feedResults) {
+    if (result.status !== 'fulfilled') continue;
+    const { label, items } = result.value;
+    let added = 0;
+    for (const item of items) {
+      if (seenLinks.has(item.link)) continue;
+      if (item.directUrl && seenDirect.has(item.directUrl)) continue;
+      seenLinks.add(item.link);
+      if (item.directUrl) seenDirect.add(item.directUrl);
+      merged.push({ ...item, _feed: label });
+      added++;
+    }
+    console.log(`  [${label}] ${added} unique item(s)`);
   }
 
-  const items = parseRSS(xml);
-  console.log(`${items.length} item(s) in feed (within ${MAX_AGE_DAYS} days)\n`);
+  // Sort newest-first across all feeds, then cap to avoid runaway processing
+  merged.sort((a, b) => {
+    const da = a.pubDate ? new Date(a.pubDate) : new Date(0);
+    const db = b.pubDate ? new Date(b.pubDate) : new Date(0);
+    return db - da;
+  });
 
-  if (!items.length) { console.log('Nothing to do.'); return; }
+  console.log(`\n${merged.length} total unique item(s) after cross-feed dedup\n`);
+  if (!merged.length) { console.log('Nothing to do.'); return; }
 
-  // ── 2. Deduplicate + batch ────────────────────────────────────────────────
+  // ── 3. Filter already-posted URLs ────────────────────────────────────────
   const existingUrls = getExistingSourceUrls();
-  const batch = items.slice(0, MAX_PER_RUN);
+  const candidates   = merged.filter(item => !existingUrls.has(item.link));
+  const batch        = candidates.slice(0, MAX_PER_RUN);
   console.log(`Processing up to ${batch.length} article(s)…\n`);
 
-  // ── 3. Launch browser once for all article fetches ────────────────────────
+  // ── 4. Launch browser once for all article fetches ────────────────────────
   const browser = await puppeteer.launch({
     headless: true,
     args: [
