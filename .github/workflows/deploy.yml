@@ -31,6 +31,14 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
+      - name: Compress large images
+        run: |
+          # Re-compress JPEGs over 400 KB to quality 82 so the _site artifact
+          # stays under GitHub Pages' 1 GB limit. ImageMagick is pre-installed
+          # on ubuntu-latest. -P4 runs four workers in parallel.
+          find images downloads -name "*.jpg" -size +400k -print0 \
+            | xargs -0 -r -P4 mogrify -quality 82
+
       - name: Build with Jekyll
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
