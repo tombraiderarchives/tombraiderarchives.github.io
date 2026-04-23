@@ -10,17 +10,15 @@ layout: default
   {% assign _hq_p  = _base | append: "/hq/thumbs/" %}
   {% assign _rnd_p = _base | append: "/renders/thumbs/" %}
   {% assign _ld_p  = _base | append: "/loadscreens/thumbs/" %}
-  {% assign _wp_p  = _base | append: "/wallpapers/thumbs/" %}
 
   {% assign _ss  = site.static_files | where_exp: "f", "f.path contains _ss_p"  %}
   {% assign _art = site.static_files | where_exp: "f", "f.path contains _art_p" %}
   {% assign _hq  = site.static_files | where_exp: "f", "f.path contains _hq_p"  %}
   {% assign _rnd = site.static_files | where_exp: "f", "f.path contains _rnd_p" %}
   {% assign _ld  = site.static_files | where_exp: "f", "f.path contains _ld_p"  %}
-  {% assign _wp  = site.static_files | where_exp: "f", "f.path contains _wp_p"  %}
 
   {% assign _has_gallery = false %}
-  {% if _ss.size > 0 or _art.size > 0 or _hq.size > 0 or _rnd.size > 0 or _ld.size > 0 or _wp.size > 0 %}
+  {% if _ss.size > 0 or _art.size > 0 or _hq.size > 0 or _rnd.size > 0 or _ld.size > 0 %}
     {% assign _has_gallery = true %}
   {% endif %}
 {% endif %}
@@ -365,34 +363,6 @@ layout: default
         </div>
         {% endif %}
 
-        {% if _wp.size > 0 %}
-        <div class="gallery-sub">
-          <button class="gallery-sub-toggle" aria-expanded="false" aria-controls="sub-wallpapers">
-            <span class="gallery-sub-title">Wallpapers</span>
-            <span class="gallery-sub-count">{{ _wp.size }}</span>
-            <svg class="gallery-sub-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M2 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="gallery-sub-panel" id="sub-wallpapers">
-            <div class="gallery-sub-panel-inner">
-              <div class="gallery-grid gallery-grid--wallpapers" data-gallery="wallpapers">
-                {% assign _wp_sorted = _wp | sort: "name" %}
-                {% for thumb in _wp_sorted %}
-                  {% assign full = thumb.path | replace: "/thumbs/", "/" %}
-                  <a href="{{ full }}" class="gallery-thumb" data-full="{{ full }}"
-                     aria-label="Wallpaper {{ forloop.index }}">
-                    <img src="{{ thumb.path }}" alt="Wallpaper {{ forloop.index }}" loading="lazy" decoding="async">
-                    <span class="gallery-thumb-dl" aria-hidden="true">
-                      <i class="ph ph-download-simple"></i>
-                    </span>
-                  </a>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
 
       </div>
     </div>

@@ -11,7 +11,7 @@ title: Home
 <section class="news-section">
   <h2 class="section-title">Latest News</h2>
   <div class="news-list news-list--featured">
-    {% for post in site.posts limit:5 %}
+    {% for post in site.posts limit:3 %}
     <article class="news-item{% unless post.header_image %} news-item--no-img{% endunless %}" data-href="{{ post.url }}">
       {% if post.header_image %}
       <div class="news-item-img-wrap" style="--blur-bg: url('{{ post.header_image | escape }}')">

@@ -1576,7 +1576,7 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   background: var(--border);
 }
 .news-day-divider-label {
-  font-size: .68rem;
+  font-size: .82rem;
   font-weight: 700;
   letter-spacing: .09em;
   text-transform: uppercase;
