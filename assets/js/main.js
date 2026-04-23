@@ -44,6 +44,22 @@
   });
 }());
 
+/* ── Portrait image detection for news cards ─────────────────────────────── */
+/* Adds --portrait class to the img-wrap when the image is taller than wide,
+   enabling the blurred background. Landscape images use object-fit:cover. */
+(function () {
+  document.querySelectorAll('.news-item-img-wrap .news-item-img').forEach(function (img) {
+    function check() {
+      if (img.naturalWidth && img.naturalHeight && img.naturalHeight > img.naturalWidth) {
+        var wrap = img.closest('.news-item-img-wrap');
+        if (wrap) wrap.classList.add('news-item-img-wrap--portrait');
+      }
+    }
+    if (img.complete) { check(); }
+    else { img.addEventListener('load', check, { once: true }); }
+  });
+}());
+
 /* ── Sidebar (mobile) ───────────────────────────────────────────────────── */
 (function () {
   var sidebar   = document.getElementById('sidebar');
