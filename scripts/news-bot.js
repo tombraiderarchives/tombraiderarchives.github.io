@@ -531,23 +531,33 @@ async function fetchArticlePage(browser, googleNewsLink, directUrl) {
 
     // ── Article text via live DOM ─────────────────────────────────────────────
     const articleText = await page.evaluate((maxChars) => {
-      // Strip noise nodes in-place
+      // Remove everything that is clearly not article body text
       [
         'script', 'style', 'noscript', 'svg', 'nav', 'header', 'footer',
         'aside', 'form', 'figure', 'iframe',
-        '[class*="cookie"]', '[class*="gdpr"]', '[class*="subscribe"]',
-        '[class*="newsletter"]', '[class*="social"]', '[class*="share"]',
-        '[class*="related"]', '[class*="recommend"]', '[class*="sidebar"]',
-        '[class*="comment"]', '[class*="ad-"]', '[id*="ad-"]',
-        '[class*="promo"]', '[class*="popup"]', '[class*="modal"]',
-        '[class*="sticky"]', '[aria-label*="advertisement" i]',
+        // Generic class/id patterns
+        '[class*="cookie"]',   '[class*="gdpr"]',      '[class*="subscribe"]',
+        '[class*="newsletter"]','[class*="social"]',    '[class*="share"]',
+        '[class*="related"]',  '[class*="recommend"]',  '[class*="sidebar"]',
+        '[class*="comment"]',  '[class*="ad-"]',        '[id*="ad-"]',
+        '[class*="promo"]',    '[class*="popup"]',      '[class*="modal"]',
+        '[class*="sticky"]',   '[class*="footer"]',     '[id*="footer"]',
+        '[class*="contact"]',  '[class*="address"]',
+        '[class*="breadcrumb"]','[class*="pagination"]',
+        '[class*="author-bio"]','[class*="author-box"]','[class*="author-info"]',
+        '[class*="tag-list"]', '[class*="tags"]',
+        '[class*="trending"]', '[class*="popular"]',    '[class*="most-read"]',
+        '[class*="widget"]',   '[class*="banner"]',
+        '[role="complementary"]', '[aria-label*="advertisement" i]',
       ].forEach(sel => {
         try { document.querySelectorAll(sel).forEach(el => el.remove()); }
         catch (_) {}
       });
 
-      // Find the main content container
+      // Find the main content container — ordered from most to least specific
       const container =
+        document.querySelector('article [class*="body"]') ||
+        document.querySelector('article [class*="content"]') ||
         document.querySelector('article') ||
         document.querySelector('[class*="article-body"]') ||
         document.querySelector('[class*="article-content"]') ||
@@ -556,25 +566,47 @@ async function fetchArticlePage(browser, googleNewsLink, directUrl) {
         document.querySelector('[class*="post-content"]') ||
         document.querySelector('[class*="entry-content"]') ||
         document.querySelector('[class*="story-body"]') ||
+        document.querySelector('[class*="story-content"]') ||
+        document.querySelector('[itemprop="articleBody"]') ||
         document.querySelector('main') ||
         document.body;
 
-      const seen    = new Set();
-      const paras   = [];
-      const noiseRe = /\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored)\b/i;
-      const bylineRe = /^[A-Z][a-z]+ [A-Z][a-z]+\s+\d+\s+(?:hour|day|week|minute|second)s? ago\b/;
-      let total = 0;
+      const seen = new Set();
+      const paras = [];
 
+      // Patterns that identify non-article paragraphs
+      const noiseRe   = /\b(?:share|tweet|cookie|subscribe|sign.?up|newsletter|advertisement|sponsored|all rights reserved|terms of use|privacy policy)\b/i;
+      const bylineRe  = /^[A-Z][a-z]+ [A-Z][a-z]+\s+\d+\s+(?:hour|day|week|minute|second)s? ago\b/;
+      // Contact/address junk: email addresses, office addresses, postal codes
+      const emailRe   = /\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}\b/;
+      const addressRe = /\b(?:floor|sector|plot|block|phase|pin\s*(?:code)?|ph\s*:|tel\s*:|fax\s*:|\d{5,6}\b)/i;
+      // Navigation / "best of" list items that leak out of nav elements
+      const navRe     = /^(?:best|top\s*\d+|compare|buy|price|review|specs)\b.{0,60}(?:under|above|rs\.?|₹|\$)\s*[\d,]+/i;
+
+      let total = 0;
       for (const el of container.querySelectorAll('p, li')) {
         const text = (el.innerText || '').replace(/\s+/g, ' ').trim();
-        if (text.length < 60 || seen.has(text) || noiseRe.test(text) || bylineRe.test(text)) continue;
+        if (text.length < 60)          continue;
+        if (seen.has(text))            continue;
+        if (noiseRe.test(text))        continue;
+        if (bylineRe.test(text))       continue;
+        if (emailRe.test(text))        continue;   // contact/footer sections
+        if (addressRe.test(text))      continue;   // office addresses
+        if (navRe.test(text))          continue;   // nav "best phones under…" lists
         seen.add(text);
         paras.push(text);
         total += text.length;
         if (total >= maxChars) break;
       }
 
-      return paras.join('\n\n').slice(0, maxChars).trim();
+      const joined = paras.join('\n\n').slice(0, maxChars).trim();
+
+      // Sanity-check: if the collected text still has a high density of email
+      // addresses or looks like concatenated nav items, discard it entirely.
+      const emailCount = (joined.match(/\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}\b/g) || []).length;
+      if (emailCount >= 2) return '';   // footer/contact page leaked through
+
+      return joined;
     }, MAX_ARTICLE_CHARS);
 
     await page.close();
