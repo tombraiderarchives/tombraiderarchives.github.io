@@ -617,6 +617,14 @@ async function writePost(item, existingUrls, browser) {
     return null;
   }
 
+  // Require at least one signal of real content. If scraping got nothing
+  // (no image and no article text) the post would be bare title-only —
+  // don't publish it at all.
+  if (!imageUrl && articleText.length < 200) {
+    console.log('     ✗  No image or article text — skipping');
+    return null;
+  }
+
   // Re-derive source name from final URL if not available from RSS
   const resolvedSource = sourceName ||
     (() => { try { return new URL(finalUrl).hostname.replace(/^www\./, ''); } catch { return 'source'; } })();
