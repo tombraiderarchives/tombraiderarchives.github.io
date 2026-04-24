@@ -120,96 +120,56 @@ body {
 }
 
 /* ── Sidebar nav ────────────────────────────────────────────────────────── */
-.sidebar-nav { padding: .75rem 0 1.25rem; }
+.sidebar-nav { padding: .5rem 0 1rem; }
 
 .nav-list { list-style: none; }
 
-/* Section divider label */
-.nav-section-label {
-  font-size: .65rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  padding: 1.25rem 1rem .4rem;
-  display: block;
-  user-select: none;
-}
-.nav-section-label:first-child { padding-top: .75rem; }
-
-/* Links */
-.nav-link {
+/* Shared row height — every interactive nav item is exactly this tall */
+.nav-link,
+.nav-group-toggle {
+  height: 36px;
   display: flex;
   align-items: center;
-  padding: .55rem 1rem;
-  font-size: .82rem;
-  color: var(--text-muted);
-  text-decoration: none;
   border-radius: 6px;
-  margin: 2px .5rem;
-  transition: color .15s, background .15s;
+  margin: 1px .5rem;
+  font-family: inherit;
+  font-size: .825rem;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 38px;
-}
-.nav-link:hover   { color: var(--text); background: var(--bg-3); text-decoration: none; }
-.nav-link.active  {
-  color: var(--accent);
-  background: var(--accent-dim);
-  font-weight: 500;
+  transition: color .15s, background .15s;
+  text-decoration: none;
 }
 
-.nav-link--leaf {
-  padding-left: 1.75rem;
-  font-size: .8rem;
-  color: var(--text-dim);
-  min-height: 34px;
+/* nav-link extras */
+.nav-link {
+  padding: 0 .75rem;
+  color: var(--text-muted);
 }
-.nav-link--leaf:hover { color: var(--text); }
-.nav-link--leaf.active { color: var(--accent); }
+.nav-link:hover  { color: var(--text); background: var(--bg-3); text-decoration: none; }
+.nav-link.active { color: var(--accent); background: var(--accent-dim); font-weight: 600; }
 
-.nav-year {
-  display: none;
-}
-.nav-link--leaf:hover .nav-year,
-.nav-link--leaf.active .nav-year { color: inherit; opacity: .6; }
-
-/* Group toggle buttons */
+/* nav-group-toggle extras */
 .nav-group-toggle {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
   width: calc(100% - 1rem);
-  margin: 2px .5rem;
-  padding: .55rem 1rem;
-  min-height: 38px;
+  padding: 0 .75rem;
+  gap: .5rem;
   background: none;
   border: none;
   color: var(--text-muted);
-  font-family: inherit;
-  font-size: .82rem;
-  font-weight: 500;
   cursor: pointer;
-  border-radius: 6px;
   text-align: left;
-  transition: color .15s, background .15s;
 }
-.nav-group-toggle:hover { color: var(--text); background: var(--bg-3); }
+.nav-group-toggle:hover              { color: var(--text); background: var(--bg-3); }
 .nav-group-toggle[aria-expanded="true"] { color: var(--text); }
+.nav-group-toggle span               { flex: 1; }
 
-.nav-group-toggle span { flex: 1; }
-
+/* Section-level toggle — same height, icon accent, slightly bolder */
 .nav-group-toggle--section {
-  font-size: .82rem;
   font-weight: 600;
-  color: var(--text-muted);
-  min-height: 40px;
-  border-top: 1px solid var(--border-2);
-  margin-top: .85rem;
-  padding-top: .6rem;
+  margin-top: .35rem;
 }
-.nav-group-toggle--section:first-of-type { border-top: 1px solid var(--border); margin-top: .75rem; }
 .nav-group-toggle--section .nav-icon {
   font-size: 1rem;
   color: var(--accent);
@@ -218,18 +178,32 @@ body {
 }
 .nav-group-toggle--section:hover .nav-icon { opacity: 1; }
 
+/* Sub-level toggle — indented, slightly smaller, dimmer */
 .nav-group-toggle--sub {
+  height: 32px;
   padding-left: 1.75rem;
   font-size: .8rem;
-  font-weight: 500;
   color: var(--text-dim);
-  min-height: 34px;
 }
-.nav-group-toggle--sub:hover { color: var(--text); }
+.nav-group-toggle--sub:hover              { color: var(--text); }
 .nav-group-toggle--sub[aria-expanded="true"] { color: var(--text-muted); }
 
-/* Leaf link list — styled panel with left accent line */
-.nav-leaf-list { list-style: none; padding: .15rem 0 .3rem; }
+/* Leaf links — match sub-toggle height and indent */
+.nav-link--leaf {
+  height: 32px;
+  padding-left: 1.75rem;
+  font-size: .8rem;
+  color: var(--text-dim);
+}
+.nav-link--leaf:hover  { color: var(--text); }
+.nav-link--leaf.active { color: var(--accent); background: none; font-weight: 500; }
+
+.nav-year { display: none; }
+.nav-link--leaf:hover .nav-year,
+.nav-link--leaf.active .nav-year { color: inherit; opacity: .6; }
+
+/* Leaf link list */
+.nav-leaf-list { list-style: none; padding: .1rem 0 .25rem; }
 
 /* Level-1: subtle line for section content (eras/categories under a section) */
 .nav-section-item > .nav-sub {
@@ -2426,59 +2400,34 @@ main > p { margin-bottom: .75rem; color: var(--text-muted); font-size: .925rem; 
   .game-cover-btn { width: 80px; }
   .game-cover-img { width: 80px; }
 
-  /* Larger touch targets in nav */
-  .nav-link {
-    min-height: 46px;
-    font-size: .9rem;
-    padding: .6rem 1rem;
-    margin: 2px .5rem;
-  }
+  /* Uniform touch targets in nav — all top-level items same height */
+  .nav-link,
   .nav-group-toggle {
-    min-height: 46px;
+    height: 46px;
     font-size: .9rem;
-    padding: .6rem 1rem;
+    padding: 0 .75rem;
+    margin: 1px .5rem;
   }
-  .nav-group-toggle--section {
-    min-height: 46px;
-    font-size: .9rem;
-    margin-top: .9rem;
-    padding-top: .55rem;
-  }
-  .nav-group-toggle--section:first-of-type { margin-top: .75rem; }
+  .nav-group-toggle--section { margin-top: .35rem; }
 
-  /* Leaf links — full-width inside sub-panel */
-  .nav-leaf-list {
-    padding: .15rem 0 .35rem;
-  }
-  .nav-leaf-list .nav-link--leaf {
-    min-height: 42px;
-    padding: .5rem 1rem;
+  /* Sub-level items — slightly smaller but still generous */
+  .nav-group-toggle--sub,
+  .nav-link--leaf {
+    height: 40px;
     font-size: .875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 2px 0;
+    padding-left: 1.75rem;
+    margin: 1px 0;
   }
-  .nav-leaf-list .nav-year {
-    flex-shrink: 0;
-  }
+  .nav-leaf-list { padding: .1rem 0 .25rem; }
+  .nav-leaf-list .nav-year { flex-shrink: 0; }
+
   /* Sub panels: reduce indent on mobile */
-  .nav-section-item > .nav-sub {
-    margin-left: .25rem;
-  }
+  .nav-section-item > .nav-sub { margin-left: .25rem; }
   .nav-sub .nav-sub {
     margin-left: .75rem;
-    padding-left: 0;
     transition: grid-template-rows .3s var(--ease);
   }
-  .nav-sub .nav-sub .nav-link--leaf {
-    padding-left: .9rem;
-  }
-  .nav-group-toggle--sub {
-    padding-left: 1.75rem;
-    font-size: .875rem;
-    min-height: 42px;
-  }
+  .nav-sub .nav-sub .nav-link--leaf { padding-left: .9rem; }
 
   /* Footer */
   .footer-inner {
