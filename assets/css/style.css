@@ -171,13 +171,15 @@ body {
   font-weight: 600;
   margin-top: .35rem;
 }
-.nav-group-toggle--section .nav-icon {
+.nav-group-toggle--section .nav-icon,
+.nav-link .nav-icon {
   font-size: 1rem;
   color: var(--accent);
   opacity: .85;
   flex-shrink: 0;
 }
-.nav-group-toggle--section:hover .nav-icon { opacity: 1; }
+.nav-group-toggle--section:hover .nav-icon,
+.nav-link:hover .nav-icon { opacity: 1; }
 
 /* Sub-level toggle — indented, slightly smaller, dimmer */
 .nav-group-toggle--sub {
