@@ -145,6 +145,7 @@ body {
 /* nav-link extras */
 .nav-link {
   padding: 0 .75rem;
+  gap: .5rem;
   color: var(--text-muted);
 }
 .nav-link:hover  { color: var(--text); background: var(--bg-3); text-decoration: none; }
