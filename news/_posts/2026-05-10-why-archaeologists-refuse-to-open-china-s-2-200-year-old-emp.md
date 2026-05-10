@@ -1,0 +1,23 @@
+---
+layout: post
+title: "Why Archaeologists Refuse to Open China’s 2,200-Year-old Emperor Qin Shi Huang’s Tomb"
+date: 2026-05-10
+category: "News"
+tags:
+  - tag: tomb-raider
+header_image: "https://cf-images.assettype.com/indulgexpress%2F2026-05-10%2F2dpmgkh2%2F552608.jpeg?w=1200&ar=40%3A21&auto=format%2Ccompress&ogImage=true&mode=crop&enlarge=true&overlay=false&overlay_position=bottom&overlay_width=100"
+excerpt_text: "LIFESTYLE LIFESTYLE HOME AND DECOR BEAUTY AND WELLNESS MIND AND BODY RELATIONSHIPS"
+source_url: "https://www.indulgexpress.com/culture/2026/May/10/why-archaeologists-refuse-to-open-chinas-2200-year-old-emperor-qin-shi-huangs-tomb"
+source_rss_url: "https://news.google.com/rss/articles/CBMizAFBVV95cUxOSjBvTHhWNzc2M0k5X0VneWY1ZmVfWWc1NWJueDBrRFV2ZnMzRjJDeXk5LTRqa1RtWHFQTVQ0RlBsQVFtUmV4bVhpUXgySFFPSGlpQUlKVDRGWWZQLUJSdHlZLVZpUEpqcXUwSEpoUEJFM0ctNWsxeC1LZlZEd2lqbHhkV0w5X01zbU9NU3IteUx0UTBtOUwzNXhzeFExa0lROUJPaUVVeFpxby10ZGo3eFdJeEttblNUYVJPcUVqZGtyWFNiNDBhbUFwYXPSAdoBQVVfeXFMT3RoWUNjeC1pYjM1NHpYN1dhY2dDRlozbEJicWNEZDFUcDBhWDVKUGFpWlB3NkR5a2ZVNVJkY3hxUUhiRThXSzFGUFVvdlRPcVVrT3VjVkpEa0h0VDVIT0NQMHJNQmd3OG1HbGc5bFZXeXFoWEdmOUZaelRLUFZ2MXR0aTZNekxuYnpwNzVNSjl2UTcwa3NjR0xZS0k4c2NlS2FfRFpKUkhtSkViZVdkMDkwbEltSVU3ZDZ5QzUxTFJVS2pDWWJvTnB4Y3pKN19UNlBNODdpTk9CZlE?oc=5"
+source_name: "Indulgexpress"
+---
+
+LIFESTYLE LIFESTYLE HOME AND DECOR BEAUTY AND WELLNESS MIND AND BODY RELATIONSHIPS
+
+FASHION FASHION IT LIST TRENDS NEW LAUNCHES PROFILE DESIGNERS WEDDINGS PHOTOGRAPHY
+
+FOOD FOOD CHENNAI BENGALURU HYDERABAD KOCHI CALCUTTA MUMBAI CHEFS TRENDS RECIPES
+
+EVENTS EVENTS CHENNAI BANGALORE HYDERABAD KOCHI KOLKATA MUMBAI DELHI
+
+VIDEOS VIDEOS CELEBS & ENTERTAINMENT MIND & BODY FOOD & RECIPES FASHION & LIFESTYLE GADGETS & TECH CARS &
