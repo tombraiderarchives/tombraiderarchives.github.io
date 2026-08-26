@@ -1,0 +1,23 @@
+---
+layout: post
+title: "Resonance: a Plague Tale Legacy - Test / Review - Lara Croft Lässt Grüssen"
+date: 2026-08-26
+category: "Trailer"
+tags:
+  - tag: tomb-raider
+header_image: "https://www.games.ch/img/resonance-a-plague-tale.843.281.piJi.1.jpg"
+excerpt_text: "Schwertkampf statt Stealth-Action und Piratin Sophia anstelle von Amicia de Rune: Das Prequel zum Pest-Abenteuer \"A Plague Tale\" entführt euch in die Ruinen des mythischen Königreichs Minos und macht gefühlt fast alles…"
+source_url: "https://www.games.ch/resonance-a-plague-tale/test/review-mhyd/"
+source_rss_url: "https://news.google.com/rss/articles/CBMib0FVX3lxTFBlUTZVb0JvQTVhUmFDdmdaVjY5TnVCdm0tLXhDMHVnNEttR2tWaUx1OFlXZ0ZwZWNGUFh6cGFzZTh0cVJUN0tWY25WLU9hUW42LU1iYU5zN09OMzRuRHJBN1lIa1d2bFZBR1puWDBSUQ?oc=5"
+source_name: "Games.ch"
+---
+
+Schwertkampf statt Stealth-Action und Piratin Sophia anstelle von Amicia de Rune: Das Prequel zum Pest-Abenteuer "A Plague Tale" entführt euch in die Ruinen des mythischen Königreichs Minos und macht gefühlt fast alles völlig anders als seine Vorgänger. Unser Test verrät, wo das Serien-Spin-off seine Sache sogar besser macht und wo die Schwächen liegen.
+
+Die Ruinen eines mythischen Königreichs als Schauplatz sowie Action, Rätsel und Platforming als Hauptzutaten fürs Gameplay: Das klingt verdächtig nach "Uncharted" oder ein neues Abenteuer von Lara Croft. Tatsächlich eifert "Resonance: A Plague Tale Legacy" den beiden Spieleserien in vielerlei Hinsicht nach, ist aber im selben Universum angesiedelt wie die beiden schleichlastigen Action-Adventures mit Amicia und Hugo de Rune, mit denen uns "Microsoft Flight Simulator 2024"-Macher Asobo Studio in den Jahren 2019 und 2022 bereits viel Freude machte. Das wieder deutlich linearere und erheblich actionlastigere Spin-off-Prequel beweist im Test auf PS5, dass anders nicht unbedingt schlechter bedeuten muss.
+
+Die Handlung von "Resonance: A Plague Tale Legacy" spielt vorwiegend im Jahr 1334, also gut 14 Jahre vor den Ereignissen im ersten Abenteuer von Amicia und Hugo, "A Plague Tale: Innocence". Da Amicia bestenfalls gerade geboren ist, übernimmt die Piratin Sophia die Hauptrolle, die bereits eine wichtige Nebenrolle in "A Plague Tale: Requiem" spielte. In ihrem Clan herrschen raue Sitten, denn in der Arena des Piratennests kommt es immer wieder mal zu einem Kampf auf Leben und Tod, worauf sich Sophia ihr ganzes Leben vorbereitet hat - gerade auch, da sie ohne Vater aufwuchs. Auf der ewigen Suche nach Reichtümern wollen die Gesetzlosen die Überreste des antiken Königreichs Minos und vor allem einen dort angeblich verborgenen Schatz finden, womit sich die Story ebenfalls eines Mythos bedient, wie es "Uncharted" unter anderem mit El Dorado oder "Tomb Raider" etwa mit Atlantis tat. Das mit der griechischen Mythologie verknüpfte Minos bedeutet hier also, dass das Labyrinth des Minotaurus genauso eine Rolle spielt wie der Held Theseus, der einst die Mischung aus Mensch und Stier besiegt haben soll.
+
+Sophia ist auf der Suche nach Hinweisen einer der Schlüssel, denn sie besitzt seit ihrer Kindheit eine rätselhafte Verbindung zu Theseus und hat Visionen von ihm und der Mittelmeerinsel Kreta, auf der der Grossteil des Abenteuers spielt. Im Zuge dessen ist es auch Theseus, in dessen Rolle ihr gelegentlich schlüpft und dabei das minoische Königreich zum Ende seiner Blütephase, berühmte Figuren wie Dädalus und andere hautnah erlebt. Doch auch Misstrauen, Intrigen und Machtspielchen innerhalb des Piratenclans spielen eine Rolle, was die Entwickler mehrfach für Wendungen nutzen, die das Interesse an der Geschichte konstant aufrechterhalten. Ungeachtet der hochwertig inszenierten Story lebt das Spiel aber deutlich stärker von den hohen Sympathiewerten seiner Heldin und noch viel mehr vom Gameplay, das ebenfalls klar von Action-Adventures wie "Uncharted" oder "Tomb Raider" inspiriert ist und dabei zu etwa gleichen Teilen Rätsel, Action sowie Platforming zu einer heiteren Mischung kombiniert - nur eben mit Schwertern anstelle von Schusswaffen.
+
+Eine wichtige Besonderheit besteht darin, dass Sophia lediglich drei Trefferpunkte respektive Lebensenergiebalken hat und (normalerweise) bei jedem Treffer einen davon verliert. Anders gesagt: Sie kippt sehr schnell aus dem Latschen, wenn ihr mehrfach hintereinander getroffen werdet. Allerdings könnt ihr euch durch einen Kill einen Balken zurückholen, was dem gleichsam schnellen wie wuchtigen Kampfsystem eine taktische Komponente gibt. Nur in den Bosskämpfen ist eine solche Heilung im Regelfall nicht möglich, da ihr dort praktisch immer nur gegen einen einzelnen Feind antretet. Die Balken eurer TP-Leiste laden sich bei den Bossen dafür nach Abschluss jeder Kampfphase von allein wieder auf.
